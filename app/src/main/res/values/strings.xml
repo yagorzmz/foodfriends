@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">foodfriends</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="bienvenido_a_food_friends">¡Bienvenido a Food Friends!</string>
+    <string name="todo">TODO</string>
+    <string name="entrar">Entrar</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="nombre">Nombre</string>
+    <string name="eres_nuevo_registrate_aqu">¿Eres nuevo? Registrate aquí</string>
+    <string name="borrar_cuenta">Borrar Cuenta</string>
+    <string name="editar_perfil">Editar Perfil</string>
+    <string name="correo">Correo:</string>
+    <string name="direcci_n">Dirección:</string>
+    <string name="nombre_usuario">Nombre Usuario</string>
+    <string name="cerrar_sesi_n">Cerrar Sesión</string>
+    <string name="guardar_perfil">Guardar Perfil</string>
+    <string name="name">Name</string>
+    <string name="escribe_su_direccion">Escribe su direccion</string>
+    <string name="id_del_usuario">ID del Usuario:</string>
+    <string name="txtCorreoUsuario">TextView</string>
+    <string name="Vacio" />
+    <string name="volver_al_menu">Volver al Menu</string>
+    <string name="acerca_de_esta_aplicaci_n">Acerca de esta aplicación</string>
+    <string name="version_1_0">Version 1.0</string>
+    <string name="acerca_de">Acerca de</string>
+    <string name="acerca_de_texto">"Bienvenido a FoodFriends, la app que conecta amantes de la comida con los mejores restaurantes de comida a domicilio.\n
+        Nuestra visión es convertirnos en la plataforma #1 en comida a domicilio, entregando no solo comida deliciosa si no también la mejor experiencia para restaurantes y clientes.
+        Nuestra misión es impulsar los negocios locales de comida brindando un acceso simple y rápido a sus servicios, al mismo tiempo que ofrecemos a los clientes una amplia selección gastronómica a solo un click de distancia. \n
+        FoodFriends fue desarrollada por un equipo de 3 talentosos programadores dirigidos por un experimentado jefe de proyecto. \n Juntos logramos crear esta solución móvil disponible tanto para Android como iOS.
+        Valoramos y protegemos la privacidad de nuestros usuarios. \n
+        Esta es la versión 1.0 de FoodFriends, pero tenemos grandes planes para mejorar la experiencia y agregar nuevas funciones próximamente.
+        Si tienes consultas o comentarios, no dudes en contactarnos a nuestro correo electrónico foodfriendsapk@gmail.com.
+         \n¡Buen provecho!  \n\nEquipo FoodFriends"</string>
+    <string name="volver">Volver</string>
+</resources>

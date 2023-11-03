@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "40939627674",
+    "project_id": "foodfriendsapp-f51dc",
+    "storage_bucket": "foodfriendsapp-f51dc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:40939627674:android:9dac459e1cd48aec0aab23",
+        "android_client_info": {
+          "package_name": "com.example.foodfriends"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7Hq5PD86Q9pqehI3oi332s1FAI8Pt-HE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
