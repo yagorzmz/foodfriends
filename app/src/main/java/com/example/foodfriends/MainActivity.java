@@ -1,12 +1,16 @@
 package com.example.foodfriends;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         //Relacionamos los elementos
         btnLogin=findViewById(R.id.btnLogin);
@@ -66,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     private void inicarRegisterActivity() {
         //Iniciamos la activity de registro
         Intent i = new Intent(this,RegisterActivity.class);
@@ -97,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                         {
                             mostrarToast("Inicio de sesion correcto.");
                             //Una vez iniciado sesión, llevamos al usuario al menu.
-                            Intent intentPerfil=new Intent(getApplicationContext(),MenuActivity.class);
+                            Intent intentPerfil=new Intent(getApplicationContext(),ProfileActivity.class);
                             startActivity(intentPerfil);
                         }
                         else

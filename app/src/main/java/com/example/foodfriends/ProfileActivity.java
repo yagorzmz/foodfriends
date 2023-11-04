@@ -41,7 +41,7 @@ public class ProfileActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
     private TextView txtNombreUsuario, txtCorreoDelUsuario,txtDireccion,txtId;
-    Button btnCerrarSesion,btnBorrarCuenta,btnVolverInicio;
+    Button btnCerrarSesion,btnBorrarCuenta;
     ImageView imgEditarDireccion,imagenPerfil;
 
 
@@ -54,7 +54,6 @@ public class ProfileActivity extends AppCompatActivity {
         //Enlazamos los elementos
         btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnBorrarCuenta = findViewById(R.id.btnBorrarCuenta);
-        btnVolverInicio=findViewById(R.id.btnVolverInicio);
         imgEditarDireccion=findViewById(R.id.imgEditarDireccion);
         txtNombreUsuario=findViewById(R.id.txtNombreUsuario);
         txtCorreoDelUsuario=findViewById(R.id.txtCorreo);
@@ -62,15 +61,6 @@ public class ProfileActivity extends AppCompatActivity {
         txtId=findViewById(R.id.txtId);
         imagenPerfil=findViewById(R.id.imgPerfil);
 
-        //Boton que devuelve al usuario al inicio
-        btnVolverInicio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i=new Intent(getApplicationContext(),MenuActivity.class);
-                startActivity(i);
-
-            }
-        });
         //Si el usuario pulsa cerrar sesion
         btnCerrarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +88,7 @@ public class ProfileActivity extends AppCompatActivity {
         completarPerfilUsuario();
 
         //Verficamos si la direccion está vacia
-        if(verificarDireccion()){
+        if(!verificarDireccion()){
             solicitarDireccion("Introduce tu direccion de envío","Debes ingresar una dirección para poder usando la app, asi sabremos donde enviarte los pedidos");
         }
 
