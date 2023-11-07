@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,10 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.foodfriends.Modelo.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,10 +23,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.bumptech.glide.Glide;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -40,9 +32,9 @@ public class ProfileActivity extends AppCompatActivity {
     DatabaseReference usuariosRef = europeDatabaseReference.child("Usuarios");
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-    private TextView txtNombreUsuario, txtCorreoDelUsuario,txtDireccion,txtId;
+    TextView txtId,txtNombre,txtCorreo,txtDireccionUsuario;
     Button btnCerrarSesion,btnBorrarCuenta;
-    ImageView imgEditarDireccion,imagenPerfil;
+    ImageView imgEditarDireccion;
 
 
     @SuppressLint("MissingInflatedId")
@@ -55,11 +47,11 @@ public class ProfileActivity extends AppCompatActivity {
         btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnBorrarCuenta = findViewById(R.id.btnBorrarCuenta);
         imgEditarDireccion=findViewById(R.id.imgEditarDireccion);
-        txtNombreUsuario=findViewById(R.id.txtNombreUsuario);
-        txtCorreoDelUsuario=findViewById(R.id.txtCorreo);
-        txtDireccion=findViewById(R.id.txtDireccion);
         txtId=findViewById(R.id.txtId);
-        imagenPerfil=findViewById(R.id.imgPerfil);
+        txtNombre=findViewById(R.id.txtNombreUsuario);
+        txtCorreo=findViewById(R.id.txtCorreo);
+        txtDireccionUsuario=findViewById(R.id.txtDireccionUsuario);
+
 
         //Si el usuario pulsa cerrar sesion
         btnCerrarSesion.setOnClickListener(new View.OnClickListener() {
@@ -85,12 +77,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
         //Actualizamos el perfil del usuario
-        completarPerfilUsuario();
-
-        //Verficamos si la direccion está vacia
-        if(!verificarDireccion()){
-            solicitarDireccion("Introduce tu direccion de envío","Debes ingresar una dirección para poder usando la app, asi sabremos donde enviarte los pedidos");
-        }
+        completarPerfil(firebaseUser.getUid());
 
     }
 
@@ -99,8 +86,14 @@ public class ProfileActivity extends AppCompatActivity {
     {
         //Obtenemos el usuario y erramos sesion
         FirebaseAuth.getInstance().signOut();
+
         //Mensaje que comunica al usuario que cerramos sesion
         mostrarToast("Se ha cerrado sesión.");
+
+        // Cuando el usuario cierra sesión
+        SessionManager session = new SessionManager(getApplicationContext());
+        session.logout();
+
         //Volvemos a la pantalla de login
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -177,55 +170,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-    //Metodo que recoge la informacion de la base de datos y actualiza el perfil del usuario
-    private void completarPerfilUsuario() {
-
-        // Obtiene la instancia actual del usuario
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (user != null) {
-            // Obtiene el ID único del usuario actual
-            String userId = user.getUid();
-
-            // Obtiene una referencia a la base de datos en la ubicación de Europa
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/")
-                    .getReference("Usuarios")
-                    .child(userId);
-
-            // Escucha cambios en los datos del usuario
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        String nombre = dataSnapshot.child("NombreUsuario").getValue(String.class);
-                        String correo = dataSnapshot.child("Correo").getValue(String.class);
-                        String direccion = dataSnapshot.child("DireccionUsuario").getValue(String.class);
-                        // Actualiza los campos en la actividad
-                        txtId.setText(user.getUid());
-                        txtNombreUsuario.setText(nombre);
-                        txtCorreoDelUsuario.setText(correo);
-                        txtDireccion.setText(direccion);
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    // Maneja errores si es necesario
-                }
-            });
-        }
-    }
-
-    //Metodo que verifica que si la direccion de envio esta vacia el usuario debe escribirla
-    private boolean verificarDireccion()
-    {
-        boolean hayDireccion=true;
-        if(txtDireccion.getText().equals("")){
-            return false;
-        }
-        return hayDireccion;
-    }
 
     //Metodo que obliga al usuario a editar la direccion para poder usar la aplicacion
     private void solicitarDireccion(String titulo,String texto) {
@@ -243,19 +187,19 @@ public class ProfileActivity extends AppCompatActivity {
 
                         if(direccion.isEmpty()) {
                             solicitarDireccion(titulo,texto); // Volver a solicitar
-                            return;
                         }
                         else if(!direccion.startsWith("C/")){
                             mostrarToast("La direccion debe tener este formato: C/...");
                             solicitarDireccion(titulo,texto);
                         }
+                        else if(direccion.startsWith("C/")){
+                            // Guardar dirección ingresada
+                            txtDireccionUsuario.setText(direccion);
 
-                        // Guardar dirección ingresada
-                        txtDireccion.setText(direccion);
-
-                        // Actualiza la dirección en la base de datos
-                        usuariosRef.child(firebaseUser.getUid()).child("DireccionUsuario").setValue(direccion);
-                        dialog.dismiss();
+                            // Actualiza la dirección en la base de datos
+                            usuariosRef.child(firebaseUser.getUid()).child("DireccionUsuario").setValue(direccion);
+                            dialog.dismiss();
+                        }
                     }
                 })
                 .show();
@@ -264,6 +208,39 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+    }
+    private void completarPerfil(String idUsuario){
+        DatabaseReference usuarioRef = usuariosRef.child(idUsuario);
+        // Agrega un ValueEventListener para escuchar los cambios en los datos del usuario
+        usuarioRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Recupera los valores de los campos del usuario
+                    String nombre = dataSnapshot.child("NombreUsuario").getValue(String.class);
+                    String correo = dataSnapshot.child("Correo").getValue(String.class);
+                    String direccion = dataSnapshot.child("DireccionUsuario").getValue(String.class);
+
+                    // Establece los valores en los TextViews
+                    txtId.setText(idUsuario);
+                    txtNombre.setText(nombre);
+                    txtCorreo.setText(correo);
+
+                    if (direccion == null || direccion.isEmpty()) {
+                        // Si la dirección está en blanco o es nula, llama al método solicitarDireccion
+                        solicitarDireccion("Aviso Direccion","Debes introducir una direccion para poder " +
+                                "enviarte los pedidos. La dirección debe empezar por C/");
+                    } else {
+                        txtDireccionUsuario.setText(direccion);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Manejo de errores si es necesario
+            }
+        });
     }
     //Metodo que muestra mensajes personalizados
     private void mostrarToast(String mensaje) {

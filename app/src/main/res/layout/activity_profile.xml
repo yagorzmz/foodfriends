@@ -26,7 +26,6 @@
         android:layout_width="220dp"
         android:layout_height="64dp"
         android:maxLines="2"
-        android:text="Id:"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,10 +35,9 @@
         app:layout_constraintVertical_bias="0.4" />
 
     <TextView
-        android:id="@+id/txtDireccion"
+        android:id="@+id/txtDireccionUsuario"
         android:layout_width="220dp"
         android:layout_height="64dp"
-        android:text="@string/direcci_n"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +50,6 @@
         android:id="@+id/txtCorreo"
         android:layout_width="220dp"
         android:layout_height="64dp"
-        android:text="@string/correo"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
