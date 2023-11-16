@@ -5,15 +5,19 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.example.foodfriends.Utilidades.SessionManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 public class ProfileActivity extends AppCompatActivity {
 
     //Elementos
+    private androidx.appcompat.widget.Toolbar toolbar;
     String urlBase = "https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/";
     DatabaseReference europeDatabaseReference = FirebaseDatabase.getInstance(urlBase).getReference();
     DatabaseReference usuariosRef = europeDatabaseReference.child("Usuarios");
@@ -37,7 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
     ImageView imgEditarDireccion;
 
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint({"MissingInflatedId", "UseSupportActionBar"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +56,10 @@ public class ProfileActivity extends AppCompatActivity {
         txtNombre=findViewById(R.id.txtNombreUsuario);
         txtCorreo=findViewById(R.id.txtCorreo);
         txtDireccionUsuario=findViewById(R.id.txtDireccionUsuario);
+
+        toolbar=findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Food Friends");
 
 
         //Si el usuario pulsa cerrar sesion
@@ -79,6 +88,48 @@ public class ProfileActivity extends AppCompatActivity {
         //Actualizamos el perfil del usuario
         completarPerfil(firebaseUser.getUid());
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.menuprincipal,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        int id=item.getItemId();
+
+        if(id==R.id.item_inicio){
+            Intent i= new Intent(getApplicationContext(), InicioActivity.class);
+            startActivity(i);
+            finish();
+        }
+        else if(id==R.id.item_carrito){
+            Intent i= new Intent(getApplicationContext(),CarritoActivity.class);
+            startActivity(i);
+            finish();
+        }
+        else if(id==R.id.item_masvendidos){
+            Intent i= new Intent(getApplicationContext(), MasVendidosActivity.class);
+            startActivity(i);
+            finish();
+        }
+        else if(id==R.id.item_perfil){
+            Intent i= new Intent(getApplicationContext(), ProfileActivity.class);
+            startActivity(i);
+            finish();
+        }
+        else if(id==R.id.item_acercade){
+            Intent i= new Intent(getApplicationContext(), AcercaDeActivity.class);
+            startActivity(i);
+            finish();
+        }
+
+
+        return super.onOptionsItemSelected(item);
     }
 
     //Metodo que cierra sesion y vuelve a la pantalla de Login
@@ -209,6 +260,8 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
     }
+
+    //Metodo que completa el perfil del usuario, obteniendo los datos de la base de datos
     private void completarPerfil(String idUsuario){
         DatabaseReference usuarioRef = usuariosRef.child(idUsuario);
         // Agrega un ValueEventListener para escuchar los cambios en los datos del usuario
@@ -242,6 +295,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
     //Metodo que muestra mensajes personalizados
     private void mostrarToast(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();

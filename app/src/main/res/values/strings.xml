@@ -35,4 +35,40 @@
         Si tienes consultas o comentarios, no dudes en contactarnos a nuestro correo electrónico foodfriendsapk@gmail.com.
          \n¡Buen provecho!  \n\nEquipo FoodFriends"</string>
     <string name="volver">Volver</string>
+    <string name="title_activity_menu_drawable">MenuDrawableActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="perfil">Perfil</string>
+    <string name="carrito">Carrito</string>
+    <string name="mas_vendidos">Mas vendidos</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="inicio">Inicio</string>
+    <string name="aplicar_filtros">Aplicar Filtros</string>
+    <string name="busqueda_personalizada">BUSQUEDA PERSONALIZADA</string>
+    <string name="estilo_de_comida">Estilo de comida</string>
+    <string name="valoraci_n">Valoración</string>
+    <string name="americana">Americana</string>
+    <string name="japonesa">Japones</string>
+    <string name="mexicana">Mexicana</string>
+    <string name="kebab">Kebab</string>
+    <string name="griega">Griega</string>
+    <string name="espanyola">Española</string>
+    <string name="india">India</string>
+    <string name="italiana">Italiana</string>
+    <string name="china">China</string>
+    <string name="textview">TextView</string>
+    <string name="nombre_del_restaurante">Nombre del Restaurante</string>
+    <string name="tipo_de_comida">Tipo de Comida</string>
+    <string name="imagen">IMAGEN</string>
+
 </resources>

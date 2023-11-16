@@ -2,7 +2,6 @@ package com.example.foodfriends;
 
 import android.Manifest;
 import android.app.NotificationChannel;
-import android.app.PendingIntent;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+
+import com.example.foodfriends.Utilidades.SessionManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private final static int NOTIFICACION_ID = 0;
     private static final int NOTIFICATION_PERMISSION_REQUEST = 1;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    Button btnLogin, btnRegister, btnAcercade;
+    Button btnLogin, btnRegister;
     EditText editEmail, editPassword;
 
     @Override
@@ -47,11 +48,12 @@ public class MainActivity extends AppCompatActivity {
             // Solicita el permiso que falta
             requestNotificationPermission();
         }
+        crearCanalNotificaion();
+        createNotification(R.drawable.ic_notificacion,"Pedido realizado!","Has realizado tu pedido correctamente");
 
         // Relacionamos los elementos de la interfaz de usuario
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
-        btnAcercade = findViewById(R.id.btnAcercade);
         editEmail = findViewById(R.id.editEmail);
         editPassword = findViewById(R.id.editPassword);
 
@@ -69,15 +71,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Validamos si se ha escrito algo en los campos de inicio de sesión
                 validarCamposYLoguear();
-            }
-        });
-
-        // Botón que lleva al usuario a la página "Acerca de"
-        btnAcercade.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), AcercaDeActivity.class);
-                startActivity(i);
             }
         });
     }
@@ -132,11 +125,11 @@ public class MainActivity extends AppCompatActivity {
     private void comprobarSesion() {
         SessionManager session = new SessionManager(getApplicationContext());
 
-        //Si el usuario no ha cerrado sesión le llevamos al menu
+        //Si el usuario no ha cerrado sesión le llevamos al inicio
         if (session.isLoggedIn()) {
             int userId = session.getUserId();
             //Si el usuario ya estaba logeado se manda al menu
-            Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
+            Intent i = new Intent(getApplicationContext(), InicioActivity.class);
             startActivity(i);
         }
     }
@@ -168,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Metodo que crea un canal de notificacion
     private void crearCanalNotificaion() {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Noticacion";
             NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);

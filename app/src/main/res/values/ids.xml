@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="checkBoxKebab" type="id" />
+    <item name="checkBoxItaliana" type="id" />
+    <item name="checkboxMexicana" type="id" />
+    <item name="checkBoxGriega" type="id" />
+    <item name="checkBoxChina" type="id" />
+    <item name="checkBoxEspanyola" type="id" />
+    <item name="checkBoxAmericana" type="id" />
+    <item name="checkBoxIndia" type="id" />
+</resources>

@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.Foodfriends" parent="Base.Theme.Foodfriends" />
+    <style name="Theme.Foodfriends.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.Foodfriends.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.Foodfriends.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

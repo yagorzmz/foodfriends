@@ -16,8 +16,20 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Foodfriends"
+        android:theme="@style/Theme.Foodfriends.NoActionBar"
         tools:targetApi="31">
+        <activity
+            android:name=".CatalogoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MasVendidosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FiltroActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CarritoActivity"
+            android:exported="false" />
         <activity
             android:name=".AcercaDeActivity"
             android:exported="false" />
@@ -36,7 +48,7 @@
             android:name=".ProfileActivity"
             android:noHistory="true" />
         <activity
-            android:name=".MenuActivity"
+            android:name=".InicioActivity"
             android:noHistory="true" />
     </application>
 

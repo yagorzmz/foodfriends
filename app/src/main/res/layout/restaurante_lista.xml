@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardview"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:animateLayoutChanges="true"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="424dp"
+        android:layout_height="156dp"
+        android:background="#FFFFFF">
+
+        <ImageView
+            android:id="@+id/imgRestaurante"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/imagen"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/imgRestaurante"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/txtRestaurante"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="@string/nombre_del_restaurante"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/txtTipo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/tipo_de_comida"
+                android:textColor="#757575"
+                android:textSize="15sp" />
+
+            <RatingBar
+                android:id="@+id/ratingBarRecycler"
+                android:layout_width="235dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:progressTint="#FFC107"
+                android:scaleX="0.8"
+                android:scaleY="0.8"
+                android:stepSize="1.0"
+                android:textAlignment="textEnd"
+                tools:ignore="RtlCompat" />
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
+
+
+
