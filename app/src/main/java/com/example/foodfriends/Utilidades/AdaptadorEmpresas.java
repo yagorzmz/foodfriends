@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -23,9 +21,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class AdaptadorEmpresas extends RecyclerView.Adapter<AdaptadorEmpresas.ViewHolder >
@@ -50,7 +46,7 @@ public class AdaptadorEmpresas extends RecyclerView.Adapter<AdaptadorEmpresas.Vi
     }
     private LayoutInflater nInflater;
     private Context context;
-    private Uri url_imagen;
+
     StorageReference storagereference;
 
     @NonNull
@@ -88,9 +84,9 @@ public class AdaptadorEmpresas extends RecyclerView.Adapter<AdaptadorEmpresas.Vi
             super(itemView);
 
             // Obtiene referencias a las vistas dentro de cada elemento
-            imgRestaurante = itemView.findViewById(R.id.imgRestaurante);
-            nombre = itemView.findViewById(R.id.txtRestaurante);
-            tipo = itemView.findViewById(R.id.txtTipo);
+            imgRestaurante = itemView.findViewById(R.id.imgProducto);
+            nombre = itemView.findViewById(R.id.txtNombreProducto);
+            tipo = itemView.findViewById(R.id.txtDescripcion);
             valoracion = itemView.findViewById(R.id.ratingBarRecycler);
         }
 

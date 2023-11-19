@@ -19,6 +19,9 @@
         android:theme="@style/Theme.Foodfriends.NoActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".ProductoActivity"
+            android:exported="false" />
+        <activity
             android:name=".CatalogoActivity"
             android:exported="false" />
         <activity

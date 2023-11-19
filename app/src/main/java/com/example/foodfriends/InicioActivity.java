@@ -38,7 +38,6 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
     private static final int REQUEST_FILTRO = 1;
     private androidx.appcompat.widget.Toolbar toolbar;
     RecyclerView recycler;
-    String urlBase = "https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/Empresas";
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference empresasReference;
     private AdaptadorEmpresas adaptadorEmpresas;
@@ -141,11 +140,10 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
             @Override
             public void onItemClick(Empresa empresa)
             {
-                Intent i = new Intent(getApplicationContext(), CatalogoActivity.class);
-                // Pasar la información de la empresa a la CatalogoActivity
-                i.putExtra("empresa", empresa);
-                // Iniciar la CatalogoActivity
-                startActivity(i);
+                String idEmpresaSeleccionada = empresa.getId();  // Reemplaza con el ID real
+                Intent intent = new Intent(getApplicationContext(), CatalogoActivity.class);
+                intent.putExtra("idEmpresaSeleccionada", idEmpresaSeleccionada);
+                startActivity(intent);
             }
         });
 

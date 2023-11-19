@@ -2,11 +2,21 @@ package com.example.foodfriends.Modelo;
 
 public class Producto
 {
+    public String getIdProducto() {
+        return idProducto;
+    }
+
+    public void setIdProducto(String idProducto) {
+        this.idProducto = idProducto;
+    }
+
+    private String idProducto;
     private String nombreProducto,descripcion,empresaId;
     private String urlProducto;
-    private float precio;
+    private Double precio;
 
-    public Producto(String nombreProducto, String descripcion, String empresaId, String urlProducto, float precio) {
+    public Producto(String idProducto,String nombreProducto, String descripcion, String empresaId, String urlProducto, Double precio) {
+        this.idProducto=idProducto;
         this.nombreProducto = nombreProducto;
         this.descripcion = descripcion;
         this.empresaId = empresaId;
@@ -46,11 +56,11 @@ public class Producto
         this.urlProducto = urlProducto;
     }
 
-    public float getPrecio() {
+    public Double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(float precio) {
+    public void setPrecio(Double precio) {
         this.precio = precio;
     }
 

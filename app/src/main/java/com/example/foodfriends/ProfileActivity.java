@@ -52,7 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
         btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnBorrarCuenta = findViewById(R.id.btnBorrarCuenta);
         imgEditarDireccion=findViewById(R.id.imgEditarDireccion);
-        txtId=findViewById(R.id.txtId);
+        txtId=findViewById(R.id.txtNombreProducto);
         txtNombre=findViewById(R.id.txtNombreUsuario);
         txtCorreo=findViewById(R.id.txtCorreo);
         txtDireccionUsuario=findViewById(R.id.txtDireccionUsuario);
