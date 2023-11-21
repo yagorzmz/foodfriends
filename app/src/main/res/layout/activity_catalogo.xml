@@ -5,7 +5,7 @@
     android:id="@+id/listviewProductos"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CatalogoActivity">
+    tools:context=".Activities.CatalogoActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar3"

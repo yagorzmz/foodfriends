@@ -1,28 +1,19 @@
-package com.example.foodfriends;
+package com.example.foodfriends.Activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.foodfriends.Modelo.Empresa;
 import com.example.foodfriends.Modelo.Producto;
-import com.example.foodfriends.Utilidades.AdaptadorEmpresas;
+import com.example.foodfriends.R;
 import com.example.foodfriends.Utilidades.AdaptadorProductos;
-import com.google.firebase.Firebase;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -82,6 +73,14 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
             @Override
             public void onItemClick(Producto producto)
             {
+                Intent intent = new Intent(getApplicationContext(), ProductoActivity.class);
+                intent.putExtra("idProducto", producto.getIdProducto());
+                intent.putExtra("nombreProducto", producto.getNombreProducto());
+                intent.putExtra("descripcion", producto.getDescripcion());
+                intent.putExtra("empresaId", producto.getEmpresaId());
+                intent.putExtra("urlProducto", producto.getUrlProducto());
+                intent.putExtra("precio", producto.getPrecio());
+                startActivity(intent);
             }
         });
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
@@ -180,6 +179,13 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void onBackPressed() {
+        // Abre la actividad del catálogo al presionar el botón de atrás
+        Intent intent = new Intent(this, InicioActivity.class);
+        startActivity(intent);
+        finish();  // Cierra la actividad actual
     }
 }
 

@@ -16,7 +16,7 @@
         android:background="#FFFFFF">
 
         <ImageView
-            android:id="@+id/imgProducto"
+            android:id="@+id/imgProductoLineaPedido"
             android:layout_width="140dp"
             android:layout_height="140dp"
             android:layout_marginStart="8dp"
@@ -29,12 +29,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toEndOf="@+id/imgProducto"
+            android:layout_toEndOf="@+id/imgProductoLineaPedido"
             android:orientation="vertical"
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/txtNombreProducto"
+                android:id="@+id/txtNombreProductoLineaPedido"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
@@ -43,7 +43,7 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/txtDescripcion"
+                android:id="@+id/txtUnidadesPedidas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"

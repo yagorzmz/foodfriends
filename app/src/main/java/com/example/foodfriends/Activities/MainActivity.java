@@ -1,4 +1,4 @@
-package com.example.foodfriends;
+package com.example.foodfriends.Activities;
 
 import android.Manifest;
 import android.app.NotificationChannel;
@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.foodfriends.R;
 import com.example.foodfriends.Utilidades.SessionManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

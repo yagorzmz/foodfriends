@@ -1,4 +1,4 @@
-package com.example.foodfriends;
+package com.example.foodfriends.Activities;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.foodfriends.R;
 import com.example.foodfriends.Utilidades.SessionManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -52,7 +54,7 @@ public class ProfileActivity extends AppCompatActivity {
         btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnBorrarCuenta = findViewById(R.id.btnBorrarCuenta);
         imgEditarDireccion=findViewById(R.id.imgEditarDireccion);
-        txtId=findViewById(R.id.txtNombreProducto);
+        txtId=findViewById(R.id.txtNombreProductoLineaPedido);
         txtNombre=findViewById(R.id.txtNombreUsuario);
         txtCorreo=findViewById(R.id.txtCorreo);
         txtDireccionUsuario=findViewById(R.id.txtDireccionUsuario);
