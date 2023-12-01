@@ -19,62 +19,53 @@
         android:background="#FFFFFF">
 
         <LinearLayout
-            android:layout_width="40dp"
+            android:layout_width="147dp"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="false"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="8dp"
-            android:orientation="vertical">
+            android:layout_marginEnd="5dp"
+            android:orientation="vertical"
+            tools:ignore="TextSizeCheck">
 
-            <ImageButton
-                android:id="@+id/imgButtonEliminarLinea"
+            <TextView
+                android:id="@+id/txtFechaPedido"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:backgroundTint="#FFFFFF"
-                android:contentDescription="@string/acerca_de"
-                app:srcCompat="@drawable/papelera"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="20sp"
+                android:text="@string/fecha_pedido"
+                android:textAlignment="center" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="243dp"
+            android:layout_width="199dp"
             android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="153dp"
             android:orientation="vertical"
             android:padding="8dp">
 
             <TextView
                 android:id="@+id/txtIdPedido"
-                android:layout_width="376dp"
-                android:layout_height="wrap_content"
-                android:text="@string/nombre_producto"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:text="@string/idpedido"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 tools:ignore="VisualLintBounds" />
 
             <TextView
                 android:id="@+id/txtPrecioTotal"
-                android:layout_width="220dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/unidades_pedidas"
+                android:text="@string/precio_total"
                 android:textColor="#757575"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/txtPrecioLineaPedido"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/precio_linea_pedido"
-                android:textColor="#757575"
-                android:textSize="15sp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="100dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="49dp"
+            android:layout_marginEnd="9dp"
             android:orientation="vertical">
 
             <TextView
@@ -84,7 +75,8 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/_1"
                 android:textAlignment="center"
-                android:textSize="40sp" />
+                android:textSize="40sp"
+                tools:ignore="DuplicateIds" />
         </LinearLayout>
 
     </RelativeLayout>

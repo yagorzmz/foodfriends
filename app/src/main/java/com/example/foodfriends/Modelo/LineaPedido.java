@@ -1,13 +1,21 @@
 package com.example.foodfriends.Modelo;
 
-import java.io.Serializable;
-
-public class LineaPedido implements Serializable
-{
-    public LineaPedido(String idProducto, String idPedido, int unidades) {
-        this.idProducto = idProducto;
+public class LineaPedido {
+    private String idLineaPedido,idPedido,idProducto;
+    private int unidades;
+    public LineaPedido(String idLineaPedido, String idPedido, String idProducto, int unidades) {
+        this.idLineaPedido = idLineaPedido;
         this.idPedido = idPedido;
+        this.idProducto = idProducto;
         this.unidades = unidades;
+    }
+
+    public String getIdLineaPedido() {
+        return idLineaPedido;
+    }
+
+    public void setIdLineaPedido(String idLineaPedido) {
+        this.idLineaPedido = idLineaPedido;
     }
 
     public String getIdPedido() {
@@ -18,6 +26,14 @@ public class LineaPedido implements Serializable
         this.idPedido = idPedido;
     }
 
+    public String getIdProducto() {
+        return idProducto;
+    }
+
+    public void setIdProducto(String idProducto) {
+        this.idProducto = idProducto;
+    }
+
     public int getUnidades() {
         return unidades;
     }
@@ -25,11 +41,4 @@ public class LineaPedido implements Serializable
     public void setUnidades(int unidades) {
         this.unidades = unidades;
     }
-
-    private String idProducto;
-    private String idPedido;
-    private int unidades;
-
-
-
 }

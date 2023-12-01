@@ -1,14 +1,16 @@
 package com.example.foodfriends.Activities;
 
+import static com.example.foodfriends.Activities.CarritoActivity.listaLineasPedidosTemp;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,8 +42,9 @@ public class ProfileActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
     TextView txtId,txtNombre,txtCorreo,txtDireccionUsuario;
-    Button btnCerrarSesion,btnBorrarCuenta;
+    Button btnCerrarSesion,btnBorrarCuenta,btnHistorial;
     ImageView imgEditarDireccion;
+    ImageView iconoToolbar;
 
 
     @SuppressLint({"MissingInflatedId", "UseSupportActionBar"})
@@ -50,26 +53,42 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        // Desactivar el botón de retroceso
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
         //Enlazamos los elementos
         btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnBorrarCuenta = findViewById(R.id.btnBorrarCuenta);
+        btnHistorial = findViewById(R.id.btnHistorial);
         imgEditarDireccion=findViewById(R.id.imgEditarDireccion);
-        txtId=findViewById(R.id.txtNombreProductoLineaPedido);
+        txtId=findViewById(R.id.txtIdPedido);
         txtNombre=findViewById(R.id.txtNombreUsuario);
         txtCorreo=findViewById(R.id.txtCorreo);
         txtDireccionUsuario=findViewById(R.id.txtDireccionUsuario);
 
+        iconoToolbar=findViewById(R.id.iconoToolbar);
         toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Food Friends");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
+        btnHistorial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(getApplicationContext(),HistorialActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
         //Si el usuario pulsa cerrar sesion
         btnCerrarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Cerramos sesion
                 cerrarSesion();
+                // Limpiar o reiniciar la lista de lineasPedidosTemp
+                listaLineasPedidosTemp.clear();
             }
         });
         //Si el usuario pulsa borrar cuenta
@@ -91,11 +110,20 @@ public class ProfileActivity extends AppCompatActivity {
         completarPerfil(firebaseUser.getUid());
 
     }
+    public String obtenerDireccion() {
+        TextView txtDireccion = findViewById(R.id.txtDireccionUsuario);
+        return txtDireccion.getText().toString();
+    }
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        MenuInflater inflater=getMenuInflater();
-        inflater.inflate(R.menu.menuprincipal,menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menuprincipal, menu);
+
+        // Deshabilita el ítem del menú correspondiente a esta actividad
+        MenuItem item = menu.findItem(R.id.item_perfil);
+        if (item != null) {
+            item.setEnabled(false);
+        }
+
         return true;
     }
 
@@ -116,11 +144,6 @@ public class ProfileActivity extends AppCompatActivity {
         }
         else if(id==R.id.item_masvendidos){
             Intent i= new Intent(getApplicationContext(), MasVendidosActivity.class);
-            startActivity(i);
-            finish();
-        }
-        else if(id==R.id.item_perfil){
-            Intent i= new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(i);
             finish();
         }
@@ -169,6 +192,8 @@ public class ProfileActivity extends AppCompatActivity {
                 String idUsuario = firebaseUser.getUid();
                 //Borra la cuenta y vuelve al Login
                 borrarUsuario(idUsuario);
+                Intent i=new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(i);
             }
         });
 
@@ -225,39 +250,59 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     //Metodo que obliga al usuario a editar la direccion para poder usar la aplicacion
-    private void solicitarDireccion(String titulo,String texto) {
-
+    public void solicitarDireccion(String titulo, String texto) {
         final EditText input = new EditText(this);
 
-        new AlertDialog.Builder(this)
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setTitle("Ingresa tu dirección")
                 .setMessage(texto)
                 .setView(input)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-
                         String direccion = input.getText().toString();
 
-                        if(direccion.isEmpty()) {
-                            solicitarDireccion(titulo,texto); // Volver a solicitar
-                        }
-                        else if(!direccion.startsWith("C/")){
-                            mostrarToast("La direccion debe tener este formato: C/...");
-                            solicitarDireccion(titulo,texto);
-                        }
-                        else if(direccion.startsWith("C/")){
+                        if (direccion.isEmpty()) {
+                            mostrarToast("Por favor, ingresa tu dirección.");
+                            solicitarDireccion(titulo, texto); // Volver a solicitar
+                        } else if (!direccion.startsWith("C/")) {
+                            mostrarToast("La dirección debe tener este formato: C/...");
+                            solicitarDireccion(titulo, texto);
+                        } else if (direccion.startsWith("C/")) {
                             // Guardar dirección ingresada
                             txtDireccionUsuario.setText(direccion);
 
                             // Actualiza la dirección en la base de datos
                             usuariosRef.child(firebaseUser.getUid()).child("DireccionUsuario").setValue(direccion);
-                            dialog.dismiss();
+
+                            // No es necesario cerrar el cuadro de diálogo aquí
                         }
                     }
                 })
                 .show();
 
+        // Desactivar el botón Atrás y el gesto de deslizar para salir de la actividad hasta que se ingrese una dirección
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            }
+        });
+
+        // Capturar el evento de cierre del cuadro de diálogo
+        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                // Verificar si se ingresó una dirección antes de cerrar el cuadro de diálogo
+                if (txtDireccionUsuario.getText().toString().isEmpty()) {
+                    solicitarDireccion(titulo, texto);
+                } else {
+                    // Habilitar el botón Atrás y el gesto de deslizar para salir de la actividad
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                }
+            }
+        });
     }
+
     @Override
     protected void onPause() {
         super.onPause();

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.foodfriends.Modelo.Producto;
@@ -32,6 +33,7 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
     private AdaptadorProductos adaptadorProductos;
     List<Producto> listaProductos;
     String idEmpresaSeleccionada;
+    ImageView iconoToolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +42,8 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
         // Configuración de la barra de herramientas
         toolbar = findViewById(R.id.toolbar3);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Food Friends");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        iconoToolbar=findViewById(R.id.iconoToolbar);
         recycler=findViewById(R.id.recyclerView);
 
         // Configuración de Firebase
@@ -116,6 +119,7 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
                 if (listener != null) {
                     listener.onDataLoaded(listaProductos);
                 }
+
             }
 
             @Override

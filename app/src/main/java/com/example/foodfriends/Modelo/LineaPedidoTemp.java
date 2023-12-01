@@ -64,4 +64,7 @@ public class LineaPedidoTemp implements Parcelable {
         dest.writeDouble(precioProducto);
         dest.writeInt(unidades);
     }
+    public double calcularPrecioTotal() {
+        return getPrecioProducto() * getUnidades();
+    }
 }

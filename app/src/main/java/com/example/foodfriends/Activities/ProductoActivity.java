@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.foodfriends.Modelo.LineaPedido;
 import com.example.foodfriends.Modelo.LineaPedidoTemp;
 import com.example.foodfriends.Modelo.Producto;
 import com.example.foodfriends.R;
@@ -46,7 +45,7 @@ public class ProductoActivity extends AppCompatActivity
     private ImageView imgProducto;
     Button btnAgregarAlCarrito;
     ImageButton btnSumarCantidad,btnRestarCantidad;
-
+    ImageView iconoToolbar;
     Producto producto;
 
     @Override
@@ -57,8 +56,8 @@ public class ProductoActivity extends AppCompatActivity
         // Configuración de la barra de herramientas
         toolbar = findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Food Friends");
-
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        iconoToolbar=findViewById(R.id.iconoToolbar);
         // Inicializa las referencias a las vistas
         txtNombreProducto = findViewById(R.id.txtNombreProducto2);
         txtPrecio = findViewById(R.id.txtPrecio);

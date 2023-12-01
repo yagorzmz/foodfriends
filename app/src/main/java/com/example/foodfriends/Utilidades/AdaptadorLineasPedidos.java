@@ -1,28 +1,15 @@
 package com.example.foodfriends.Utilidades;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.foodfriends.Modelo.Empresa;
-import com.example.foodfriends.Modelo.LineaPedido;
 import com.example.foodfriends.Modelo.LineaPedidoTemp;
 import com.example.foodfriends.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
@@ -32,7 +19,8 @@ public class AdaptadorLineasPedidos extends ArrayAdapter<LineaPedidoTemp>
     private OnLineaPedidoChangeListener mListener;
 
 
-    public AdaptadorLineasPedidos(Context context, List<LineaPedidoTemp> lineasPedidos,OnLineaPedidoChangeListener listener) {
+
+    public AdaptadorLineasPedidos(Context context, List<LineaPedidoTemp> lineasPedidos, OnLineaPedidoChangeListener listener) {
         super(context, 0, lineasPedidos);
         mListener = listener;
     }
@@ -49,10 +37,10 @@ public class AdaptadorLineasPedidos extends ArrayAdapter<LineaPedidoTemp>
         }
 
         // Obtener referencias a las vistas en el layout
-        TextView txtNumeroItem = convertView.findViewById(R.id.txtNumeroLinea);
-        TextView txtNombreProducto = convertView.findViewById(R.id.txtNombreProductoLineaPedido);
+        TextView txtNumeroItem = convertView.findViewById(R.id.txtNumeroPedido);
+        TextView txtNombreProducto = convertView.findViewById(R.id.txtIdPedido);
         TextView txtPrecioUnidad = convertView.findViewById(R.id.txtPrecioLineaPedido);
-        TextView txtUnidades = convertView.findViewById(R.id.txtUnidadesPedidas);
+        TextView txtUnidades = convertView.findViewById(R.id.txtPrecioTotal);
         ImageButton btnEliminarLinea = convertView.findViewById(R.id.imgButtonEliminarLinea);
 
         // Asignar los datos del objeto a las vistas

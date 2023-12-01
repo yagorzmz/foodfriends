@@ -78,8 +78,8 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
             super(itemView);
 
             // Obtiene referencias a las vistas dentro de cada elemento
-            nombreProducto = itemView.findViewById(R.id.txtNombreProductoLineaPedido);
-            descripcion=itemView.findViewById(R.id.txtUnidadesPedidas);
+            nombreProducto = itemView.findViewById(R.id.txtIdPedido);
+            descripcion=itemView.findViewById(R.id.txtPrecioTotal);
             imgProducto = itemView.findViewById(R.id.imgProductoLineaPedido);
         }
 

@@ -15,6 +15,11 @@ public class Producto
     private String urlProducto;
     private Double precio;
 
+    public Producto(String idProducto,String nombreProducto,String urlProducto){
+        this.idProducto=idProducto;
+        this.nombreProducto = nombreProducto;
+        this.urlProducto = urlProducto;
+    }
     public Producto(String idProducto,String nombreProducto, String descripcion, String empresaId, String urlProducto, Double precio) {
         this.idProducto=idProducto;
         this.nombreProducto = nombreProducto;

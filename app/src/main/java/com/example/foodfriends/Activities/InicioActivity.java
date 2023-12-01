@@ -3,8 +3,8 @@ package com.example.foodfriends.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -35,6 +35,7 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
     private AdaptadorEmpresas adaptadorEmpresas;
     List<Empresa> listaEmpresas;
     private SearchView searchview;
+    ImageView iconoToolbar;
 
 
     @Override
@@ -43,14 +44,17 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
         setContentView(R.layout.activity_inicio);
 
         // Configuración de la barra de herramientas
-        toolbar = findViewById(R.id.toolbar2);
+        toolbar = findViewById(R.id.toolbar7);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Food Friends");
+        iconoToolbar=findViewById(R.id.iconoToolbar);
+        // Eliminar el título del Toolbar
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         recycler=findViewById(R.id.recyclerView);
 
         searchview=findViewById(R.id.buscador);
         searchview.clearFocus();
 
+        //Establecemos el listener del filtro
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -82,9 +86,14 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
     //Inflamos el menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflar el menú principal en la barra de acción
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menuprincipal, menu);
+        getMenuInflater().inflate(R.menu.menuprincipal, menu);
+
+        // Deshabilita el ítem del menú correspondiente a esta actividad
+        MenuItem item = menu.findItem(R.id.item_inicio);
+        if (item != null) {
+            item.setEnabled(false);
+        }
+
         return true;
     }
 
@@ -93,12 +102,7 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
     public boolean onOptionsItemSelected(MenuItem item) {
         // Manejar las opciones del menú
         int id = item.getItemId();
-        if (id == R.id.item_inicio) {
-            // Iniciar la actividad de Inicio
-            Intent i = new Intent(getApplicationContext(), InicioActivity.class);
-            startActivity(i);
-            finish();
-        } else if (id == R.id.item_carrito) {
+        if (id == R.id.item_carrito) {
             // Iniciar la actividad del Carrito
             Intent i = new Intent(getApplicationContext(), CarritoActivity.class);
             startActivity(i);
@@ -137,6 +141,7 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
                 startActivity(intent);
             }
         });
+        //Enlazamos el recyclerview y seleccionamos su adaptador
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -182,22 +187,33 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
             }
         });
     }
+    //Metodo que filtra las empresas mediante el searcher
     private void filterList(String texto) {
+        // Creamos una nueva lista para almacenar los elementos filtrados
         List<Empresa> listaFiltrada = new ArrayList<>();
 
+        // Iteramos a través de la lista original de empresas
         for (Empresa empresa : listaEmpresas) {
+            // Comprobamos si el nombre de la empresa contiene el texto de búsqueda (ignorando mayúsculas/minúsculas)
             if (empresa.getNombreEmpresa().toLowerCase().contains(texto.toLowerCase())) {
+                // Si se encuentra una coincidencia, agregar la empresa a la lista filtrada
                 listaFiltrada.add(empresa);
             }
         }
 
+        // Verificamos si la lista filtrada está vacía
         if (listaFiltrada.isEmpty()) {
-            Toast.makeText(this, "Lista vacía", Toast.LENGTH_SHORT).show();
+            // Mostrar un mensaje Toast indicando que no se encontraron resultados
+            Toast.makeText(this, "No se ha encontrado el restaurante", Toast.LENGTH_SHORT).show();
         } else {
+            // Si hay resultados, actualizamos el adaptador con la nueva lista filtrada
             adaptadorEmpresas.setFilteredList(listaFiltrada);
-            adaptadorEmpresas.notifyDataSetChanged(); // Notificar al adaptador que los datos han cambiado
+
+            // Notificamos al adaptador que los datos han cambiado para que actualice la vista
+            adaptadorEmpresas.notifyDataSetChanged();
         }
     }
+
 
     @Override
     public void onItemClick(Empresa item) {

@@ -28,119 +28,117 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
-    //Elementos
+    // Elementos necesarios para notificaciones
     private final static String CHANNEL_ID = "NOTIFICACION";
     private final static int NOTIFICACION_ID = 0;
     private static final int NOTIFICATION_PERMISSION_REQUEST = 1;
-    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    Button btnLogin, btnRegister;
-    EditText editEmail, editPassword;
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance(); // Instancia de Firebase Authentication
+    Button btnLogin, btnRegister; // Botones de inicio de sesión y registro
+    EditText editEmail, editPassword; // Campos de texto para el correo electrónico y la contraseña
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Comprobamos si mantiene la sesión activa
+        // Comprobamos si el usuario ya tiene una sesión activa
         comprobarSesion();
 
-        // Verifica si ya se tiene el permiso de notificación
+        // Verificamos si se ha concedido el permiso de notificación
         if (!hasNotificationPermission()) {
-            // Solicita el permiso que falta
+            // Si no se ha concedido, solicitamos el permiso
             requestNotificationPermission();
         }
-        crearCanalNotificaion();
-        createNotification(R.drawable.ic_notificacion,"Pedido realizado!","Has realizado tu pedido correctamente");
 
-        // Relacionamos los elementos de la interfaz de usuario
+        // Relacionamos los elementos de la interfaz de usuario con sus respectivos ID
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
         editEmail = findViewById(R.id.editEmail);
         editPassword = findViewById(R.id.editPassword);
 
-        // Método que al hacer clic en el botón de registrarse, lleva al usuario a la pantalla de registro
+        // Configuramos el listener para el botón de registro
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Al hacer clic en el botón de registro, nos dirigimos a la pantalla de registro
                 iniciarRegisterActivity();
             }
         });
 
-        // Botón de inicio de sesión, comprobamos si el usuario existe
+        // Configuramos el listener para el botón de inicio de sesión
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Validamos si se ha escrito algo en los campos de inicio de sesión
+                // Validamos los campos y procedemos al inicio de sesión si son correctos
                 validarCamposYLoguear();
             }
         });
     }
 
-    // Método que nos lleva a la pantalla de Registro
+    // Método que inicia la actividad de Registro
     private void iniciarRegisterActivity() {
-        // Iniciamos la activity de registro
         Intent i = new Intent(this, RegisterActivity.class);
         startActivity(i);
     }
 
-    // Método que valida los campos y, si son correctos, inicia sesión
+    // Método que valida los campos y procede al inicio de sesión si son correctos
     private void validarCamposYLoguear() {
-        String correo2 = editPassword.getText().toString(); // Debería ser editEmail.getText().toString()?
-        String password2 = editPassword.getText().toString(); // Debería ser editPassword.getText().toString()?
+        // Obtenemos el correo electrónico y la contraseña de los campos de texto
+        String correo2 = editPassword.getText().toString(); // ¿Debería ser editEmail.getText().toString()?
+        String password2 = editPassword.getText().toString(); // ¿Debería ser editPassword.getText().toString()?
 
         if (correo2.isEmpty() || password2.isEmpty()) {
-            // El campo de nombre de usuario o contraseña está vacío, muestra un Toast de advertencia.
+            // Si el campo de correo electrónico o contraseña está vacío, mostramos un Toast de advertencia
             mostrarToast("Por favor, completa todos los campos antes de iniciar sesión.");
         } else {
+            // Si los campos son válidos, procedemos al inicio de sesión
             iniciarSesion();
         }
     }
 
-    // Método que inicia sesión al usuario si los campos son válidos
+    // Método que inicia sesión utilizando Firebase Authentication
     public void iniciarSesion() {
         firebaseAuth.signInWithEmailAndPassword(editEmail.getText().toString(), editPassword.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            // Si el inicio de sesión es exitoso, manejamos la sesión
                             mostrarToast("Inicio de sesión correcto.");
 
-                            // Cuando el usuario inicia sesión, se maneja la sesión
                             SessionManager session = new SessionManager(getApplicationContext());
                             session.setLogin(true, session.getUserId());
 
                             // Una vez iniciada la sesión, llevamos al usuario al menú.
-                            Intent intentPerfil = new Intent(getApplicationContext(), ProfileActivity.class);
+                            Intent intentPerfil = new Intent(getApplicationContext(), InicioActivity.class);
                             startActivity(intentPerfil);
                         } else {
-                            // Si falla el inicio de sesión
+                            // Si falla el inicio de sesión, mostramos un Toast de error
                             mostrarToast("Inicio de sesión fallido.");
                         }
                     }
                 });
     }
 
-
-    //Metodo que comprueba si el usuario no ha cerrado sesión, llevandolo directamente al menu
-    //sin necesidad de volver a iniciar sesion
+    // Método que comprueba si el usuario ya ha iniciado sesión previamente
     private void comprobarSesion() {
         SessionManager session = new SessionManager(getApplicationContext());
 
-        //Si el usuario no ha cerrado sesión le llevamos al inicio
+        // Si el usuario no ha cerrado sesión, lo llevamos directamente al menú
         if (session.isLoggedIn()) {
             int userId = session.getUserId();
-            //Si el usuario ya estaba logeado se manda al menu
+            // Si el usuario ya estaba logeado, lo llevamos al menú
             Intent i = new Intent(getApplicationContext(), InicioActivity.class);
             startActivity(i);
         }
     }
 
-    //Metodo que comprueba si tiene el permiso de notificaciones
+    // Método que verifica si se tiene el permiso de notificaciones
     private boolean hasNotificationPermission() {
         return (ContextCompat.checkSelfPermission(this, Manifest.permission.WAKE_LOCK) == PackageManager.PERMISSION_GRANTED);
     }
 
-    //Metodo que pide al usuario el permiso de notificacion
+    // Método que solicita al usuario el permiso de notificación
     private void requestNotificationPermission() {
         // Solicita el permiso de notificación
         if (!hasNotificationPermission()) {
@@ -148,31 +146,31 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Manejo de resultados de solicitudes de permisos
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == NOTIFICATION_PERMISSION_REQUEST) {
-            // Verifica el resultado de la solicitud de permiso de notificación
+            // Verificamos el resultado de la solicitud de permiso de notificación
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permiso de notificación concedido, puedes realizar acciones relacionadas con notificaciones.
             }
         }
     }
 
-    //Metodo que crea un canal de notificacion
-    private void crearCanalNotificaion() {
-
+    // Método que crea un canal de notificación
+    private void crearCanalNotificacion() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Noticacion";
+            CharSequence name = "Notificacion";
             NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(notificationChannel);
         }
     }
 
-    //Metodo que crea una notificacion personalizada
-    private void createNotification(int imagen,String titulo,String texto) {
+    // Método que crea y muestra una notificación personalizada
+    private void createNotification(int imagen, String titulo, String texto) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(imagen)
                 .setContentTitle(titulo)
@@ -186,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
         notificationManagerCompat.notify(NOTIFICACION_ID, builder.build());
     }
 
-    //Metodo que muestra mensajes personalizados
+    // Método que muestra mensajes personalizados utilizando Toast
     private void mostrarToast(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
     }

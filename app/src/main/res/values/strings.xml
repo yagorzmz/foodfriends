@@ -29,7 +29,6 @@
     <string name="acerca_de_texto">"Bienvenido a FoodFriends, la app que conecta amantes de la comida con los mejores restaurantes de comida a domicilio.\n
         Nuestra visión es convertirnos en la plataforma #1 en comida a domicilio, entregando no solo comida deliciosa si no también la mejor experiencia para restaurantes y clientes.
         Nuestra misión es impulsar los negocios locales de comida brindando un acceso simple y rápido a sus servicios, al mismo tiempo que ofrecemos a los clientes una amplia selección gastronómica a solo un click de distancia. \n
-        FoodFriends fue desarrollada por un equipo de 3 talentosos programadores dirigidos por un experimentado jefe de proyecto.
         Valoramos y protegemos la privacidad de nuestros usuarios. \n
         Esta es la versión 1.0 de FoodFriends, pero tenemos grandes planes para mejorar la experiencia y agregar nuevas funciones próximamente.
         Si tienes consultas o comentarios, no dudes en contactarnos a nuestro correo electrónico foodfriendsapk@gmail.com.
@@ -74,5 +73,11 @@
     <string name="unidades_pedidas">Unidades pedidas</string>
     <string name="_1">1</string>
     <string name="nombre_producto">Nombre producto</string>
+    <string name="realizar_pedido">Realizar pedido</string>
+    <string name="precio_total_del_pedido">Precio total del pedido</string>
+    <string name="carrito_vacio">CARRITO VACIO</string>
+    <string name="fecha_pedido">Fecha Pedido</string>
+    <string name="idpedido">IdPedido</string>
+    <string name="precio_total">Precio total</string>
 
 </resources>

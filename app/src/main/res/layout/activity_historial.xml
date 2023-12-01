@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    tools:context=".Activities.InicioActivity">
+    tools:context=".Activities.HistorialActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar7"
@@ -34,26 +33,14 @@
         android:layout_marginEnd="16dp" <!-- Puedes ajustar el margen según sea necesario -->
         android:contentDescription="@string/desc_icono" />
     </androidx.appcompat.widget.Toolbar>
-    <SearchView
-        android:id="@+id/buscador"
-        android:layout_width="0dp"
-        android:layout_height="51dp"
-        android:background="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar7" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <ListView
+        android:id="@+id/listviewHistorial"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#FF6E40"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buscador"
-        app:layout_constraintVertical_bias="0.717" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar7" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
