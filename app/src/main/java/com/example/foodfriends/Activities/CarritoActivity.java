@@ -57,7 +57,7 @@ import java.util.Map;
 
 public class CarritoActivity extends AppCompatActivity implements AdaptadorLineasPedidos.OnLineaPedidoChangeListener
 {
-    // Definición de variables de la clase.
+    // Definición de variables de la clase
     private static final String CHANNEL_ID = "mi_canal_de_notificaciones";
     private static double totalConGastosEnvio;
     private androidx.appcompat.widget.Toolbar toolbar;

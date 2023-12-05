@@ -32,7 +32,6 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
     private DatabaseReference productosReference;
     private AdaptadorProductos adaptadorProductos;
     List<Producto> listaProductos;
-    String idEmpresaSeleccionada;
     ImageView iconoToolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

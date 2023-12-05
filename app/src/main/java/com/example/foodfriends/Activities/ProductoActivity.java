@@ -36,8 +36,6 @@ public class ProductoActivity extends AppCompatActivity
     private static final int CANTIDAD_MAXIMA = 5;
     private int cantidadActual=1;
     private androidx.appcompat.widget.Toolbar toolbar;
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference productosReference;
     private TextView txtNombreProducto;
     private TextView txtPrecio;
     private TextView txtDescripcion;
@@ -103,7 +101,16 @@ public class ProductoActivity extends AppCompatActivity
                 mostrarToast("Producto agregado al carrito. Cantidad: " + cantidadSeleccionada);
             }
         });
-        // Recuperamos la información de la empresa enviada desde la actividad anterior
+
+        //Uno de los dos metodos tendra un intent nulo
+        recuperarIntentProducto();
+
+        //Actualizamos la cantidad
+        actualizarCantidad();
+    }
+
+    // Recuperamos la información de la empresa enviada desde la actividad anterior
+    private void recuperarIntentProducto(){
         Intent intent = getIntent();
         if (intent != null)
         {
@@ -115,10 +122,7 @@ public class ProductoActivity extends AppCompatActivity
                 obtenerInformacionProducto(producto);
             }
         }
-
-        actualizarCantidad();
     }
-
     //Obtiene la info del producto seleccionado
     private void obtenerInformacionProducto(Producto producto) {
         txtNombreProducto.setText(producto.getNombreProducto());
