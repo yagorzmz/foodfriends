@@ -25,12 +25,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-
+/**
+ * La clase MainActivity gestiona el inicio de sesión de los usuarios mediante
+ * el correo y la contraseña en la aplicación.
+ * Utiliza Firebase Authentication para verificar las cuentas de usuario.
+ * Los usuarios no registrados podrán acceder a la opcion de registrarse.
+ */
 public class MainActivity extends AppCompatActivity {
 
-    // Elementos necesarios para notificaciones
-    private final static String CHANNEL_ID = "NOTIFICACION";
-    private final static int NOTIFICACION_ID = 0;
+    // Elementos
     private static final int NOTIFICATION_PERMISSION_REQUEST = 1;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance(); // Instancia de Firebase Authentication
     Button btnLogin, btnRegister; // Botones de inicio de sesión y registro
@@ -157,31 +160,6 @@ public class MainActivity extends AppCompatActivity {
                 // Permiso de notificación concedido, puedes realizar acciones relacionadas con notificaciones.
             }
         }
-    }
-
-    // Método que crea un canal de notificación
-    private void crearCanalNotificacion() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Notificacion";
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
-    }
-
-    // Método que crea y muestra una notificación personalizada
-    private void createNotification(int imagen, String titulo, String texto) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(imagen)
-                .setContentTitle(titulo)
-                .setContentText(texto)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        notificationManagerCompat.notify(NOTIFICACION_ID, builder.build());
     }
 
     // Método que muestra mensajes personalizados utilizando Toast

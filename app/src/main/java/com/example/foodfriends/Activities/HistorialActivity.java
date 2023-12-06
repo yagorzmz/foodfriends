@@ -26,8 +26,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class HistorialActivity extends AppCompatActivity{
+/**
+ * La clase HistorialActivity permite visualizar el histroial de los pedidos de cada
+ * cada usuario, permitiendo ver el precio total de cada pedido, su id y su fecha de
+ * realización
+ */
+public class HistorialActivity extends AppCompatActivity {
 
     private androidx.appcompat.widget.Toolbar toolbar;
     private ImageView iconoToolbar;
@@ -59,9 +63,12 @@ public class HistorialActivity extends AppCompatActivity{
         adapter = new AdaptadorHistorial(this, listaPedidos);
         listViewHistorial.setAdapter(adapter);
 
+        //Cargamos el historial de pedidos
         cargarPedidos();
 
     }
+
+    //Metodo que recorre la tabla pedidos recuperando cada pedido del usuario actual
     private void cargarPedidos() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");
         DatabaseReference pedidosReference = firebaseDatabase.getReference("Pedidos");
@@ -69,14 +76,17 @@ public class HistorialActivity extends AppCompatActivity{
         pedidosReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                // Limpiar la lista actual de pedidos
                 listaPedidos.clear();
 
+                // Iterar sobre los nodos hijos para obtener la información de cada pedido
                 for (DataSnapshot pedidoSnapshot : dataSnapshot.getChildren()) {
                     String id = pedidoSnapshot.getKey();
                     String idCliente = pedidoSnapshot.child("ClienteId").getValue(String.class);
                     Double precio = pedidoSnapshot.child("PrecioTotal").getValue(Double.class);
                     String fecha = pedidoSnapshot.child("FechaPedido").getValue(String.class);
 
+                    // Crear un objeto Pedido con la información obtenida y agregarlo a la lista
                     Pedido pedido = new Pedido(id, idCliente, precio, fecha);
                     listaPedidos.add(pedido);
                 }
@@ -87,15 +97,20 @@ public class HistorialActivity extends AppCompatActivity{
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Manejar errores si es necesario
+                mostrarToast("No se han encontrado pedidos realizados");
             }
         });
     }
+
+    //Metodo que muestra un toast personalizado
+    private void mostrarToast(String mensaje) {
+        Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
+    }
+
     //Inflamos el menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menuprincipal, menu);
-
         return true;
     }
 
@@ -109,8 +124,7 @@ public class HistorialActivity extends AppCompatActivity{
             Intent i = new Intent(getApplicationContext(), InicioActivity.class);
             startActivity(i);
             finish();
-        }
-        else if (id == R.id.item_carrito) {
+        } else if (id == R.id.item_carrito) {
             // Iniciar la actividad del Carrito
             Intent i = new Intent(getApplicationContext(), CarritoActivity.class);
             startActivity(i);

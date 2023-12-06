@@ -8,6 +8,10 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.foodfriends.R;
+/**
+ * Esta clase proporciona la lógica para la pantalla "Acerca de" de la aplicación, permitiendo
+ * al usuario obtener información sobre el desarrollo de la aplicación y volver a la pantalla principal si lo desea.
+*/
 public class AcercaDeActivity extends AppCompatActivity {
 
     // Botón para volver a la pantalla principal

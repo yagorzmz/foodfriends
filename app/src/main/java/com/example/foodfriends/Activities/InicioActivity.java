@@ -24,7 +24,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InicioActivity extends AppCompatActivity implements AdaptadorEmpresas.OnItemClickListener{
+/**
+ * La clase InicioActivity muestra la pantalla principal de la aplicacion,
+ * donde se muestran las diferentes em,presas de comida. En ella se puede
+ * por nombre, acceder mediante el menu a las demas activities y ver los
+ * productos de cada empresa
+ */
+public class InicioActivity extends AppCompatActivity implements AdaptadorEmpresas.OnItemClickListener {
 
     // Elementos
     private static final int REQUEST_FILTRO = 1;
@@ -46,12 +52,12 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
         // Configuración de la barra de herramientas
         toolbar = findViewById(R.id.toolbar7);
         setSupportActionBar(toolbar);
-        iconoToolbar=findViewById(R.id.iconoToolbar);
+        iconoToolbar = findViewById(R.id.iconoToolbar);
         // Eliminar el título del Toolbar
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        recycler=findViewById(R.id.recyclerView);
+        recycler = findViewById(R.id.recyclerView);
 
-        searchview=findViewById(R.id.buscador);
+        searchview = findViewById(R.id.buscador);
         searchview.clearFocus();
 
         //Establecemos el listener del filtro
@@ -63,6 +69,7 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
 
             @Override
             public boolean onQueryTextChange(String s) {
+                //Aplicamos el filtro de busqueda
                 filterList(s);
                 return true;
             }
@@ -129,12 +136,11 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
 
     // Método que inicia el RecyclerView
     public void init(List<Empresa> listaEmpresas) {
-        adaptadorEmpresas = new AdaptadorEmpresas(listaEmpresas, this,new AdaptadorEmpresas.OnItemClickListener(){
+        adaptadorEmpresas = new AdaptadorEmpresas(listaEmpresas, this, new AdaptadorEmpresas.OnItemClickListener() {
 
             //Metodo onClick de las empresas
             @Override
-            public void onItemClick(Empresa empresa)
-            {
+            public void onItemClick(Empresa empresa) {
                 String idEmpresaSeleccionada = empresa.getId();  // Reemplaza con el ID real
                 Intent intent = new Intent(getApplicationContext(), CatalogoActivity.class);
                 intent.putExtra("idEmpresaSeleccionada", idEmpresaSeleccionada);
@@ -142,7 +148,6 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
             }
         });
         //Enlazamos el recyclerview y seleccionamos su adaptador
-
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -153,40 +158,47 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
 
     // Método que añade en una lista las empresas de la base de datos
     private void cargarEmpresas(final OnDataLoadedListener listener) {
-        empresasReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                 listaEmpresas = new ArrayList<>();
+        try {
+            empresasReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    listaEmpresas = new ArrayList<>();
 
-                // Iterar sobre las empresas en la base de datos
-                for (DataSnapshot empresaSnapshot : dataSnapshot.getChildren()) {
-                    // Obtener los datos de la empresa desde la base de datos
-                    String id=empresaSnapshot.getKey();
-                    String urlLogo = empresaSnapshot.child("LogoEmpresa").getValue(String.class);
-                    String direccion = empresaSnapshot.child("DireccionEmpresa").getValue(String.class);
-                    String nombre = empresaSnapshot.child("NombreEmpresa").getValue(String.class);
-                    Float estrellas = empresaSnapshot.child("Estrellas").getValue(Float.class);
-                    Long telefono = empresaSnapshot.child("Telefono").getValue(Long.class);
-                    String tipo = empresaSnapshot.child("TipoComida").getValue(String.class);
+                    // Iterar sobre las empresas en la base de datos
+                    for (DataSnapshot empresaSnapshot : dataSnapshot.getChildren()) {
+                        // Obtener los datos de la empresa desde la base de datos
+                        String id = empresaSnapshot.getKey();
+                        String urlLogo = empresaSnapshot.child("LogoEmpresa").getValue(String.class);
+                        String direccion = empresaSnapshot.child("DireccionEmpresa").getValue(String.class);
+                        String nombre = empresaSnapshot.child("NombreEmpresa").getValue(String.class);
+                        Float estrellas = empresaSnapshot.child("Estrellas").getValue(Float.class);
+                        Long telefono = empresaSnapshot.child("Telefono").getValue(Long.class);
+                        String tipo = empresaSnapshot.child("TipoComida").getValue(String.class);
 
-                    // Crear un objeto Empresa y añadirlo a la lista
-                    Empresa empresa = new Empresa(id,urlLogo, nombre, direccion, estrellas, telefono, tipo);
-                    listaEmpresas.add(empresa);
+                        // Crear un objeto Empresa y añadirlo a la lista
+                        Empresa empresa = new Empresa(id, urlLogo, nombre, direccion, estrellas, telefono, tipo);
+                        listaEmpresas.add(empresa);
 
+                    }
+
+                    // Notificar que los datos han sido cargados
+                    if (listener != null) {
+                        listener.onDataLoaded(listaEmpresas);
+                    }
                 }
 
-                // Notificar que los datos han sido cargados
-                if (listener != null) {
-                    listener.onDataLoaded(listaEmpresas);
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    mostrarToast("No se han podido cargar las empresas. Porfavor intente entrar mas tarde.");
+                    finish();
                 }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Manejar errores si es necesario
-            }
-        });
+            });
+        } catch (Exception e) {
+            // Manejar cualquier excepción que pueda ocurrir al cargar las empresas
+            e.printStackTrace();
+        }
     }
+
     //Metodo que filtra las empresas mediante el searcher
     private void filterList(String texto) {
         // Creamos una nueva lista para almacenar los elementos filtrados
