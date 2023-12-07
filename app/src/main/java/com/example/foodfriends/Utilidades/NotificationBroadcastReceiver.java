@@ -1,4 +1,8 @@
 package com.example.foodfriends.Utilidades;
+import static android.content.Intent.getIntent;
+
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -28,6 +32,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
         // Mostrar una nueva notificación con el mensaje "Pedido confirmado"
         mostrarNotificacionPedidoConfirmado(context);
         CarritoActivity.registrarPedidoYLineasPedido();
+
     }
 
     private void mostrarNotificacionPedidoConfirmado(Context context) {

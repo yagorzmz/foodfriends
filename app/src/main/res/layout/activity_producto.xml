@@ -71,6 +71,7 @@
         android:layout_below="@id/txtPrecio"
         android:padding="16dp"
         android:text="Descripción del Producto"
+        android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -106,11 +107,11 @@
 
     <ImageButton
         android:id="@+id/btnSumarCantidad"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:backgroundTint="#FEFAFD"
         android:contentDescription="@string/Vacio"
-        android:scaleType="fitCenter"
+        android:scaleType="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.778"
@@ -122,11 +123,11 @@
 
     <ImageButton
         android:id="@+id/btnBajarCantidad"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:backgroundTint="#FEFAFD"
         android:contentDescription="@string/Vacio"
-        android:scaleType="fitCenter"
+        android:scaleType="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.525"

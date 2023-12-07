@@ -46,11 +46,17 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * La clase MasVendidosActivity muestra los 5 productos mas vendidos
+ * en los ultimos 7 dias, para aqeullos usuarios que estan indecisos
+ * en su decision.
+ */
 public class MasVendidosActivity extends AppCompatActivity {
 
+    //Elementos
     private androidx.appcompat.widget.Toolbar toolbar;
     private ImageView iconoToolbar;
-    private DatabaseReference pedidosReference,lineasPedidosReference;
+    private DatabaseReference pedidosReference, lineasPedidosReference;
     private List<String> top5Productos;
     private TextView txtPrimerPuesto, txtSegundoPuesto, txtTercerPuesto, txtCuartoPuesto, txtQuintoPuesto;
     private ImageView imgPrimerPuesto, imgSegundoPuesto, imgTercerPuesto, imgCuartoPuesto, imgQuintoPuesto;
@@ -62,12 +68,12 @@ public class MasVendidosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mas_vendidos);
 
         //Creamos la lista de los 5 productos mas vendidos
-        top5Productos=new ArrayList<>();
+        top5Productos = new ArrayList<>();
 
         // Enlazamos los elementos
         toolbar = findViewById(R.id.toolbar6);
         setSupportActionBar(toolbar);
-        iconoToolbar=findViewById(R.id.iconoToolbar);
+        iconoToolbar = findViewById(R.id.iconoToolbar);
 
         // Eliminar el título del Toolbar
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -138,82 +144,95 @@ public class MasVendidosActivity extends AppCompatActivity {
             }
         });
     }
+
     // Método para abrir la ProductoActivity con la información del producto
     private void abrirProductoActivity(String idProducto) {
+
         // Obtenemos el producto utilizando el id
         obtenerProductoPorId(idProducto, new OnProductoLoadedListener() {
             @Override
             public void onProductoLoaded(Producto producto) {
-                //Verificamos que el producto no sea nulo antes de abrir la actividad
-                if (producto != null) {
-                    //Creamos un Intent para abrir la ProductoActivity
-                    Intent intent = new Intent(getApplicationContext(), ProductoActivity.class);
-                    // Pasa la información del producto al Intent
-                    intent.putExtra("idProducto", producto.getIdProducto());
-                    intent.putExtra("nombreProducto", producto.getNombreProducto());
-                    intent.putExtra("descripcion", producto.getDescripcion());
-                    intent.putExtra("empresaId", producto.getEmpresaId());
-                    intent.putExtra("urlProducto", producto.getUrlProducto());
-                    intent.putExtra("precio", producto.getPrecio());
-                    // Inicia la ProductoActivity
-                    startActivity(intent);
-                } else {
-                    //Manejamos el caso en el que no se encuentre el producto
-                    Toast.makeText(getApplicationContext(), "Producto no encontrado", Toast.LENGTH_SHORT).show();
+                try {
+                    //Verificamos que el producto no sea nulo antes de abrir la actividad
+                    if (producto != null) {
+                        //Creamos un Intent para abrir la ProductoActivity
+                        Intent intent = new Intent(getApplicationContext(), ProductoActivity.class);
+                        // Pasa la información del producto al Intent
+                        intent.putExtra("idProducto", producto.getIdProducto());
+                        intent.putExtra("nombreProducto", producto.getNombreProducto());
+                        intent.putExtra("descripcion", producto.getDescripcion());
+                        intent.putExtra("empresaId", producto.getEmpresaId());
+                        intent.putExtra("urlProducto", producto.getUrlProducto());
+                        intent.putExtra("precio", producto.getPrecio());
+                        // Inicia la ProductoActivity
+                        startActivity(intent);
+                    } else {
+                        //Manejamos el caso en el que no se encuentre el producto
+                        Toast.makeText(getApplicationContext(), "Producto no encontrado", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    // Manejar cualquier excepción que pueda ocurrir al obtener el producto por ID
+                    e.printStackTrace();
                 }
             }
+
         });
     }
+
     //Método para obtener detalles de un producto por su ID
-    private void obtenerProductoPorId(String idProducto, OnProductoLoadedListener listener)
-    {
-        //Referencia de productos
-        productosReference.child(idProducto).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Verificamos si hay algún dato en el snapshot
-                if (dataSnapshot.exists() && dataSnapshot.hasChildren()) {
-                    // Obtenemos detalles del producto
-                    String nombreProducto = dataSnapshot.child("NombreProducto").getValue(String.class);
-                    String urlProducto = dataSnapshot.child("urlProducto").getValue(String.class);
-                    String descripcion = dataSnapshot.child("Descripcion").getValue(String.class);
-                    String empresaId = dataSnapshot.child("EmpresaId").getValue(String.class);
-                    Double precio = dataSnapshot.child("Precio").getValue(Double.class);
+    private void obtenerProductoPorId(String idProducto, OnProductoLoadedListener listener) {
+        try {
+            //Referencia de productos
+            productosReference.child(idProducto).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    // Verificamos si hay algún dato en el snapshot
+                    if (dataSnapshot.exists() && dataSnapshot.hasChildren()) {
+                        // Obtenemos detalles del producto
+                        String nombreProducto = dataSnapshot.child("NombreProducto").getValue(String.class);
+                        String urlProducto = dataSnapshot.child("urlProducto").getValue(String.class);
+                        String descripcion = dataSnapshot.child("Descripcion").getValue(String.class);
+                        String empresaId = dataSnapshot.child("EmpresaId").getValue(String.class);
+                        Double precio = dataSnapshot.child("Precio").getValue(Double.class);
 
-                    // Verificar si alguno de los valores es nulo
-                    if (nombreProducto != null && urlProducto != null && descripcion != null && empresaId != null && precio != null) {
-                        // Creamos un objeto Producto con la información
-                        Producto producto = new Producto(idProducto, nombreProducto, descripcion, empresaId, urlProducto, precio);
+                        // Verificar si alguno de los valores es nulo
+                        if (nombreProducto != null && urlProducto != null && descripcion != null && empresaId != null && precio != null) {
+                            // Creamos un objeto Producto con la información
+                            Producto producto = new Producto(idProducto, nombreProducto, descripcion, empresaId, urlProducto, precio);
 
-                        // Notificamos al listener que el producto ha sido cargado
-                        if (listener != null) {
-                            listener.onProductoLoaded(producto);
+                            // Notificamos al listener que el producto ha sido cargado
+                            if (listener != null) {
+                                listener.onProductoLoaded(producto);
+                            }
+                        } else {
+                            // Notificamos al listener que algún valor es nulo
+                            if (listener != null) {
+                                listener.onProductoLoaded(null);
+                            }
                         }
                     } else {
-                        // Notificamos al listener que algún valor es nulo
+                        // Notificamos al listener que el producto no fue encontrado
                         if (listener != null) {
                             listener.onProductoLoaded(null);
                         }
                     }
-                } else {
-                    // Notificamos al listener que el producto no fue encontrado
-                    if (listener != null) {
-                        listener.onProductoLoaded(null);
-                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getApplicationContext(),"No se encontraron prodcutos",Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(getApplicationContext(), "No se encontraron prodcutos", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // Interfaz para manejar la carga del producto
     public interface OnProductoLoadedListener {
         void onProductoLoaded(Producto producto);
     }
+
     //Inflamos el menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -227,6 +246,7 @@ public class MasVendidosActivity extends AppCompatActivity {
 
         return true;
     }
+
     //Recogemos los items del menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -237,8 +257,7 @@ public class MasVendidosActivity extends AppCompatActivity {
             Intent i = new Intent(getApplicationContext(), InicioActivity.class);
             startActivity(i);
             finish();
-        }
-        else if (id == R.id.item_carrito) {
+        } else if (id == R.id.item_carrito) {
             // Iniciar la actividad del Carrito
             Intent i = new Intent(getApplicationContext(), CarritoActivity.class);
             startActivity(i);
@@ -257,97 +276,117 @@ public class MasVendidosActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     //Metodo que recoge y devuelve la lista de pedidos realizados en los ultimos 7 dias
     private void obtenerPedidosUltimos7Dias(final OnPedidosLoadedListener listener) {
-        final List<String> idPedidos = new ArrayList<>();
+        try {
+            final List<String> idPedidos = new ArrayList<>();
 
-        // Obtener la fecha actual
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        String fechaActual = sdf.format(calendar.getTime());
+            // Obtener la fecha actual
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            String fechaActual = sdf.format(calendar.getTime());
 
-        // Calcular la fecha de hace 7 días
-        calendar.add(Calendar.DAY_OF_YEAR, -6);  // Cambia a -6 para incluir el día actual
-        String fechaHace7Dias = sdf.format(calendar.getTime());
+            // Calcular la fecha de hace 7 días
+            calendar.add(Calendar.DAY_OF_YEAR, -6);  // Cambia a -6 para incluir el día actual
+            String fechaHace7Dias = sdf.format(calendar.getTime());
 
-        // Realizar la consulta con un rango de fechas
-        Query query = pedidosReference.orderByChild("FechaPedido").startAt(fechaHace7Dias + " 00:00:00").endAt(fechaActual + " 23:59:59");
+            // Realizar la consulta con un rango de fechas
+            Query query = pedidosReference.orderByChild("FechaPedido").startAt(fechaHace7Dias + " 00:00:00").endAt(fechaActual + " 23:59:59");
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot pedidoSnapshot : dataSnapshot.getChildren()) {
-                    // Obtener el idPedido y agregarlo a la lista
-                    String idPedido = pedidoSnapshot.getKey();
-                    idPedidos.add(idPedido);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot pedidoSnapshot : dataSnapshot.getChildren()) {
+                        // Obtener el idPedido y agregarlo a la lista
+                        String idPedido = pedidoSnapshot.getKey();
+                        idPedidos.add(idPedido);
+                    }
+
+                    // Notificar que los datos han sido cargados
+                    if (listener != null) {
+                        listener.onPedidosLoaded(idPedidos);
+                    }
                 }
 
-                // Notificar que los datos han sido cargados
-                if (listener != null) {
-                    listener.onPedidosLoaded(idPedidos);
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Manejar errores si es necesario
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Manejar errores si es necesario
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
     public interface OnPedidosLoadedListener {
         void onPedidosLoaded(List<String> idPedidos);
     }
+
     //Metodo que recoge y devuelve la lista de id de productos realizados en los ultimos 7 dias
     //y obtiene los 5 mas vendidos
-    private void obtenerTop5Productos(List<String>listaId,final OnProductosIdLoadedListener listener) {
-        final List<String> idProductos = new ArrayList<>();
-        final Map<String, Integer> topProductos = new HashMap<>();
-        lineasPedidosReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(String idPedido : listaId) {
-                    for (DataSnapshot lineaSnapshot : dataSnapshot.getChildren()) {
-                        String idProducto = lineaSnapshot.child("ProductoId").getValue(String.class);
-                        String PedidoId = lineaSnapshot.child("PedidoId").getValue(String.class);
-                        Integer Unidades = lineaSnapshot.child("Unidades").getValue(Integer.class);
-                        if(idPedido.equals(PedidoId)) {
-                            // Sumar las unidades al producto correspondiente en el mapa
-                            topProductos.put(idProducto, topProductos.getOrDefault(idProducto, 0) + Unidades);
+    private void obtenerTop5Productos(List<String> listaId, final OnProductosIdLoadedListener listener) {
+        try {
+            final List<String> idProductos = new ArrayList<>();
+            final Map<String, Integer> topProductos = new HashMap<>();
+            lineasPedidosReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    try {
+                        for (String idPedido : listaId) {
+                            for (DataSnapshot lineaSnapshot : dataSnapshot.getChildren()) {
+                                String idProducto = lineaSnapshot.child("ProductoId").getValue(String.class);
+                                String pedidoId = lineaSnapshot.child("PedidoId").getValue(String.class);
+                                Integer unidades = lineaSnapshot.child("Unidades").getValue(Integer.class);
+                                if (idPedido.equals(pedidoId)) {
+                                    // Sumar las unidades al producto correspondiente en el mapa
+                                    topProductos.put(idProducto, topProductos.getOrDefault(idProducto, 0) + unidades);
+                                }
+                            }
                         }
+                        // Ordenar el mapa por valor en orden descendente para obtener el top 5
+                        List<Map.Entry<String, Integer>> listaOrdenada = new ArrayList<>(topProductos.entrySet());
+                        listaOrdenada.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+
+                        // Limpiar la lista antes de agregar elementos
+                        top5Productos.clear();
+
+                        // Tomar los primeros 5 elementos o menos si no hay suficientes
+                        int count = 0;
+                        for (Map.Entry<String, Integer> entry : listaOrdenada) {
+                            top5Productos.add(entry.getKey());
+                            count++;
+                            if (count == 5) {
+                                break;
+                            }
+                        }
+                        // Notificar que los datos han sido cargados
+                        if (listener != null) {
+                            listener.onProductosIdLoaded(top5Productos);
+                        }
+                    } catch (Exception e) {
+                        // Manejar cualquier excepción que pueda ocurrir al procesar los datos de las líneas de pedido
+                        e.printStackTrace();
                     }
                 }
-                // Ordenar el mapa por valor en orden descendente para obtener el top 5
-                List<Map.Entry<String, Integer>> listaOrdenada = new ArrayList<>(topProductos.entrySet());
-                listaOrdenada.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
 
-                // Limpiar la lista antes de agregar elementos
-                top5Productos.clear();
-
-                // Tomar los primeros 5 elementos o menos si no hay suficientes
-                int count = 0;
-                for (Map.Entry<String, Integer> entry : listaOrdenada) {
-                    top5Productos.add(entry.getKey());
-                    count++;
-                    if (count == 5) {
-                        break;
-                    }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Manejar errores si es necesario
                 }
-                // Notificar que los datos han sido cargados
-                if (listener != null) {
-                    listener.onProductosIdLoaded(top5Productos);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
+            });
+        } catch (Exception e) {
+            // Manejar cualquier excepción que pueda ocurrir al obtener el top 5 de productos
+            e.printStackTrace();
+        }
     }
+
+
     public interface OnProductosIdLoadedListener {
         void onProductosIdLoaded(List<String> idProductos);
     }
+
     //Metodo que recoge los prodcutos y ecupera su informacion para poder mostrarla
     private void mostrarTop(List<String> top5Productos) {
         for (int i = 0; i < top5Productos.size(); i++) {
@@ -376,122 +415,128 @@ public class MasVendidosActivity extends AppCompatActivity {
 
     //Recoge cada productos y lo plasma en los imageview y textviews
     private void mostrarDetallesProducto(int index, String nombreProducto, String urlProducto) {
-        StorageReference storageReference;
-        // Verificar que el índice sea válido
-        if (index >= 0 && index < 5) {
-            // Mostrar detalles en las vistas correspondientes
-            switch (index) {
-                case 0:
-                    txtPrimerPuesto.setText(nombreProducto);
-                    storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(urlProducto);
-                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            // Carga la imagen en el ImageView utilizando Picasso
-                            Glide.with(getApplicationContext())
-                                    .load(uri.toString())
-                                    .placeholder(R.drawable.waiting)
-                                    .error(R.drawable.error)
-                                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                                    .into(imgPrimerPuesto);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Manejar fallos al obtener la URL de descarga
-                            e.printStackTrace();
-                        }
-                    });
-                    break;
-                case 1:
-                    txtSegundoPuesto.setText(nombreProducto);
-                    storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(urlProducto);
-                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            // Carga la imagen en el ImageView utilizando Picasso
-                            Glide.with(getApplicationContext())
-                                    .load(uri.toString())
-                                    .placeholder(R.drawable.waiting)
-                                    .error(R.drawable.error)
-                                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                                    .into(imgSegundoPuesto);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Manejar fallos al obtener la URL de descarga
-                            e.printStackTrace();
-                        }
-                    });
-                    break;
-                case 2:
-                    txtTercerPuesto.setText(nombreProducto);
-                    storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(urlProducto);
-                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            // Carga la imagen en el ImageView utilizando Picasso
-                            Glide.with(getApplicationContext())
-                                    .load(uri.toString())
-                                    .placeholder(R.drawable.waiting)
-                                    .error(R.drawable.error)
-                                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                                    .into(imgTercerPuesto);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Manejar fallos al obtener la URL de descarga
-                            e.printStackTrace();
-                        }
-                    });
-                    break;
-                case 3:
-                    txtCuartoPuesto.setText(nombreProducto);
-                    storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(urlProducto);
-                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            // Carga la imagen en el ImageView utilizando Picasso
-                            Glide.with(getApplicationContext())
-                                    .load(uri.toString())
-                                    .placeholder(R.drawable.waiting)
-                                    .error(R.drawable.error)
-                                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                                    .into(imgCuartoPuesto);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Manejar fallos al obtener la URL de descarga
-                            e.printStackTrace();
-                        }
-                    });
-                    break;
-                case 4:
-                    txtQuintoPuesto.setText(nombreProducto);
-                    storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(urlProducto);
-                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            // Carga la imagen en el ImageView utilizando Picasso
-                            Glide.with(getApplicationContext())
-                                    .load(uri.toString())
-                                    .placeholder(R.drawable.waiting)
-                                    .error(R.drawable.error)
-                                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                                    .into(imgQuintoPuesto);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Manejar fallos al obtener la URL de descarga
-                            e.printStackTrace();
-                        }
-                    });
-                    break;
+        try {
+            StorageReference storageReference;
+            // Verificar que el índice sea válido
+            if (index >= 0 && index < 5) {
+                // Mostrar detalles en las vistas correspondientes
+                switch (index) {
+                    case 0:
+                        txtPrimerPuesto.setText(nombreProducto);
+                        storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(urlProducto);
+                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                // Cargar la imagen en el ImageView utilizando Glide
+                                Glide.with(getApplicationContext())
+                                        .load(uri.toString())
+                                        .placeholder(R.drawable.waiting)
+                                        .error(R.drawable.error)
+                                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                                        .into(imgPrimerPuesto);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Manejar fallos al obtener la URL de descarga
+                                e.printStackTrace();
+                            }
+                        });
+                        break;
+                    case 1:
+                        txtSegundoPuesto.setText(nombreProducto);
+                        storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(urlProducto);
+                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                // Cargar la imagen en el ImageView utilizando Glide
+                                Glide.with(getApplicationContext())
+                                        .load(uri.toString())
+                                        .placeholder(R.drawable.waiting)
+                                        .error(R.drawable.error)
+                                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                                        .into(imgSegundoPuesto);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Manejar fallos al obtener la URL de descarga
+                                e.printStackTrace();
+                            }
+                        });
+                        break;
+                    case 2:
+                        txtTercerPuesto.setText(nombreProducto);
+                        storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(urlProducto);
+                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                // Cargar la imagen en el ImageView utilizando Glide
+                                Glide.with(getApplicationContext())
+                                        .load(uri.toString())
+                                        .placeholder(R.drawable.waiting)
+                                        .error(R.drawable.error)
+                                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                                        .into(imgTercerPuesto);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Manejar fallos al obtener la URL de descarga
+                                e.printStackTrace();
+                            }
+                        });
+                        break;
+                    case 3:
+                        txtCuartoPuesto.setText(nombreProducto);
+                        storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(urlProducto);
+                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                // Cargar la imagen en el ImageView utilizando Glide
+                                Glide.with(getApplicationContext())
+                                        .load(uri.toString())
+                                        .placeholder(R.drawable.waiting)
+                                        .error(R.drawable.error)
+                                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                                        .into(imgCuartoPuesto);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Manejar fallos al obtener la URL de descarga
+                                e.printStackTrace();
+                            }
+                        });
+                        break;
+                    case 4:
+                        txtQuintoPuesto.setText(nombreProducto);
+                        storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(urlProducto);
+                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                // Cargar la imagen en el ImageView utilizando Glide
+                                Glide.with(getApplicationContext())
+                                        .load(uri.toString())
+                                        .placeholder(R.drawable.waiting)
+                                        .error(R.drawable.error)
+                                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                                        .into(imgQuintoPuesto);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Manejar fallos al obtener la URL de descarga
+                                e.printStackTrace();
+                            }
+                        });
+                        break;
+                }
             }
+        } catch (Exception e) {
+            // Manejar cualquier excepción que pueda ocurrir al mostrar los detalles del producto
+            e.printStackTrace();
         }
     }
+
 }

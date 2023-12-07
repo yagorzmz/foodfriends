@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">foodfriends</string>
-    <string name="username">Username</string>
-    <string name="password">Password</string>
+    <string name="username">Usuario</string>
+    <string name="password">Contraseña</string>
     <string name="bienvenido_a_food_friends">¡Bienvenido a Food Friends!</string>
     <string name="todo">TODO</string>
     <string name="entrar">Entrar</string>
-    <string name="register">Register</string>
-    <string name="login">Login</string>
+    <string name="register">Registrarse</string>
+    <string name="login">Iniciar Sesión</string>
     <string name="email">Email</string>
     <string name="nombre">Nombre</string>
     <string name="eres_nuevo_registrate_aqu">¿Eres nuevo? Registrate aquí</string>

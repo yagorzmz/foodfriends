@@ -28,10 +28,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
+/**
+ * La clase ProductoActivity permite al usuario añadir el producto
+ * seleccionado previamente al carrito, escogiendo la cantidad del
+ * producto (max 5 unidades)
+ */
 public class ProductoActivity extends AppCompatActivity
 {
-
+    //Elementos
     private static final int CANTIDAD_MINIMA = 1;
     private static final int CANTIDAD_MAXIMA = 5;
     private int cantidadActual=1;
@@ -66,6 +70,7 @@ public class ProductoActivity extends AppCompatActivity
         btnRestarCantidad=findViewById(R.id.btnBajarCantidad);
         txtCantidadProducto=findViewById(R.id.txtCantidadProducto);
 
+        //Metodo que incrementa las unidades escogidas del producto
         btnSumarCantidad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,13 +78,14 @@ public class ProductoActivity extends AppCompatActivity
             }
         });
 
+        //Metodo que decrementa las unidades escogidas del producto
         btnRestarCantidad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 decrementarCantidad();
             }
         });
-        // Configuración del clic del botón
+        //Metodo que añade el prodcuto al carrito
         btnAgregarAlCarrito.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

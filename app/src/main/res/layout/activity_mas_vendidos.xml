@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondopodio"
+    android:background="@drawable/t"
     tools:context=".Activities.MasVendidosActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -36,131 +36,134 @@
     </androidx.appcompat.widget.Toolbar>
 
     <ImageView
-        android:id="@+id/imgCuartoPuesto"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.292"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.797"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <ImageView
-        android:id="@+id/imgTercerPuesto"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.951"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.284"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <ImageView
-        android:id="@+id/imgSegundoPuesto"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.054"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.235"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <ImageView
         android:id="@+id/imgPrimerPuesto"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.414"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.168"
+        app:layout_constraintVertical_bias="0.163"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <ImageView
-        android:id="@+id/imgQuintoPuesto"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+    <TextView
+        android:id="@+id/txtCuartoPuesto"
+        android:layout_width="150dp"
+        android:layout_height="80dp"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.292"
+        app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.993"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintVertical_bias="0.775" />
 
     <TextView
         android:id="@+id/txtPrimerPuesto"
-        android:layout_width="142dp"
-        android:layout_height="30dp"
+        android:layout_width="150dp"
+        android:layout_height="80dp"
         android:text="TextView"
         android:textAlignment="center"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.318" />
+        app:layout_constraintVertical_bias="0.185" />
+
+    <TextView
+        android:id="@+id/txtTercerPuesto"
+        android:layout_width="150dp"
+        android:layout_height="80dp"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.572" />
 
     <TextView
         android:id="@+id/txtSegundoPuesto"
-        android:layout_width="137dp"
-        android:layout_height="30dp"
+        android:layout_width="150dp"
+        android:layout_height="80dp"
         android:text="TextView"
         android:textAlignment="center"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.029"
+        app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.376" />
 
+    <ImageView
+        android:id="@+id/imgTercerPuesto"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.414"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.575"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/imgQuintoPuesto"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.414"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.963"
+        tools:srcCompat="@tools:sample/avatars" />
+
     <TextView
-        android:id="@+id/txtTercerPuesto"
-        android:layout_width="134dp"
-        android:layout_height="21dp"
+        android:id="@+id/txtQuintoPuesto"
+        android:layout_width="150dp"
+        android:layout_height="80dp"
         android:text="TextView"
         android:textAlignment="center"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.414" />
+        app:layout_constraintVertical_bias="0.953" />
 
-    <TextView
-        android:id="@+id/txtCuartoPuesto"
-        android:layout_width="177dp"
-        android:layout_height="27dp"
-        android:text="TextView"
-        android:textSize="16sp"
+    <ImageView
+        android:id="@+id/imgSegundoPuesto"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.931"
+        app:layout_constraintHorizontal_bias="0.414"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.762" />
+        app:layout_constraintVertical_bias="0.372"
+        tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
-        android:id="@+id/txtQuintoPuesto"
-        android:layout_width="177dp"
-        android:layout_height="27dp"
-        android:text="TextView"
-        android:textSize="16sp"
+    <ImageView
+        android:id="@+id/imgCuartoPuesto"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.931"
+        app:layout_constraintHorizontal_bias="0.414"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.904" />
+        app:layout_constraintVertical_bias="0.781"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/txtTitulo"

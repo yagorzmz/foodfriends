@@ -55,17 +55,21 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class CarritoActivity extends AppCompatActivity implements AdaptadorLineasPedidos.OnLineaPedidoChangeListener
-{
+/**
+ * La clase CarritoActivity muestra todos los productos añadidos al carrito
+ * con sus unidades, el repcio de cada linea de pedido y el precio total del pedido
+ */
+public class CarritoActivity extends AppCompatActivity implements AdaptadorLineasPedidos.OnLineaPedidoChangeListener {
     // Definición de variables de la clase
     private static final String CHANNEL_ID = "mi_canal_de_notificaciones";
     private static double totalConGastosEnvio;
     private androidx.appcompat.widget.Toolbar toolbar;
-    ListView listViewLineasPedido;
-    private Button btnRealizarPedido;
+    static ListView listViewLineasPedido;
+    private static Button btnRealizarPedido;
     static AdaptadorLineasPedidos adapter;
     static List<LineaPedidoTemp> listaLineasPedidosTemp;
-    TextView txtTotalPedido, txtCarritoVacio;
+    static TextView txtTotalPedido;
+    static TextView txtCarritoVacio;
     ImageView iconoToolbar;
 
     @Override
@@ -85,9 +89,28 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         txtTotalPedido = findViewById(R.id.txtTotalPedido);
         txtCarritoVacio = findViewById(R.id.txtCarritoVacio);
 
+        actualizarCarrito();
         // Crear el canal de notificaciones al inicio de la actividad.
         crearCanalNotificacion();
 
+        listViewLineasPedido.setAdapter(adapter);
+
+        // Configuramos el listener para el botón de realizar pedido.
+        btnRealizarPedido.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listaLineasPedidosTemp.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "No hay productos para realizar el pedido", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Mostramos un diálogo de confirmación antes de realizar el pedido.
+                    mostrarDialogoRealizarPedido();
+                }
+            }
+        });
+    }
+
+    //Metodo que comprueba el estado del carrito, si esta vacio yo contiene lineas de pedido
+    private void actualizarCarrito() {
         // Comprobamos si el carrito está vacío.
         if (listaLineasPedidosTemp.isEmpty()) {
             // Si está vacío, mostramos un mensaje y ocultamos elementos.
@@ -101,53 +124,44 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             txtCarritoVacio.setVisibility(View.GONE);
             listViewLineasPedido.setAdapter(adapter);
         }
-
-        // Configuramos el listener para el botón de realizar pedido.
-        btnRealizarPedido.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Mostramos un diálogo de confirmación antes de realizar el pedido.
-                mostrarDialogoRealizarPedido();
-            }
-        });
     }
 
+    //Metodo que va calculando el precio a pagar del pedido
     private void actualizarTotal() {
-            double totalSinIVA = 0.0;
+        double totalSinIVA = 0.0;
 
-            // Calcular el total sin IVA sumando los precios de cada línea
-            for (LineaPedidoTemp lineaPedido : listaLineasPedidosTemp) {
-                totalSinIVA += lineaPedido.calcularPrecioTotal();
-            }
+        // Calcular el total sin IVA sumando los precios de cada línea
+        for (LineaPedidoTemp lineaPedido : listaLineasPedidosTemp) {
+            totalSinIVA += lineaPedido.calcularPrecioTotal();
+        }
 
-            double totalIVA = totalSinIVA * 0.21;
-            double totalConIVA = totalSinIVA + totalIVA;
+        double totalIVA = totalSinIVA * 0.21;
+        double totalConIVA = totalSinIVA + totalIVA;
 
-            // Calcular el envío según las reglas especificadas
-            double costeEnvio = 0.0;
-            if (totalSinIVA < 10) {
-                costeEnvio = 3.5;
-            } else if (totalSinIVA >= 10 && totalSinIVA <= 20) {
-                costeEnvio = 2.5;
-            } else if (totalSinIVA > 20) {
-                costeEnvio = 1.5;
-            }
+        // Calcular el envío según las reglas especificadas
+        double costeEnvio = 0.0;
+        if (totalSinIVA < 10) {
+            costeEnvio = 3.5;
+        } else if (totalSinIVA >= 10 && totalSinIVA <= 20) {
+            costeEnvio = 2.5;
+        } else if (totalSinIVA > 20) {
+            costeEnvio = 1.5;
+        }
 
-            totalConGastosEnvio = totalConIVA + costeEnvio;
+        totalConGastosEnvio = totalConIVA + costeEnvio;
 
-            // Crear el mensaje con el formato deseado
-            StringBuilder mensaje = new StringBuilder();
-            mensaje.append("Precio pedido sin IVA = ").append(formatearPrecio(totalSinIVA)).append("€\n");
-            mensaje.append("IVA adicional = ").append(formatearPrecio(totalIVA)).append("€\n");
-            mensaje.append("Coste de envío = ").append(formatearPrecio(costeEnvio)).append("€\n");
-            mensaje.append("Total pedido = ").append(formatearPrecio(totalConGastosEnvio)).append("€");
+        // Crear el mensaje con el formato deseado
+        StringBuilder mensaje = new StringBuilder();
+        mensaje.append("Precio pedido sin IVA = ").append(formatearPrecio(totalSinIVA)).append("€\n");
+        mensaje.append("IVA adicional = ").append(formatearPrecio(totalIVA)).append("€\n");
+        mensaje.append("Coste de envío = ").append(formatearPrecio(costeEnvio)).append("€\n");
+        mensaje.append("Total pedido = ").append(formatearPrecio(totalConGastosEnvio)).append("€");
 
-            // Mostrar el mensaje
-            TextView txtTotal = findViewById(R.id.txtTotalPedido);
-            txtTotal.setText(mensaje.toString());
-
-
+        // Mostrar el mensaje
+        TextView txtTotal = findViewById(R.id.txtTotalPedido);
+        txtTotal.setText(mensaje.toString());
     }
+
     //Inflamos el menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -158,7 +172,6 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         if (item != null) {
             item.setEnabled(false);
         }
-
         return true;
     }
 
@@ -197,37 +210,41 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         DecimalFormat formato = new DecimalFormat("#.##");
         return formato.format(precio);
     }
+
     @Override
     public void onLineaPedidoChanged() {
         actualizarTotal();
     }
+
     @Override
     public void onEliminarLineaPedido(int position) {
-
         // Implementar la lógica para eliminar la línea de pedido en la posición indicada
         listaLineasPedidosTemp.remove(position);
 
+        // Actualizar el total después de eliminar una línea de pedido
+        actualizarTotal();
+
         // Verificar si la lista está vacía después de la eliminación
-        //Comprobamos si el carrito está vacio
         if (listaLineasPedidosTemp.isEmpty()) {
-            // La lista está vacía, muestra el TextView "CARRITO VACIO" y oculta otros elementos
-            txtCarritoVacio.setVisibility(View.VISIBLE);
-            listViewLineasPedido.setVisibility(View.GONE);
-            btnRealizarPedido.setVisibility(View.GONE);
-            txtTotalPedido.setVisibility(View.GONE);
-        }
-         else
-         {
+            carritoVacio();
+        } else {
             // La lista no está vacía, configura el adaptador y muestra los elementos
             listViewLineasPedido.setAdapter(adapter);
             btnRealizarPedido.setVisibility(View.VISIBLE);
         }
+
         // Notificar al adaptador que los datos han cambiado
         adapter.notifyDataSetChanged();
-
-        // Actualizar el total después de eliminar una línea de pedido
-        actualizarTotal();
     }
+
+    // La lista está vacía, muestra el TextView "CARRITO VACIO" y oculta otros elementos
+    private static void carritoVacio() {
+        txtCarritoVacio.setVisibility(View.VISIBLE);
+        listViewLineasPedido.setVisibility(View.GONE);
+        btnRealizarPedido.setVisibility(View.GONE);
+        txtTotalPedido.setVisibility(View.GONE);
+    }
+
     //Metodo que muestra al usuario un dialogo para que elija el tiempo en que quiere
     //recibir el pedido
     private void mostrarOpcionesTiempoEntrega() {
@@ -248,20 +265,23 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Selecciona el tiempo de entrega")
                 .setItems(opcionesTiempo.toArray(new String[0]), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        long milisegundos=0;
-                        switch (which)
-                        {
-                            case 0:milisegundos=convertirMinutosAMilisegundos(1);
+                    public void onClick(DialogInterface dialog, int which) {
+                        long milisegundos = 0;
+                        switch (which) {
+                            case 0:
+                                milisegundos = convertirMinutosAMilisegundos(1);
                                 break;
-                            case 1:milisegundos=convertirMinutosAMilisegundos(45);
+                            case 1:
+                                milisegundos = convertirMinutosAMilisegundos(45);
                                 break;
-                            case 2:milisegundos=convertirMinutosAMilisegundos(60);
+                            case 2:
+                                milisegundos = convertirMinutosAMilisegundos(60);
                                 break;
-                            case 3:milisegundos=convertirMinutosAMilisegundos(75);
+                            case 3:
+                                milisegundos = convertirMinutosAMilisegundos(75);
                                 break;
-                            case 4:milisegundos=convertirMinutosAMilisegundos(90);
+                            case 4:
+                                milisegundos = convertirMinutosAMilisegundos(90);
                                 break;
                         }
                         //Mostramos un dialogo para avisar al usuario de que le pedido se esta realizando
@@ -272,9 +292,9 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
                 });
         builder.create().show();
     }
+
     //Mostramos un cuadro de dialogo para preguntar si realmente quiere hacer el pedido
     private void mostrarDialogoRealizarPedido() {
-        // Crear y configurar el diálogo de confirmación
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Confirmación de Pedido")
                 .setMessage("¿Estás seguro de que deseas realizar el pedido?")
@@ -292,15 +312,13 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
                 })
                 .show();
     }
+
     //Metodo que programa cuando enviar la notificacion de confirmacion de entrega de pedido
     private void programarNotificacionDespuesDe(long milisegundos) {
-        // Creamos un Handler en el hilo principal
         Handler handler = new Handler(Looper.getMainLooper());
-
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Metodo para mostrar la notificación
                 mostrarNotificacion();
             }
         }, milisegundos);
@@ -320,6 +338,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         }
     }
 
+    //Metodo que muestra la notificacion de confirmacion al usuario
     private void mostrarNotificacion() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Confirmacion de entrega de pedido";
@@ -355,9 +374,12 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             notificationManager.notify(1, builder.build());
         }
     }
+
+    //Metodo que pasa minutos a milisegundos
     public static long convertirMinutosAMilisegundos(int minutos) {
         return minutos * 60 * 1000L;
     }
+
     // Método para obtener la hora en formato HH:mm
     private String obtenerTiempoFormateado(int hora, int minuto) {
         Calendar cal = Calendar.getInstance();
@@ -367,7 +389,11 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         SimpleDateFormat formato = new SimpleDateFormat("HH:mm");
         return formato.format(cal.getTime());
     }
+
+    //Método que registra el pedido y las lineas del pedido una vez confirmado el pedido
     public static void registrarPedidoYLineasPedido() {
+        // Limpiar la lista de líneas de pedidos
+        listaLineasPedidosTemp.clear();
 
         // Configuración de Firebase
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");
@@ -410,11 +436,16 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
 
             // Actualizar el campo NumeroVentas del producto
             actualizarNumeroVentas(lineaPedidoTemp.getIdProducto());
-            // Supongamos que `listaLineasPedidosTemp` es tu carrito de compra
-            listaLineasPedidosTemp.clear();
-            adapter.notifyDataSetChanged();
         }
+
+        // Limpiar la lista y notificar al adaptador después de procesar todas las líneas de pedido
+        listaLineasPedidosTemp.clear();
+        adapter.notifyDataSetChanged();
+        carritoVacio();
     }
+
+    //Muestra el dialogo al usuario de que el pedido se esta realizando y deberá
+    //confirmar su entrega
     private void mostrarDialogoEnMarcha() {
         // Crear y configurar el diálogo
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -427,44 +458,44 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
                 });
         builder.create().show();
     }
+
+    //Metodo que suma el numero de ventas de cada producto en la base de datos
     private static void actualizarNumeroVentas(String productoId) {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");
-        DatabaseReference productosReference = firebaseDatabase.getReference("Productos");
+        try {
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");
+            DatabaseReference productosReference = firebaseDatabase.getReference("Productos");
 
-        // Obtener el valor actual de NumeroVentas
-        productosReference.child(productoId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    // Obtener el valor actual de NumeroVentas
-                    Long numeroVentasActual = (Long) snapshot.child("NumeroVentas").getValue();
+            // Obtener el valor actual de NumeroVentas
+            productosReference.child(productoId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        // Obtener el valor actual de NumeroVentas
+                        Long numeroVentasActual = (Long) snapshot.child("NumeroVentas").getValue();
 
-                    // Incrementar el valor de NumeroVentas
-                    long nuevoNumeroVentas = numeroVentasActual + 1;
+                        // Incrementar el valor de NumeroVentas
+                        long nuevoNumeroVentas = numeroVentasActual + 1;
 
-                    // Actualizar el campo NumeroVentas en la base de datos
-                    productosReference.child(productoId).child("NumeroVentas").setValue(nuevoNumeroVentas);
+                        // Actualizar el campo NumeroVentas en la base de datos
+                        productosReference.child(productoId).child("NumeroVentas").setValue(nuevoNumeroVentas);
 
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Manejar errores si es necesario
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(adapter.getContext(), "Ha ocurrido un error en el calculo del precio", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(adapter.getContext(), "Ha ocurrido un error en el calculo del precio", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Método para obtener la fecha actual en un formato específico (puedes ajustar esto según tus necesidades)
     private static String obtenerFechaActual() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         return sdf.format(new Date());
-    }
-
-    // Método de ejemplo para obtener la lista de líneas de pedido del RecyclerView
-    private List<LineaPedido> obtenerListaLineasPedido() {
-        // Supongamos que obtienes la lista de líneas de pedido del RecyclerView de algún lugar
-        return new ArrayList<>();
     }
 
 }

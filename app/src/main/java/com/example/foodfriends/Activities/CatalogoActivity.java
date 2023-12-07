@@ -23,9 +23,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * La clase CatalogoActivity muestra todo el catalogo de la empresa seleccionada
+ * pudiendo así escoger el usuaripo que producto quiere añadir al carrito
+ */
 public class CatalogoActivity extends AppCompatActivity implements AdaptadorProductos.OnItemClickListener{
 
+    //Elementos
     private androidx.appcompat.widget.Toolbar toolbar;
     RecyclerView recycler;
     private FirebaseDatabase firebaseDatabase;
@@ -93,40 +97,47 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
         recyclerView.setAdapter(adaptadorProductos);
     }
     // Método que añade en una lista las empresas de la base de datos
-    private void cargarProductos(String idEmpresa,final CatalogoActivity.OnDataLoadedListener listener) {
-        productosReference.orderByChild("EmpresaId").equalTo(idEmpresa).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                listaProductos = new ArrayList<>();
+    private void cargarProductos(String idEmpresa, final CatalogoActivity.OnDataLoadedListener listener) {
+        try {
+            productosReference.orderByChild("EmpresaId").equalTo(idEmpresa).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    listaProductos = new ArrayList<>();
 
-                // Iterar sobre los productos en la base de datos
-                for (DataSnapshot productoSnapshot : dataSnapshot.getChildren()) {
-                    // Obtener los datos del producto desde la base de datos
-                    String id = productoSnapshot.getKey();
-                    String nombreProducto = (String) productoSnapshot.child("NombreProducto").getValue();
-                    String descripcionProducto= (String) productoSnapshot.child("Descripcion").getValue();
-                    String empresaId = (String) productoSnapshot.child("EmpresaId").getValue();
-                    Double precio= (Double) productoSnapshot.child("Precio").getValue();
-                    String urlProducto = (String) productoSnapshot.child("urlProducto").getValue();
+                    // Iterar sobre los productos en la base de datos
+                    for (DataSnapshot productoSnapshot : dataSnapshot.getChildren()) {
+                        // Obtener los datos del producto desde la base de datos
+                        String id = productoSnapshot.getKey();
+                        String nombreProducto = (String) productoSnapshot.child("NombreProducto").getValue();
+                        String descripcionProducto = (String) productoSnapshot.child("Descripcion").getValue();
+                        String empresaId = (String) productoSnapshot.child("EmpresaId").getValue();
+                        Double precio = (Double) productoSnapshot.child("Precio").getValue();
+                        String urlProducto = (String) productoSnapshot.child("urlProducto").getValue();
 
-                    // Crear un objeto Producto y añadirlo a la lista
-                    Producto producto = new Producto(id, nombreProducto,descripcionProducto,empresaId,urlProducto,precio);
-                    listaProductos.add(producto);
+                        // Crear un objeto Producto y añadirlo a la lista
+                        Producto producto = new Producto(id, nombreProducto, descripcionProducto, empresaId, urlProducto, precio);
+                        listaProductos.add(producto);
+                    }
+
+                    // Notificar que los datos han sido cargados
+                    if (listener != null) {
+                        listener.onDataLoaded(listaProductos);
+                    }
+
                 }
 
-                // Notificar que los datos han sido cargados
-                if (listener != null) {
-                    listener.onDataLoaded(listaProductos);
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Manejar errores si es necesario
+                    mostrarToast(databaseError.getMessage());
                 }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Manejar errores si es necesario
-            }
-        });
+            });
+        } catch (Exception e) {
+            // Manejar cualquier excepción que pueda ocurrir al cargar los productos
+            e.printStackTrace();
+        }
     }
+
     @Override
     public void onItemClick(Producto item) {
         mostrarToast(item.getIdProducto());
@@ -188,7 +199,7 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
         // Abre la actividad del catálogo al presionar el botón de atrás
         Intent intent = new Intent(this, InicioActivity.class);
         startActivity(intent);
-        finish();  // Cierra la actividad actual
+        finish();
     }
 }
 

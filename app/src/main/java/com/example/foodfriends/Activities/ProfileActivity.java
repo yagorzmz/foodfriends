@@ -32,6 +32,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+/**
+ * La clase ProfileActivity muestra la información del usuario
+ * , cambiar su direccion de envio, su foto de perfil y su
+ * historial de pedidos,ademas de borrar su cuenta y cerrar sesión
+ */
 public class ProfileActivity extends AppCompatActivity {
 
     //Elementos
@@ -72,7 +77,7 @@ public class ProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-
+        //Metodo quie abre el hsitorial de pedidos del usuario
         btnHistorial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,7 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
                 finish();
             }
         });
-        //Si el usuario pulsa cerrar sesion
+        //Metodo que cierra sesión al usuario
         btnCerrarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,7 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
                 listaLineasPedidosTemp.clear();
             }
         });
-        //Si el usuario pulsa borrar cuenta
+        //Metodo que borra la cuenta del usuario
         btnBorrarCuenta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -100,6 +105,7 @@ public class ProfileActivity extends AppCompatActivity {
                 eliminarCuenta();
             }
         });
+        //Metodo que permite cambiar la direccion del usuario
         imgEditarDireccion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,10 +115,6 @@ public class ProfileActivity extends AppCompatActivity {
         //Actualizamos el perfil del usuario
         completarPerfil(firebaseUser.getUid());
 
-    }
-    public String obtenerDireccion() {
-        TextView txtDireccion = findViewById(R.id.txtDireccionUsuario);
-        return txtDireccion.getText().toString();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -338,7 +340,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Manejo de errores si es necesario
+                mostrarToast("No se ha podido completar el perfil");
             }
         });
     }

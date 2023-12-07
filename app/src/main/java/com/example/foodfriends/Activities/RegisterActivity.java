@@ -77,7 +77,6 @@ public class RegisterActivity extends AppCompatActivity {
 
                         try {
                             // Validamos la dirección de email
-
                             if (!validarEmail("miEmail@gmail.com")) {
                                 mostrarToast("Email no válido.");
                             } else {
