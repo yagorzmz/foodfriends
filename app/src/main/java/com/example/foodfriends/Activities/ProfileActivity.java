@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,13 +34,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 /**
- * La clase ProfileActivity muestra la información del usuario
- * , cambiar su direccion de envio, su foto de perfil y su
+ * La clase ProfileActivity muestra la información del usuario,
+ * cambiar su direccion de envio, su foto de perfil y su
  * historial de pedidos,ademas de borrar su cuenta y cerrar sesión
  */
 public class ProfileActivity extends AppCompatActivity {
 
-    //Elementos
+    //Elementos de la activity
     private androidx.appcompat.widget.Toolbar toolbar;
     String urlBase = "https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/";
     DatabaseReference europeDatabaseReference = FirebaseDatabase.getInstance(urlBase).getReference();
@@ -50,7 +51,6 @@ public class ProfileActivity extends AppCompatActivity {
     Button btnCerrarSesion,btnBorrarCuenta,btnHistorial;
     ImageView imgEditarDireccion;
     ImageView iconoToolbar;
-
 
     @SuppressLint({"MissingInflatedId", "UseSupportActionBar"})
     @Override
@@ -173,7 +173,7 @@ public class ProfileActivity extends AppCompatActivity {
         session.logout();
 
         //Volvemos a la pantalla de login
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
 
@@ -194,7 +194,7 @@ public class ProfileActivity extends AppCompatActivity {
                 String idUsuario = firebaseUser.getUid();
                 //Borra la cuenta y vuelve al Login
                 borrarUsuario(idUsuario);
-                Intent i=new Intent(getApplicationContext(),MainActivity.class);
+                Intent i=new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(i);
             }
         });
@@ -251,9 +251,14 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    //Metodo que obliga al usuario a editar la direccion para poder usar la aplicacion
+    //Método que obliga al usuario a editar la direccion para poder usar la aplicacion
     public void solicitarDireccion(String titulo, String texto) {
         final EditText input = new EditText(this);
+
+        // Configuramos el filtro para limitar la longitud del texto
+        InputFilter[] filters = new InputFilter[1];
+        filters[0] = new InputFilter.LengthFilter(46);
+        input.setFilters(filters);
 
         AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setTitle("Ingresa tu dirección")
@@ -275,8 +280,6 @@ public class ProfileActivity extends AppCompatActivity {
 
                             // Actualiza la dirección en la base de datos
                             usuariosRef.child(firebaseUser.getUid()).child("DireccionUsuario").setValue(direccion);
-
-                            // No es necesario cerrar el cuadro de diálogo aquí
                         }
                     }
                 })

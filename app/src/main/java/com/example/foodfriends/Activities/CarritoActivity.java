@@ -60,8 +60,10 @@ import java.util.Map;
  * con sus unidades, el repcio de cada linea de pedido y el precio total del pedido
  */
 public class CarritoActivity extends AppCompatActivity implements AdaptadorLineasPedidos.OnLineaPedidoChangeListener {
-    // Definición de variables de la clase
+
+    //Elementos de la activity
     private static final String CHANNEL_ID = "mi_canal_de_notificaciones";
+    private static final int NOTIFICATION_ID = 1;
     private static double totalConGastosEnvio;
     private androidx.appcompat.widget.Toolbar toolbar;
     static ListView listViewLineasPedido;
@@ -89,6 +91,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         txtTotalPedido = findViewById(R.id.txtTotalPedido);
         txtCarritoVacio = findViewById(R.id.txtCarritoVacio);
 
+        //Siempre que entremos actualizamos la situacion del carrito
         actualizarCarrito();
         // Crear el canal de notificaciones al inicio de la actividad.
         crearCanalNotificacion();
@@ -99,17 +102,22 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         btnRealizarPedido.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (listaLineasPedidosTemp.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "No hay productos para realizar el pedido", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Mostramos un diálogo de confirmación antes de realizar el pedido.
-                    mostrarDialogoRealizarPedido();
-                }
+                manejarBotonRealizarPedido();
             }
         });
     }
+    //Método que maneja la interacción con el botón realizar pedido
+    private void manejarBotonRealizarPedido() {
+        if (listaLineasPedidosTemp.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "No hay productos para realizar el pedido", Toast.LENGTH_SHORT).show();
+        } else {
+            // Mostramos un diálogo de confirmación antes de realizar el pedido.
+            mostrarDialogoRealizarPedido();
+        }
+    }
 
-    //Metodo que comprueba el estado del carrito, si esta vacio yo contiene lineas de pedido
+
+    //Método que comprueba el estado del carrito, si esta vacio yo contiene lineas de pedido
     private void actualizarCarrito() {
         // Comprobamos si el carrito está vacío.
         if (listaLineasPedidosTemp.isEmpty()) {
@@ -126,7 +134,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         }
     }
 
-    //Metodo que va calculando el precio a pagar del pedido
+    //Método que va calculando el precio a pagar del pedido
     private void actualizarTotal() {
         double totalSinIVA = 0.0;
 
@@ -138,7 +146,8 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         double totalIVA = totalSinIVA * 0.21;
         double totalConIVA = totalSinIVA + totalIVA;
 
-        // Calcular el envío según las reglas especificadas
+        //Calcular el envío según las reglas especificadas
+        //Dependiendo del coste del pedido establecemos un gasto de envío
         double costeEnvio = 0.0;
         if (totalSinIVA < 10) {
             costeEnvio = 3.5;
@@ -148,16 +157,17 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             costeEnvio = 1.5;
         }
 
+        //Precio final del pedido
         totalConGastosEnvio = totalConIVA + costeEnvio;
 
-        // Crear el mensaje con el formato deseado
+        //Crear el mensaje con el formato deseado
         StringBuilder mensaje = new StringBuilder();
         mensaje.append("Precio pedido sin IVA = ").append(formatearPrecio(totalSinIVA)).append("€\n");
         mensaje.append("IVA adicional = ").append(formatearPrecio(totalIVA)).append("€\n");
         mensaje.append("Coste de envío = ").append(formatearPrecio(costeEnvio)).append("€\n");
         mensaje.append("Total pedido = ").append(formatearPrecio(totalConGastosEnvio)).append("€");
 
-        // Mostrar el mensaje
+        //Mostrar el mensaje
         TextView txtTotal = findViewById(R.id.txtTotalPedido);
         txtTotal.setText(mensaje.toString());
     }
@@ -205,7 +215,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         return super.onOptionsItemSelected(item);
     }
 
-    // Método para formatear el precio
+    //Método para formatear el precio
     private String formatearPrecio(double precio) {
         DecimalFormat formato = new DecimalFormat("#.##");
         return formato.format(precio);
@@ -233,11 +243,11 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             btnRealizarPedido.setVisibility(View.VISIBLE);
         }
 
-        // Notificar al adaptador que los datos han cambiado
+        //Notificar al adaptador que los datos han cambiado
         adapter.notifyDataSetChanged();
     }
 
-    // La lista está vacía, muestra el TextView "CARRITO VACIO" y oculta otros elementos
+    //Método que cuando la lista está vacía, muestra el TextView "CARRITO VACIO" y oculta otros elementos
     private static void carritoVacio() {
         txtCarritoVacio.setVisibility(View.VISIBLE);
         listViewLineasPedido.setVisibility(View.GONE);
@@ -245,7 +255,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         txtTotalPedido.setVisibility(View.GONE);
     }
 
-    //Metodo que muestra al usuario un dialogo para que elija el tiempo en que quiere
+    //Método que muestra al usuario un dialogo para que elija el tiempo en que quiere
     //recibir el pedido
     private void mostrarOpcionesTiempoEntrega() {
         // Obtener la hora actual del dispositivo
@@ -269,7 +279,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
                         long milisegundos = 0;
                         switch (which) {
                             case 0:
-                                milisegundos = convertirMinutosAMilisegundos(1);
+                                milisegundos = convertirMinutosAMilisegundos(30);
                                 break;
                             case 1:
                                 milisegundos = convertirMinutosAMilisegundos(45);
@@ -313,7 +323,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
                 .show();
     }
 
-    //Metodo que programa cuando enviar la notificacion de confirmacion de entrega de pedido
+    //Método que programa cuando enviar la notificacion de confirmacion de entrega de pedido
     private void programarNotificacionDespuesDe(long milisegundos) {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(new Runnable() {
@@ -324,7 +334,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         }, milisegundos);
     }
 
-    //Metodo que crea el canal de las notificaciones
+    //Método que crea el canal de las notificaciones
     private void crearCanalNotificacion() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Confirmacion de entrega de pedido";
@@ -338,7 +348,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         }
     }
 
-    //Metodo que muestra la notificacion de confirmacion al usuario
+    //Método que muestra la notificacion de confirmacion al usuario
     private void mostrarNotificacion() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Confirmacion de entrega de pedido";
@@ -375,12 +385,12 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         }
     }
 
-    //Metodo que pasa minutos a milisegundos
+    //Método que pasa minutos a milisegundos
     public static long convertirMinutosAMilisegundos(int minutos) {
         return minutos * 60 * 1000L;
     }
 
-    // Método para obtener la hora en formato HH:mm
+    //Método para obtener la hora en formato HH:mm
     private String obtenerTiempoFormateado(int hora, int minuto) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, hora);
@@ -402,27 +412,24 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser usuarioFirebase = mAuth.getCurrentUser();
 
-        // Obtener una referencia a la base de datos de Firebase
+        //Obtenemos una referencia a la base de datos de Firebase
         DatabaseReference databaseReference = firebaseDatabase.getReference();
-        // Generar un nuevo ID para el pedido utilizando push() de Firebase
+        //Generar un nuevo ID para el pedido utilizando push() de Firebase
         String nuevoPedidoId = databaseReference.child("Pedidos").push().getKey();
-        // Obtener la fecha actual
         String fechaPedido = obtenerFechaActual();
-        //ID del cliente
         String clienteId = usuarioFirebase.getUid();
-        // Supongamos que ya has calculado el precio total
         double precioTotal = totalConGastosEnvio;
 
-        // Crear un mapa para contener los datos del pedido
+        //Creamos un mapa para contener los datos del pedido
         Map<String, Object> pedidoData = new HashMap<>();
         pedidoData.put("FechaPedido", fechaPedido);
         pedidoData.put("PrecioTotal", precioTotal);
         pedidoData.put("ClienteId", clienteId);
 
-        // Registrar pedido en DB
+        //Registramos pedido en DB
         pedidosReference.child(nuevoPedidoId).setValue(pedidoData);
 
-        // Registrar cada línea de pedido en la base de datos
+        //Registramos cada línea de pedido en la base de datos
         for (LineaPedidoTemp lineaPedidoTemp : listaLineasPedidosTemp) {
             String idLineaPedido = lineaspedidosReference.push().getKey();
             // Crear un mapa para contener los datos de la línea de pedido
@@ -431,14 +438,14 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             lineaData.put("ProductoId", lineaPedidoTemp.getIdProducto());
             lineaData.put("Unidades", lineaPedidoTemp.getUnidades());
 
-            // Registrar línea en DB
+            //Registramos línea en DB
             lineaspedidosReference.child(idLineaPedido).setValue(lineaData);
 
-            // Actualizar el campo NumeroVentas del producto
+            //Actualizamos el campo NumeroVentas del producto
             actualizarNumeroVentas(lineaPedidoTemp.getIdProducto());
         }
 
-        // Limpiar la lista y notificar al adaptador después de procesar todas las líneas de pedido
+        //Limpiamos la lista y notificar al adaptador después de procesar todas las líneas de pedido
         listaLineasPedidosTemp.clear();
         adapter.notifyDataSetChanged();
         carritoVacio();
@@ -459,24 +466,24 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         builder.create().show();
     }
 
-    //Metodo que suma el numero de ventas de cada producto en la base de datos
+    //Método que suma el numero de ventas de cada producto en la base de datos
     private static void actualizarNumeroVentas(String productoId) {
         try {
             FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");
             DatabaseReference productosReference = firebaseDatabase.getReference("Productos");
 
-            // Obtener el valor actual de NumeroVentas
+            //Obtenemos el valor actual de NumeroVentas
             productosReference.child(productoId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
-                        // Obtener el valor actual de NumeroVentas
+                        //Obtenemos el valor actual de NumeroVentas
                         Long numeroVentasActual = (Long) snapshot.child("NumeroVentas").getValue();
 
-                        // Incrementar el valor de NumeroVentas
+                        //Incrementamos el valor de NumeroVentas
                         long nuevoNumeroVentas = numeroVentasActual + 1;
 
-                        // Actualizar el campo NumeroVentas en la base de datos
+                        //Actualizamos el campo NumeroVentas en la base de datos
                         productosReference.child(productoId).child("NumeroVentas").setValue(nuevoNumeroVentas);
 
                     }
@@ -492,7 +499,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         }
     }
 
-    // Método para obtener la fecha actual en un formato específico (puedes ajustar esto según tus necesidades)
+    //Método para obtener la fecha actual en un formato específico (puedes ajustar esto según tus necesidades)
     private static String obtenerFechaActual() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         return sdf.format(new Date());

@@ -81,10 +81,10 @@
                 android:id="@+id/txtNumeroPedido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/_1"
                 android:textAlignment="center"
-                android:textSize="40sp" />
+                android:textSize="35sp" />
         </LinearLayout>
 
     </RelativeLayout>

@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class InicioActivity extends AppCompatActivity implements AdaptadorEmpresas.OnItemClickListener {
 
-    // Elementos
+    //Elementos de la activity
     private static final int REQUEST_FILTRO = 1;
     private androidx.appcompat.widget.Toolbar toolbar;
     RecyclerView recycler;
@@ -43,20 +43,18 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
     private SearchView searchview;
     ImageView iconoToolbar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inicio);
 
-        // Configuración de la barra de herramientas
+        //Configuración de la barra de herramientas
         toolbar = findViewById(R.id.toolbar7);
         setSupportActionBar(toolbar);
         iconoToolbar = findViewById(R.id.iconoToolbar);
-        // Eliminar el título del Toolbar
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        recycler = findViewById(R.id.recyclerView);
 
+        recycler = findViewById(R.id.recyclerView);
         searchview = findViewById(R.id.buscador);
         searchview.clearFocus();
 
@@ -75,15 +73,15 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
             }
         });
 
-        // Configuración de Firebase
+        //Configuración de Firebase
         firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");
         empresasReference = firebaseDatabase.getReference("Empresas");
 
-        // Iniciar la carga de empresas desde Firebase
+        //Iniciamos la carga de empresas desde Firebase
         cargarEmpresas(new OnDataLoadedListener() {
             @Override
             public void onDataLoaded(List<Empresa> listaEmpresas) {
-                // Cargamos el RecyclerView
+                //Cargamos el RecyclerView
                 init(listaEmpresas);
             }
         });
@@ -95,19 +93,18 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menuprincipal, menu);
 
-        // Deshabilita el ítem del menú correspondiente a esta actividad
+        //Deshabilita el ítem del menú correspondiente a esta actividad
         MenuItem item = menu.findItem(R.id.item_inicio);
         if (item != null) {
             item.setEnabled(false);
         }
-
         return true;
     }
 
     //Recogemos los items del menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Manejar las opciones del menú
+        //Manejamos las opciones del menú
         int id = item.getItemId();
         if (id == R.id.item_carrito) {
             // Iniciar la actividad del Carrito
@@ -134,14 +131,14 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
         return super.onOptionsItemSelected(item);
     }
 
-    // Método que inicia el RecyclerView
+    //Método que inicia el RecyclerView
     public void init(List<Empresa> listaEmpresas) {
         adaptadorEmpresas = new AdaptadorEmpresas(listaEmpresas, this, new AdaptadorEmpresas.OnItemClickListener() {
 
-            //Metodo onClick de las empresas
+            //Método onClick de las empresas
             @Override
             public void onItemClick(Empresa empresa) {
-                String idEmpresaSeleccionada = empresa.getId();  // Reemplaza con el ID real
+                String idEmpresaSeleccionada = empresa.getId();
                 Intent intent = new Intent(getApplicationContext(), CatalogoActivity.class);
                 intent.putExtra("idEmpresaSeleccionada", idEmpresaSeleccionada);
                 startActivity(intent);
@@ -152,11 +149,11 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Establecer el adaptador correcto aquí
+        //Establecemos el adaptador
         recyclerView.setAdapter(adaptadorEmpresas);
     }
 
-    // Método que añade en una lista las empresas de la base de datos
+    //Método que añade en una lista las empresas de la base de datos
     private void cargarEmpresas(final OnDataLoadedListener listener) {
         try {
             empresasReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -164,9 +161,9 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     listaEmpresas = new ArrayList<>();
 
-                    // Iterar sobre las empresas en la base de datos
+                    //Iteramos sobre las empresas en la base de datos
                     for (DataSnapshot empresaSnapshot : dataSnapshot.getChildren()) {
-                        // Obtener los datos de la empresa desde la base de datos
+                        //Obtenemos los datos de la empresa desde la base de datos
                         String id = empresaSnapshot.getKey();
                         String urlLogo = empresaSnapshot.child("LogoEmpresa").getValue(String.class);
                         String direccion = empresaSnapshot.child("DireccionEmpresa").getValue(String.class);
@@ -199,29 +196,29 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
         }
     }
 
-    //Metodo que filtra las empresas mediante el searcher
+    //Método que filtra las empresas mediante el searcher
     private void filterList(String texto) {
-        // Creamos una nueva lista para almacenar los elementos filtrados
+        //Creamos una nueva lista para almacenar los elementos filtrados
         List<Empresa> listaFiltrada = new ArrayList<>();
 
-        // Iteramos a través de la lista original de empresas
+        //Iteramos a través de la lista original de empresas
         for (Empresa empresa : listaEmpresas) {
-            // Comprobamos si el nombre de la empresa contiene el texto de búsqueda (ignorando mayúsculas/minúsculas)
+            //Comprobamos si el nombre de la empresa contiene el texto de búsqueda (ignorando mayúsculas/minúsculas)
             if (empresa.getNombreEmpresa().toLowerCase().contains(texto.toLowerCase())) {
-                // Si se encuentra una coincidencia, agregar la empresa a la lista filtrada
+                //Si se encuentra una coincidencia, agregar la empresa a la lista filtrada
                 listaFiltrada.add(empresa);
             }
         }
 
-        // Verificamos si la lista filtrada está vacía
+        //Verificamos si la lista filtrada está vacía
         if (listaFiltrada.isEmpty()) {
-            // Mostrar un mensaje Toast indicando que no se encontraron resultados
+            //Mostramos un mensaje Toast indicando que no se encontraron resultados
             Toast.makeText(this, "No se ha encontrado el restaurante", Toast.LENGTH_SHORT).show();
         } else {
-            // Si hay resultados, actualizamos el adaptador con la nueva lista filtrada
+            //Si hay resultados, actualizamos el adaptador con la nueva lista filtrada
             adaptadorEmpresas.setFilteredList(listaFiltrada);
 
-            // Notificamos al adaptador que los datos han cambiado para que actualice la vista
+            //Notificamos al adaptador que los datos han cambiado para que actualice la vista
             adaptadorEmpresas.notifyDataSetChanged();
         }
     }
@@ -232,12 +229,12 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
         mostrarToast(item.getNombreEmpresa());
     }
 
-    // Interfaz para manejar la carga de datos
+    //Interfaz para manejar la carga de datos
     public interface OnDataLoadedListener {
         void onDataLoaded(List<Empresa> lista);
     }
 
-    //Metodo que muestra mensajes personalizados
+    //Método que muestra mensajes personalizados
     private void mostrarToast(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
     }

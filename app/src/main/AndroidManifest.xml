@@ -64,7 +64,7 @@
             android:name=".Activities.AcercaDeActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".Activities.LoginActivity"
             android:exported="true"
             android:noHistory="true">
             <intent-filter>

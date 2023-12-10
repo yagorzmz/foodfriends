@@ -35,7 +35,7 @@ import com.google.firebase.storage.StorageReference;
  */
 public class ProductoActivity extends AppCompatActivity
 {
-    //Elementos
+    //Elementos de la activity
     private static final int CANTIDAD_MINIMA = 1;
     private static final int CANTIDAD_MAXIMA = 5;
     private int cantidadActual=1;
@@ -206,21 +206,22 @@ public class ProductoActivity extends AppCompatActivity
     private void mostrarToast(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
     }
+    //Metodo que actualiza la cantidad elegida del producto
     private void actualizarCantidad() {
         txtCantidadProducto.setText(String.valueOf(cantidadActual));
         btnRestarCantidad.setEnabled(cantidadActual > CANTIDAD_MINIMA);
         btnSumarCantidad.setEnabled(cantidadActual < CANTIDAD_MAXIMA);
     }
+    //Metodo que incrementa la cantidad del producto
     private void incrementarCantidad() {
         if (cantidadActual < CANTIDAD_MAXIMA) {
             cantidadActual++;
         }
         actualizarCantidad();
     }
-
+    //Metodo que decrementa la cantidad del producto
     private void decrementarCantidad()
     {
-
         if (cantidadActual > CANTIDAD_MINIMA) {
             cantidadActual--;
             actualizarCantidad();

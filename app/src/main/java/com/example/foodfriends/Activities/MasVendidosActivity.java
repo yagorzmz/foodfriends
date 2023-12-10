@@ -53,7 +53,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class MasVendidosActivity extends AppCompatActivity {
 
-    //Elementos
+    //Elementos de la activity
     private androidx.appcompat.widget.Toolbar toolbar;
     private ImageView iconoToolbar;
     private DatabaseReference pedidosReference, lineasPedidosReference;
@@ -282,16 +282,16 @@ public class MasVendidosActivity extends AppCompatActivity {
         try {
             final List<String> idPedidos = new ArrayList<>();
 
-            // Obtener la fecha actual
+            //Obtener la fecha actual
             Calendar calendar = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             String fechaActual = sdf.format(calendar.getTime());
 
-            // Calcular la fecha de hace 7 días
+            //Calcular la fecha de hace 7 días
             calendar.add(Calendar.DAY_OF_YEAR, -6);  // Cambia a -6 para incluir el día actual
             String fechaHace7Dias = sdf.format(calendar.getTime());
 
-            // Realizar la consulta con un rango de fechas
+            //Realizar la consulta con un rango de fechas
             Query query = pedidosReference.orderByChild("FechaPedido").startAt(fechaHace7Dias + " 00:00:00").endAt(fechaActual + " 23:59:59");
 
             query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -311,7 +311,7 @@ public class MasVendidosActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    // Manejar errores si es necesario
+                    Toast.makeText(getApplicationContext(), "Ha ocurrido un error. Reinicie la app", Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
@@ -340,19 +340,19 @@ public class MasVendidosActivity extends AppCompatActivity {
                                 String pedidoId = lineaSnapshot.child("PedidoId").getValue(String.class);
                                 Integer unidades = lineaSnapshot.child("Unidades").getValue(Integer.class);
                                 if (idPedido.equals(pedidoId)) {
-                                    // Sumar las unidades al producto correspondiente en el mapa
+                                    //Sumar las unidades al producto correspondiente en el mapa
                                     topProductos.put(idProducto, topProductos.getOrDefault(idProducto, 0) + unidades);
                                 }
                             }
                         }
-                        // Ordenar el mapa por valor en orden descendente para obtener el top 5
+                        //Ordenar el mapa por valor en orden descendente para obtener el top 5
                         List<Map.Entry<String, Integer>> listaOrdenada = new ArrayList<>(topProductos.entrySet());
                         listaOrdenada.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
 
-                        // Limpiar la lista antes de agregar elementos
+                        //Limpiar la lista antes de agregar elementos
                         top5Productos.clear();
 
-                        // Tomar los primeros 5 elementos o menos si no hay suficientes
+                        //Tomar los primeros 5 elementos o menos si no hay suficientes
                         int count = 0;
                         for (Map.Entry<String, Integer> entry : listaOrdenada) {
                             top5Productos.add(entry.getKey());
@@ -366,18 +366,18 @@ public class MasVendidosActivity extends AppCompatActivity {
                             listener.onProductosIdLoaded(top5Productos);
                         }
                     } catch (Exception e) {
-                        // Manejar cualquier excepción que pueda ocurrir al procesar los datos de las líneas de pedido
+                        //Manejar cualquier excepción que pueda ocurrir al procesar los datos de las líneas de pedido
                         e.printStackTrace();
                     }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    // Manejar errores si es necesario
+                    //Manejar errores si es necesario
                 }
             });
         } catch (Exception e) {
-            // Manejar cualquier excepción que pueda ocurrir al obtener el top 5 de productos
+            //Manejar cualquier excepción que pueda ocurrir al obtener el top 5 de productos
             e.printStackTrace();
         }
     }
@@ -393,15 +393,15 @@ public class MasVendidosActivity extends AppCompatActivity {
             final int index = i;
             String idProducto = top5Productos.get(i);
 
-            // Realizar la consulta para obtener detalles del producto por su ID
+            //Realizar la consulta para obtener detalles del producto por su ID
             productosReference.child(idProducto).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    // Obtener detalles del producto
+                    //Obtener detalles del producto
                     String nombreProducto = dataSnapshot.child("NombreProducto").getValue(String.class);
                     String urlProducto = dataSnapshot.child("urlProducto").getValue(String.class);
 
-                    // Mostrar detalles en las vistas correspondientes
+                    //Mostrar detalles en las vistas correspondientes
                     mostrarDetallesProducto(index, nombreProducto, urlProducto);
                 }
 
@@ -417,9 +417,9 @@ public class MasVendidosActivity extends AppCompatActivity {
     private void mostrarDetallesProducto(int index, String nombreProducto, String urlProducto) {
         try {
             StorageReference storageReference;
-            // Verificar que el índice sea válido
+            //Verificar que el índice sea válido
             if (index >= 0 && index < 5) {
-                // Mostrar detalles en las vistas correspondientes
+                //Mostrar detalles en las vistas correspondientes
                 switch (index) {
                     case 0:
                         txtPrimerPuesto.setText(nombreProducto);
@@ -427,7 +427,7 @@ public class MasVendidosActivity extends AppCompatActivity {
                         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                // Cargar la imagen en el ImageView utilizando Glide
+                                //Cargar la imagen en el ImageView utilizando Glide
                                 Glide.with(getApplicationContext())
                                         .load(uri.toString())
                                         .placeholder(R.drawable.waiting)
@@ -438,7 +438,7 @@ public class MasVendidosActivity extends AppCompatActivity {
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                // Manejar fallos al obtener la URL de descarga
+                                //Manejar fallos al obtener la URL de descarga
                                 e.printStackTrace();
                             }
                         });
@@ -449,7 +449,7 @@ public class MasVendidosActivity extends AppCompatActivity {
                         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                // Cargar la imagen en el ImageView utilizando Glide
+                                //Cargar la imagen en el ImageView utilizando Glide
                                 Glide.with(getApplicationContext())
                                         .load(uri.toString())
                                         .placeholder(R.drawable.waiting)
@@ -460,7 +460,7 @@ public class MasVendidosActivity extends AppCompatActivity {
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                // Manejar fallos al obtener la URL de descarga
+                                //Manejar fallos al obtener la URL de descarga
                                 e.printStackTrace();
                             }
                         });
@@ -471,7 +471,7 @@ public class MasVendidosActivity extends AppCompatActivity {
                         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                // Cargar la imagen en el ImageView utilizando Glide
+                                //Cargar la imagen en el ImageView utilizando Glide
                                 Glide.with(getApplicationContext())
                                         .load(uri.toString())
                                         .placeholder(R.drawable.waiting)
@@ -482,7 +482,7 @@ public class MasVendidosActivity extends AppCompatActivity {
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                // Manejar fallos al obtener la URL de descarga
+                                //Manejar fallos al obtener la URL de descarga
                                 e.printStackTrace();
                             }
                         });
@@ -493,7 +493,7 @@ public class MasVendidosActivity extends AppCompatActivity {
                         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                // Cargar la imagen en el ImageView utilizando Glide
+                                //Cargar la imagen en el ImageView utilizando Glide
                                 Glide.with(getApplicationContext())
                                         .load(uri.toString())
                                         .placeholder(R.drawable.waiting)
@@ -504,7 +504,7 @@ public class MasVendidosActivity extends AppCompatActivity {
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                // Manejar fallos al obtener la URL de descarga
+                                //Manejar fallos al obtener la URL de descarga
                                 e.printStackTrace();
                             }
                         });
@@ -515,7 +515,7 @@ public class MasVendidosActivity extends AppCompatActivity {
                         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                // Cargar la imagen en el ImageView utilizando Glide
+                                //Cargar la imagen en el ImageView utilizando Glide
                                 Glide.with(getApplicationContext())
                                         .load(uri.toString())
                                         .placeholder(R.drawable.waiting)
@@ -526,7 +526,7 @@ public class MasVendidosActivity extends AppCompatActivity {
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                // Manejar fallos al obtener la URL de descarga
+                                //Manejar fallos al obtener la URL de descarga
                                 e.printStackTrace();
                             }
                         });
@@ -534,7 +534,7 @@ public class MasVendidosActivity extends AppCompatActivity {
                 }
             }
         } catch (Exception e) {
-            // Manejar cualquier excepción que pueda ocurrir al mostrar los detalles del producto
+            //Manejar cualquier excepción que pueda ocurrir al mostrar los detalles del producto
             e.printStackTrace();
         }
     }

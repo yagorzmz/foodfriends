@@ -41,7 +41,7 @@
         android:id="@+id/imgProducto2"
         android:layout_width="220dp"
         android:layout_height="220dp"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         android:src="@drawable/logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -93,11 +93,11 @@
 
     <TextView
         android:id="@+id/txtCantidadProducto"
-        android:layout_width="18dp"
-        android:layout_height="31dp"
+        android:layout_width="25dp"
+        android:layout_height="37dp"
         android:text="1"
         android:textAlignment="center"
-        android:textSize="24sp"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.648"

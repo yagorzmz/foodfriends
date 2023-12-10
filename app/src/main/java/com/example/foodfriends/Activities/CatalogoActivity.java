@@ -24,12 +24,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 /**
- * La clase CatalogoActivity muestra todo el catalogo de la empresa seleccionada
+ * La clase CatalogoActivity muestra todo el catalogo de la empresa
  * pudiendo así escoger el usuaripo que producto quiere añadir al carrito
  */
 public class CatalogoActivity extends AppCompatActivity implements AdaptadorProductos.OnItemClickListener{
 
-    //Elementos
+    //Elementos de la activity
     private androidx.appcompat.widget.Toolbar toolbar;
     RecyclerView recycler;
     private FirebaseDatabase firebaseDatabase;
@@ -42,18 +42,18 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalogo);
 
-        // Configuración de la barra de herramientas
+        //Configuración de la barra de herramientas
         toolbar = findViewById(R.id.toolbar3);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         iconoToolbar=findViewById(R.id.iconoToolbar);
         recycler=findViewById(R.id.recyclerView);
 
-        // Configuración de Firebase
+        //Configuración de Firebase
         firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");
         productosReference = firebaseDatabase.getReference("Productos");
 
-        // Recuperamos la información de la empresa enviada desde la actividad anterior
+        //Recuperamos la información de la empresa enviada desde la actividad anterior
         Intent intent = getIntent();
         if (intent != null)
         {
@@ -71,7 +71,7 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
             }
         }
     }
-    // Método que inicia el RecyclerView
+    //Método que inicia el RecyclerView
     public void init(List<Producto> listaProductos) {
         adaptadorProductos = new AdaptadorProductos(listaProductos, this,new AdaptadorProductos.OnItemClickListener(){
 
@@ -93,10 +93,10 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Establecer el adaptador correcto aquí
+        //Establecemos el adaptador correcto aquí
         recyclerView.setAdapter(adaptadorProductos);
     }
-    // Método que añade en una lista las empresas de la base de datos
+    //Método que añade en una lista las empresas de la base de datos
     private void cargarProductos(String idEmpresa, final CatalogoActivity.OnDataLoadedListener listener) {
         try {
             productosReference.orderByChild("EmpresaId").equalTo(idEmpresa).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -104,7 +104,7 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     listaProductos = new ArrayList<>();
 
-                    // Iterar sobre los productos en la base de datos
+                    //Iteramos sobre los productos en la base de datos
                     for (DataSnapshot productoSnapshot : dataSnapshot.getChildren()) {
                         // Obtener los datos del producto desde la base de datos
                         String id = productoSnapshot.getKey();
@@ -119,7 +119,7 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
                         listaProductos.add(producto);
                     }
 
-                    // Notificar que los datos han sido cargados
+                    //Notificamos que los datos han sido cargados
                     if (listener != null) {
                         listener.onDataLoaded(listaProductos);
                     }
@@ -133,7 +133,7 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
                 }
             });
         } catch (Exception e) {
-            // Manejar cualquier excepción que pueda ocurrir al cargar los productos
+            //Manejamos cualquier excepción que pueda ocurrir al cargar los productos
             e.printStackTrace();
         }
     }
@@ -143,18 +143,18 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
         mostrarToast(item.getIdProducto());
     }
 
-    // Interfaz para manejar la carga de datos
+    //Interfaz para manejar la carga de datos
     public interface OnDataLoadedListener {
         void onDataLoaded(List<Producto> lista);
     }
 
-    //Metodo que muestra mensajes personalizados
+    //Método que muestra mensajes personalizados
     private void mostrarToast(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflar el menú principal en la barra de acción
+        //Inflamos el menú principal en la barra de acción
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menuprincipal, menu);
         return true;
@@ -196,7 +196,7 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
     }
     @Override
     public void onBackPressed() {
-        // Abre la actividad del catálogo al presionar el botón de atrás
+        //Abre la actividad del catálogo al presionar el botón de atrás
         Intent intent = new Intent(this, InicioActivity.class);
         startActivity(intent);
         finish();

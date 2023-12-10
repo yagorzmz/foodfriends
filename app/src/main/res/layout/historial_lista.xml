@@ -32,7 +32,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="20sp"
                 android:text="@string/fecha_pedido"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="#FF0000" />
         </LinearLayout>
 
         <LinearLayout
@@ -46,7 +47,7 @@
             <TextView
                 android:id="@+id/txtIdPedido"
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
+                android:layout_height="37dp"
                 android:text="@string/idpedido"
                 android:textColor="@android:color/black"
                 android:textSize="14sp"
@@ -55,9 +56,9 @@
             <TextView
                 android:id="@+id/txtPrecioTotal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="29dp"
                 android:text="@string/precio_total"
-                android:textColor="#757575"
+                android:textColor="#18AA1F"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -72,10 +73,10 @@
                 android:id="@+id/txtNumeroPedido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/_1"
                 android:textAlignment="center"
-                android:textSize="40sp"
+                android:textSize="20sp"
                 tools:ignore="DuplicateIds" />
         </LinearLayout>
 

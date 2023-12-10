@@ -33,6 +33,7 @@ import java.util.List;
  */
 public class HistorialActivity extends AppCompatActivity {
 
+    //Elementos de la activity
     private androidx.appcompat.widget.Toolbar toolbar;
     private ImageView iconoToolbar;
     private ListView listViewHistorial;
@@ -44,22 +45,22 @@ public class HistorialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historial);
 
-        // Inicializa la lista de pedidos
+        //Inicializa la lista de pedidos
         listaPedidos = new ArrayList<>();
 
-        // Configuración de la barra de herramientas
+        //Configuración de la barra de herramientas
         toolbar = findViewById(R.id.toolbar7);
         setSupportActionBar(toolbar);
         iconoToolbar = findViewById(R.id.iconoToolbar);
 
-        // Elimina el título del Toolbar
+        //Elimina el título del Toolbar
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
         listViewHistorial = findViewById(R.id.listviewHistorial);
 
-        // Configurar el adaptador con la lista de pedidos
+        //Configurar el adaptador con la lista de pedidos
         adapter = new AdaptadorHistorial(this, listaPedidos);
         listViewHistorial.setAdapter(adapter);
 
@@ -68,7 +69,7 @@ public class HistorialActivity extends AppCompatActivity {
 
     }
 
-    //Metodo que recorre la tabla pedidos recuperando cada pedido del usuario actual
+    //Método que recorre la tabla pedidos recuperando cada pedido del usuario actual
     private void cargarPedidos() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");
         DatabaseReference pedidosReference = firebaseDatabase.getReference("Pedidos");
@@ -76,22 +77,22 @@ public class HistorialActivity extends AppCompatActivity {
         pedidosReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // Limpiar la lista actual de pedidos
+                //Limpiamos la lista actual de pedidos
                 listaPedidos.clear();
 
-                // Iterar sobre los nodos hijos para obtener la información de cada pedido
+                //Iteramos sobre los nodos hijos para obtener la información de cada pedido
                 for (DataSnapshot pedidoSnapshot : dataSnapshot.getChildren()) {
                     String id = pedidoSnapshot.getKey();
                     String idCliente = pedidoSnapshot.child("ClienteId").getValue(String.class);
                     Double precio = pedidoSnapshot.child("PrecioTotal").getValue(Double.class);
                     String fecha = pedidoSnapshot.child("FechaPedido").getValue(String.class);
 
-                    // Crear un objeto Pedido con la información obtenida y agregarlo a la lista
+                    //Creamos un objeto Pedido con la información obtenida y agregarlo a la lista
                     Pedido pedido = new Pedido(id, idCliente, precio, fecha);
                     listaPedidos.add(pedido);
                 }
 
-                // Notificar al adaptador que los datos han cambiado
+                //Notificamos al adaptador que los datos han cambiado
                 adapter.notifyDataSetChanged();
             }
 
@@ -102,7 +103,7 @@ public class HistorialActivity extends AppCompatActivity {
         });
     }
 
-    //Metodo que muestra un toast personalizado
+    //Método que muestra un toast personalizado
     private void mostrarToast(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
     }
@@ -145,9 +146,6 @@ public class HistorialActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
-
-
 }

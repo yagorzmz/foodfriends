@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    // Elementos de la Activity de registro
+    //Elementos de la Activity de registro
     String urlBase = "https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/";
     DatabaseReference europeDatabaseReference = FirebaseDatabase.getInstance(urlBase).getReference();
     DatabaseReference usuariosRef = europeDatabaseReference.child("Usuarios");
@@ -52,13 +52,13 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Inicialización de elementos de la interfaz
+        //Inicialización de elementos de la interfaz
         btnRegister = findViewById(R.id.btnRegister2);
         editEmail = findViewById(R.id.editEmail2);
         editPassword = findViewById(R.id.editPassword2);
         editNombre = findViewById(R.id.editNombre);
 
-        // Configuración del listener para el botón de registro
+        //Configuración del listener para el botón de registro
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,30 +76,30 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         try {
-                            // Validamos la dirección de email
+                            //Validamos la dirección de email
                             if (!validarEmail("miEmail@gmail.com")) {
                                 mostrarToast("Email no válido.");
                             } else {
-                                // Si el registro es satisfactorio...
+                                //Si el registro es satisfactorio
                                 if (task.isSuccessful()) {
                                     FirebaseUser user = firebaseAuth.getCurrentUser();
 
-                                    // Autenticación del usuario con FirebaseAuth
+                                    //Autenticación del usuario con FirebaseAuth
                                     FirebaseAuth auth = FirebaseAuth.getInstance();
 
-                                    // Obtenemos los datos ingresados por el usuario
+                                    //Obtenemos los datos ingresados por el usuario
                                     String idUsuario = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                     String nombre = editNombre.getText().toString();
                                     String correo = editEmail.getText().toString();
 
-                                    // Creamos el usuario que vamos a registrar, con la dirección en blanco ya que la escribirá posteriormente
-                                    // Establecemos por defecto una imagen de usuario, que podrá cambiar
+                                    //Creamos el usuario que vamos a registrar, con la dirección en blanco ya que la escribirá posteriormente
+                                    //Establecemos por defecto una imagen de usuario, que podrá cambiar
                                     Usuario nuevoUsuario = new Usuario(idUsuario, nombre, correo, "");
-                                    // Registramos el usuario en la base de datos
+                                    //Registramos el usuario en la base de datos
                                     registrarUsuarioBaseDatos(nuevoUsuario);
 
                                 }
-                                // Si ya se ha registrado con el mismo correo...
+                                //Si ya se ha registrado con el mismo correo...
                                 else {
                                     mostrarToast("El usuario ya ha sido registrado." +
                                             "Registrese con otro correo");
@@ -112,20 +112,20 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    // Método que valida si el usuario al registrarse introduce una dirección de email válida
+    //Método que valida si el usuario al registrarse introduce una dirección de email válida
     private boolean validarEmail(String email) {
         Pattern pattern = Patterns.EMAIL_ADDRESS;
         return pattern.matcher(email).matches();
     }
 
-    // Método que evalúa si ha escrito en todos los EditText
+    //Método que evalúa si ha escrito en todos los EditText
     private void validarCamposYRegistrar() {
         String nombre = editNombre.getText().toString().trim();
         String correo = editEmail.getText().toString().trim();
         String password = editPassword.getText().toString().trim();
 
         if (nombre.isEmpty() || correo.isEmpty() || password.isEmpty()) {
-            // Alguno de los campos está vacío, muestra un Toast de advertencia.
+            //Alguno de los campos está vacío, muestra un Toast de advertencia.
             mostrarToast("Por favor, completa todos los campos antes de registrarte.");
         } else {
             registrarUsuario();
@@ -137,22 +137,22 @@ public class RegisterActivity extends AppCompatActivity {
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
     }
 
-    // Método que registra en la base de datos el usuario
+    //Método que registra en la base de datos el usuario
     public void registrarUsuarioBaseDatos(Usuario usuario) {
         try {
-            // Obtener el ID del usuario
+            //Obtener el ID del usuario
             String idUsuario = usuario.getIdUsuario();
 
-            // Crear un mapa para contener los datos del usuario
+            //Crear un mapa para contener los datos del usuario
             Map<String, Object> userData = new HashMap<>();
             userData.put("NombreUsuario", usuario.getNombreUsuario());
             userData.put("Correo", usuario.getCorreo());
             userData.put("DireccionUsuario", usuario.getDireccionUsuario());
 
-            // Registrar usuario en DB
+            //Registrar usuario en DB
             usuariosRef.child(idUsuario).setValue(userData);
 
-            // Redirigir a la actividad de inicio después del registro
+            //Redirigir a la actividad de inicio después del registro
             Intent intent = new Intent(getApplicationContext(), InicioActivity.class);
             startActivity(intent);
         } catch (Exception e) {

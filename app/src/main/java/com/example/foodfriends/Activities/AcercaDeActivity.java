@@ -31,7 +31,7 @@ public class AcercaDeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Crear un Intent para volver a la pantalla principal (MainActivity)
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                 // Iniciar la actividad correspondiente al Intent
                 startActivity(i);
             }
