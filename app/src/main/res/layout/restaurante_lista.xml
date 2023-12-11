@@ -40,27 +40,26 @@
                 android:layout_marginBottom="4dp"
                 android:text="@string/nombre_del_restaurante"
                 android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:id="@+id/txtPrecioTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="3dp"
                 android:text="@string/tipo_de_comida"
                 android:textColor="#757575"
-                android:textSize="15sp" />
+                android:textSize="17sp" />
 
             <TextView
                 android:id="@+id/txtNumeroTelefono"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="28dp"
                 android:layout_marginTop="4dp"
-                android:layout_marginBottom="8dp"
                 android:text="Numero Telefono"
                 android:textColor="#FF0000"
-                android:textSize="15sp" />
+                android:textSize="16sp" />
 
             <RatingBar
                 android:id="@+id/ratingBarRecycler"

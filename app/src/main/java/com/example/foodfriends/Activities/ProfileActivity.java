@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.Menu;
@@ -18,13 +19,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.foodfriends.R;
 import com.example.foodfriends.Utilidades.SessionManager;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,6 +43,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.util.UUID;
 
 /**
  * La clase ProfileActivity muestra la información del usuario,
@@ -49,14 +66,33 @@ public class ProfileActivity extends AppCompatActivity {
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
     TextView txtId,txtNombre,txtCorreo,txtDireccionUsuario;
     Button btnCerrarSesion,btnBorrarCuenta,btnHistorial;
-    ImageView imgEditarDireccion;
+    ImageView imgEditarDireccion,imgPerfil;
     ImageView iconoToolbar;
+    StorageReference storageReference;
+    Uri image;
+
+    private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result.getResultCode() == RESULT_OK) {
+                if (result.getData() != null) {
+                    image = result.getData().getData();
+                    Glide.with(getApplicationContext()).load(image).into(imgPerfil);
+                }
+            } else {
+                Toast.makeText(ProfileActivity.this, "Please select an image", Toast.LENGTH_SHORT).show();
+            }
+        }
+    });
 
     @SuppressLint({"MissingInflatedId", "UseSupportActionBar"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        FirebaseApp.initializeApp(getApplicationContext());
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         // Desactivar el botón de retroceso
         if (getSupportActionBar() != null) {
@@ -72,10 +108,19 @@ public class ProfileActivity extends AppCompatActivity {
         txtCorreo=findViewById(R.id.txtCorreo);
         txtDireccionUsuario=findViewById(R.id.txtDireccionUsuario);
 
+        imgPerfil=findViewById(R.id.imgPerfil);
+
         iconoToolbar=findViewById(R.id.iconoToolbar);
         toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        imgPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         //Metodo quie abre el hsitorial de pedidos del usuario
         btnHistorial.setOnClickListener(new View.OnClickListener() {

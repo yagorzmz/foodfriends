@@ -30,15 +30,6 @@
                 <action android:name="com.example.foodfriends.ACCION_NOTIFICACION" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".Utilidades.RestartReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.example.foodfriends.RESTART_APP" />
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".Utilidades.SplashScreenActivity"
             android:exported="true">
