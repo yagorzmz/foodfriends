@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -254,7 +255,7 @@ public class ProfileActivity extends AppCompatActivity {
                         })
                         .addOnFailureListener(exception -> {
                             // Maneja los errores durante la carga de la imagen
-                            mostrarToast("Error al subir la imagen al Storage");
+                            mostrarToast("Error al subir la imagen");
                             exception.printStackTrace();
                         });
         }
@@ -266,8 +267,7 @@ public class ProfileActivity extends AppCompatActivity {
         // Actualiza el campo urlFotoPerfil en la base de datos
         usuariosRef.child(idUsuario).child("urlFotoPerfil").setValue(urlFotoPerfil)
                 .addOnSuccessListener(aVoid -> {
-                    mostrarToast("URL de la foto de perfil actualizada con éxito en la base de datos");
-                    // Puedes realizar otras acciones después de la actualización exitosa si es necesario
+                    mostrarToast("Se ha actualizado la foto con exito");
                 })
                 .addOnFailureListener(e -> {
                     mostrarToast("Error al actualizar la URL de la foto de perfil en la base de datos");
@@ -276,36 +276,65 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void subirImagenAlStorage(Uri uriImagen) {
-        // Genera un nombre único para la imagen en el Storage (puedes mejorar esto según tus necesidades)
-        String nombreImagen = "imagen_" + System.currentTimeMillis() + ".jpg";
+        // Obtiene el nombre del archivo original a partir de la URI
+        String nombreImagen = obtenerNombreArchivoDesdeUri(uriImagen);
+
+        if (nombreImagen == null) {
+            // Maneja el caso en que no se pueda obtener el nombre del archivo
+            mostrarToast("No se pudo obtener el nombre del archivo");
+            return;
+        }
+
+        // Crea una referencia en el Storage con el mismo nombre que el archivo original
         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("urlPerfiles").child(nombreImagen);
 
-        // Antes de subir la nueva imagen, elimina la imagen anterior si existe
-        eliminarImagenAnterior();
+        // Antes de subir la nueva imagen, verifica si la imagen ya existe en el Storage
+        storageReference.getDownloadUrl().addOnSuccessListener(existingUri -> {
+            //Puedes actualizar la URL en la base de datos si es necesario
+            actualizarUrlFotoPerfilEnBaseDeDatos(existingUri.toString());
+        }).addOnFailureListener(exception -> {
+            // La imagen no existe, procede a subirla
+            storageReference.putFile(uriImagen)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // La imagen se ha subido exitosamente
+                        mostrarToast("Imagen subida con éxito");
 
-        // Sube la nueva imagen al Storage
-        storageReference.putFile(uriImagen)
-                .addOnSuccessListener(taskSnapshot -> {
-                    // La imagen se ha subido exitosamente
-                    mostrarToast("Imagen subida con éxito");
+                        // Obtiene la URL de descarga de la imagen recién cargada
+                        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                            // Actualiza el campo urlFotoPerfil en la base de datos con la nueva URL
+                            actualizarUrlFotoPerfilEnBaseDeDatos(uri.toString());
+                        }).addOnFailureListener(innerException -> {
+                            // Maneja los errores al obtener la URL de descarga
+                            mostrarToast("Error al obtener la URL de descarga");
+                            innerException.printStackTrace();
+                        });
 
-                    // Obtiene la URL de descarga de la imagen recién cargada
-                    storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-                        // Actualiza el campo urlFotoPerfil en la base de datos con la nueva URL
-                        actualizarUrlFotoPerfilEnBaseDeDatos(uri.toString());
-                    }).addOnFailureListener(exception -> {
-                        // Maneja los errores al obtener la URL de descarga
-                        mostrarToast("Error al obtener la URL de descarga");
-                        exception.printStackTrace();
+                        // Puedes realizar otras acciones después de la carga exitosa si es necesario
+                    })
+                    .addOnFailureListener(innerException -> {
+                        // Maneja los errores durante la carga de la imagen
+                        mostrarToast("Error al subir la imagen al Storage");
+                        innerException.printStackTrace();
                     });
+        });
+    }
 
-                    // Puedes realizar otras acciones después de la carga exitosa si es necesario
-                })
-                .addOnFailureListener(exception -> {
-                    // Maneja los errores durante la carga de la imagen
-                    mostrarToast("Error al subir la imagen al Storage");
-                    exception.printStackTrace();
-                });
+    private String obtenerNombreArchivoDesdeUri(Uri uri) {
+        String nombreArchivo = null;
+        Cursor cursor = null;
+        try {
+            String[] projection = {MediaStore.Images.Media.DISPLAY_NAME};
+            cursor = getContentResolver().query(uri, projection, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
+                nombreArchivo = cursor.getString(columnIndex);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return nombreArchivo;
     }
     private void eliminarImagenAnterior() {
         // Obtén el ID del usuario actual
