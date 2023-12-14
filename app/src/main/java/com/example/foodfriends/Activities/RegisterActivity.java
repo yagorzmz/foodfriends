@@ -94,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                                     //Creamos el usuario que vamos a registrar, con la dirección en blanco ya que la escribirá posteriormente
                                     //Establecemos por defecto una imagen de usuario, que podrá cambiar
-                                    Usuario nuevoUsuario = new Usuario(idUsuario, nombre, correo, "");
+                                    Usuario nuevoUsuario = new Usuario(idUsuario, nombre, correo, "","gs://foodfriendsapp-f51dc.appspot.com/urlPerfiles/perfilvacio.jpg");
                                     //Registramos el usuario en la base de datos
                                     registrarUsuarioBaseDatos(nuevoUsuario);
 
@@ -148,6 +148,7 @@ public class RegisterActivity extends AppCompatActivity {
             userData.put("NombreUsuario", usuario.getNombreUsuario());
             userData.put("Correo", usuario.getCorreo());
             userData.put("DireccionUsuario", usuario.getDireccionUsuario());
+            userData.put("urlFotoPerfil", usuario.getUrlImagenUsuario());
 
             //Registrar usuario en DB
             usuariosRef.child(idUsuario).setValue(userData);

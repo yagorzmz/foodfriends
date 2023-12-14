@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.foodfriends"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.foodfriends"
@@ -55,9 +55,10 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation ("com.squareup.picasso:picasso:2.8")
     implementation ("org.greenrobot:eventbus:3.3.0")
-    implementation ("androidx.activity:activity-ktx:1.4.0")
+    implementation ("androidx.activity:activity-ktx:1.8.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
 }
