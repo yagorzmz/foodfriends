@@ -2,6 +2,7 @@ package com.example.foodfriends.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -57,6 +58,13 @@ public class RegisterActivity extends AppCompatActivity {
         editEmail = findViewById(R.id.editEmail2);
         editPassword = findViewById(R.id.editPassword2);
         editNombre = findViewById(R.id.editNombre);
+
+        // Establece un filtro para limitar el número de caracteres
+        InputFilter[] inputFilters = new InputFilter[1];
+        inputFilters[0] = new InputFilter.LengthFilter(24);
+        editEmail.setFilters(inputFilters);
+        editNombre.setFilters(inputFilters);
+        editPassword.setFilters(inputFilters);
 
         //Configuración del listener para el botón de registro
         btnRegister.setOnClickListener(new View.OnClickListener() {

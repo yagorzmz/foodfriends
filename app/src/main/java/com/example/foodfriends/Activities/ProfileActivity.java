@@ -93,9 +93,9 @@ public class ProfileActivity extends AppCompatActivity {
     DatabaseReference usuariosRef = europeDatabaseReference.child("Usuarios");
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-    TextView txtId,txtNombre,txtCorreo,txtDireccionUsuario;
-    Button btnCerrarSesion,btnBorrarCuenta,btnHistorial;
-    ImageView imgEditarDireccion,imgPerfil;
+    TextView txtId, txtNombre, txtCorreo, txtDireccionUsuario;
+    Button btnCerrarSesion, btnBorrarCuenta, btnHistorial;
+    ImageView imgEditarDireccion, imgPerfil;
     ImageView iconoToolbar;
     StorageReference storageReference;
     Uri uri;
@@ -118,16 +118,16 @@ public class ProfileActivity extends AppCompatActivity {
         btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         btnBorrarCuenta = findViewById(R.id.btnBorrarCuenta);
         btnHistorial = findViewById(R.id.btnHistorial);
-        imgEditarDireccion=findViewById(R.id.imgEditarDireccion);
-        txtId=findViewById(R.id.txtIdPedido);
-        txtNombre=findViewById(R.id.txtNombreUsuario);
-        txtCorreo=findViewById(R.id.txtCorreo);
-        txtDireccionUsuario=findViewById(R.id.txtDireccionUsuario);
+        imgEditarDireccion = findViewById(R.id.imgEditarDireccion);
+        txtId = findViewById(R.id.txtIdPedido);
+        txtNombre = findViewById(R.id.txtNombreUsuario);
+        txtCorreo = findViewById(R.id.txtCorreo);
+        txtDireccionUsuario = findViewById(R.id.txtDireccionUsuario);
 
-        imgPerfil=findViewById(R.id.imgPerfil);
+        imgPerfil = findViewById(R.id.imgPerfil);
 
-        iconoToolbar=findViewById(R.id.iconoToolbar);
-        toolbar=findViewById(R.id.toolbar);
+        iconoToolbar = findViewById(R.id.iconoToolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -145,7 +145,7 @@ public class ProfileActivity extends AppCompatActivity {
         btnHistorial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent(getApplicationContext(),HistorialActivity.class);
+                Intent i = new Intent(getApplicationContext(), HistorialActivity.class);
                 startActivity(i);
                 finish();
             }
@@ -163,8 +163,7 @@ public class ProfileActivity extends AppCompatActivity {
         //Metodo que borra la cuenta del usuario
         btnBorrarCuenta.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 //Eliminamos la cuenta
                 eliminarCuenta();
             }
@@ -173,13 +172,14 @@ public class ProfileActivity extends AppCompatActivity {
         imgEditarDireccion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                solicitarDireccion("Edita tu direccion","Introduce tu nueva direccion de envio");
+                solicitarDireccion("Edita tu direccion", "Introduce tu nueva direccion de envio");
             }
         });
         //Actualizamos el perfil del usuario
         completarPerfil(firebaseUser.getUid());
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menuprincipal, menu);
@@ -193,27 +193,23 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        int id=item.getItemId();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
 
-        if(id==R.id.item_inicio){
-            Intent i= new Intent(getApplicationContext(), InicioActivity.class);
+        if (id == R.id.item_inicio) {
+            Intent i = new Intent(getApplicationContext(), InicioActivity.class);
             startActivity(i);
             finish();
-        }
-        else if(id==R.id.item_carrito){
-            Intent i= new Intent(getApplicationContext(),CarritoActivity.class);
+        } else if (id == R.id.item_carrito) {
+            Intent i = new Intent(getApplicationContext(), CarritoActivity.class);
             startActivity(i);
             finish();
-        }
-        else if(id==R.id.item_masvendidos){
-            Intent i= new Intent(getApplicationContext(), MasVendidosActivity.class);
+        } else if (id == R.id.item_masvendidos) {
+            Intent i = new Intent(getApplicationContext(), MasVendidosActivity.class);
             startActivity(i);
             finish();
-        }
-        else if(id==R.id.item_acercade){
-            Intent i= new Intent(getApplicationContext(), AcercaDeActivity.class);
+        } else if (id == R.id.item_acercade) {
+            Intent i = new Intent(getApplicationContext(), AcercaDeActivity.class);
             startActivity(i);
             finish();
         }
@@ -221,50 +217,50 @@ public class ProfileActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     protected void onActivityResult(
             int requestCode, int resultCode, final Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != Activity.RESULT_OK) {
-            // Handle error
+            mostrarToast("Se ha producido un error al cargar la imagen");
             return;
         }
         switch (requestCode) {
             case PHOTO_PICKER_REQUEST_CODE:
-                // Get photo picker response for single select.
                 Uri uriImagenSeleccionada = data.getData();
                 imgPerfil.setImageURI(uriImagenSeleccionada);
                 subirImagenAlStorage(uriImagenSeleccionada);
                 storageReference.putFile(uriImagenSeleccionada)
                         .addOnSuccessListener(taskSnapshot -> {
-                            // La imagen se ha subido exitosamente
+                            //La imagen se ha subido exitosamente
                             mostrarToast("Imagen subida con éxito");
 
-                            // Obtiene la URL de descarga de la imagen recién cargada
+                            //Obtenemos la URL de descarga de la imagen recién cargada
                             storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-                                // Actualiza el campo urlFotoPerfil en la base de datos con la nueva URL
+                                //Actualizamos el campo urlFotoPerfil en la base de datos con la nueva URL
                                 actualizarUrlFotoPerfilEnBaseDeDatos(uri.toString());
                             }).addOnFailureListener(exception -> {
-                                // Maneja los errores al obtener la URL de descarga
+                                //Manejamos los errores al obtener la URL de descarga
                                 mostrarToast("Error al obtener la URL de descarga");
                                 exception.printStackTrace();
                             });
 
-                            // Puedes realizar otras acciones después de la carga exitosa si es necesario
                         })
                         .addOnFailureListener(exception -> {
-                            // Maneja los errores durante la carga de la imagen
+                            //Manejamos los errores durante la carga de la imagen
                             mostrarToast("Error al subir la imagen");
                             exception.printStackTrace();
                         });
         }
     }
+
     private void actualizarUrlFotoPerfilEnBaseDeDatos(String urlFotoPerfil) {
-        // Obtén el ID del usuario actual
+        //Obténemos el ID del usuario actual
         String idUsuario = firebaseUser.getUid();
 
-        // Actualiza el campo urlFotoPerfil en la base de datos
+        //Actualizamos el campo urlFotoPerfil en la base de datos
         usuariosRef.child(idUsuario).child("urlFotoPerfil").setValue(urlFotoPerfil)
                 .addOnSuccessListener(aVoid -> {
                     mostrarToast("Se ha actualizado la foto con exito");
@@ -275,105 +271,81 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
+    //Metodo que sube la imagen escogida de la galeria al storage de firebase
     private void subirImagenAlStorage(Uri uriImagen) {
-        // Obtiene el nombre del archivo original a partir de la URI
+        //Obtenemos el nombre del archivo original a partir de la URI
         String nombreImagen = obtenerNombreArchivoDesdeUri(uriImagen);
 
         if (nombreImagen == null) {
-            // Maneja el caso en que no se pueda obtener el nombre del archivo
+            //Manejamos el caso en que no se pueda obtener el nombre del archivo
             mostrarToast("No se pudo obtener el nombre del archivo");
             return;
         }
 
-        // Crea una referencia en el Storage con el mismo nombre que el archivo original
+        //Creamos una referencia en el Storage con el mismo nombre que el archivo original
         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("urlPerfiles").child(nombreImagen);
 
-        // Antes de subir la nueva imagen, verifica si la imagen ya existe en el Storage
+        //Antes de subir la nueva imagen, verificamos si la imagen ya existe en el Storage
         storageReference.getDownloadUrl().addOnSuccessListener(existingUri -> {
-            //Puedes actualizar la URL en la base de datos si es necesario
             actualizarUrlFotoPerfilEnBaseDeDatos(existingUri.toString());
         }).addOnFailureListener(exception -> {
-            // La imagen no existe, procede a subirla
+            // La imagen no existe, procedemos a subirla
             storageReference.putFile(uriImagen)
                     .addOnSuccessListener(taskSnapshot -> {
-                        // La imagen se ha subido exitosamente
+                        //La imagen se ha subido exitosamente
                         mostrarToast("Imagen subida con éxito");
 
-                        // Obtiene la URL de descarga de la imagen recién cargada
+                        //Obtenemos la URL de descarga de la imagen recién cargada
                         storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-                            // Actualiza el campo urlFotoPerfil en la base de datos con la nueva URL
+                            //Actualizamos el campo urlFotoPerfil en la base de datos con la nueva URL
                             actualizarUrlFotoPerfilEnBaseDeDatos(uri.toString());
                         }).addOnFailureListener(innerException -> {
-                            // Maneja los errores al obtener la URL de descarga
+                            //Manejamos los errores al obtener la URL de descarga
                             mostrarToast("Error al obtener la URL de descarga");
                             innerException.printStackTrace();
                         });
 
-                        // Puedes realizar otras acciones después de la carga exitosa si es necesario
                     })
                     .addOnFailureListener(innerException -> {
-                        // Maneja los errores durante la carga de la imagen
+                        //Manejamos los errores durante la carga de la imagen
                         mostrarToast("Error al subir la imagen al Storage");
                         innerException.printStackTrace();
                     });
         });
     }
 
+    // Método que obtiene el nombre de archivo de una imagen a partir de su URI
     private String obtenerNombreArchivoDesdeUri(Uri uri) {
         String nombreArchivo = null;
         Cursor cursor = null;
         try {
+            //Definimos la proyección para obtener el nombre del archivo desde el proveedor de contenidos
             String[] projection = {MediaStore.Images.Media.DISPLAY_NAME};
+
+            //Realizamos una consulta al proveedor de contenidos para obtener el nombre del archivo
             cursor = getContentResolver().query(uri, projection, null, null, null);
+
+            //Verificamos si se obtuvo un resultado y mover el cursor al primer elemento
             if (cursor != null && cursor.moveToFirst()) {
+                //Obtenemos el índice de la columna del nombre del archivo
                 int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
+
+                //Obtenemos el nombre del archivo desde el cursor
                 nombreArchivo = cursor.getString(columnIndex);
             }
         } finally {
+            //Cerramos el cursor para liberar recursos
             if (cursor != null) {
                 cursor.close();
             }
         }
+
+        //Devolvemos el nombre del archivo o null si no se pudo obtener
         return nombreArchivo;
     }
-    private void eliminarImagenAnterior() {
-        // Obtén el ID del usuario actual
-        String idUsuario = firebaseUser.getUid();
-
-        // Obtén la URL de la imagen actual en la base de datos
-        usuariosRef.child(idUsuario).child("urlFotoPerfil").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String urlFotoPerfilActual = dataSnapshot.getValue(String.class);
-                if (urlFotoPerfilActual != null && !urlFotoPerfilActual.isEmpty()) {
-                    // Si hay una URL de imagen actual, elimínala del Storage
-                    StorageReference referenciaImagenAnterior = FirebaseStorage.getInstance().getReferenceFromUrl(urlFotoPerfilActual);
-                    referenciaImagenAnterior.delete()
-                            .addOnSuccessListener(aVoid -> {
-                                // La imagen anterior se eliminó con éxito
-                                mostrarToast("Imagen anterior eliminada con éxito");
-                            })
-                            .addOnFailureListener(exception -> {
-                                // Maneja los errores al eliminar la imagen anterior
-                                mostrarToast("Error al eliminar la imagen anterior");
-                                exception.printStackTrace();
-                            });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Maneja los errores al obtener la URL de la imagen actual desde la base de datos
-                mostrarToast("Error al obtener la URL de la imagen actual");
-                databaseError.toException().printStackTrace();
-            }
-        });
-    }
-
 
     //Metodo que cierra sesion y vuelve a la pantalla de Login
-    private void cerrarSesion()
-    {
+    private void cerrarSesion() {
         //Obtenemos el usuario y erramos sesion
         FirebaseAuth.getInstance().signOut();
 
@@ -392,8 +364,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     //Método que elimina la cuenta del usuario.
-    public void eliminarCuenta()
-    {
+    public void eliminarCuenta() {
         // Mostrar un cuadro de diálogo de confirmación antes de eliminar la cuenta
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Eliminar cuenta");
@@ -406,7 +377,7 @@ public class ProfileActivity extends AppCompatActivity {
                 String idUsuario = firebaseUser.getUid();
                 //Borra la cuenta y vuelve al Login
                 borrarUsuario(idUsuario);
-                Intent i=new Intent(getApplicationContext(), LoginActivity.class);
+                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(i);
             }
         });
@@ -424,8 +395,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     //Método que borra al usuario mediante su id de la base de datos y de la autenticacion
-    public void borrarUsuario(String idUsuario)
-    {
+    public void borrarUsuario(String idUsuario) {
         // Obtener la referencia específica al usuario que se desea borrar
         DatabaseReference usuarioAEliminarRef = usuariosRef.child(idUsuario);
 
@@ -440,24 +410,18 @@ public class ProfileActivity extends AppCompatActivity {
                     // Ahora, eliminar el usuario de Firebase Authentication
                     firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task)
-                        {
-                            if (task.isSuccessful())
-                            {
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
                                 // El usuario se eliminó con éxito de Firebase Authentication
                                 mostrarToast("Usuario eliminado de la autenticación");
                                 finish(); // Cierra la actividad después de eliminar el usuario
-                            }
-                            else
-                            {
+                            } else {
                                 mostrarToast("Error al eliminar el usuario de la autenticación");
                             }
                         }
                     });
-                }
-                else
-                {
-                    mostrarToast( "Error al eliminar el usuario de la base de datos");
+                } else {
+                    mostrarToast("Error al eliminar el usuario de la base de datos");
                 }
             }
         });
@@ -526,7 +490,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     //Metodo que completa el perfil del usuario, obteniendo los datos de la base de datos
-    private void completarPerfil(String idUsuario){
+    private void completarPerfil(String idUsuario) {
         DatabaseReference usuarioRef = usuariosRef.child(idUsuario);
         // Agrega un ValueEventListener para escuchar los cambios en los datos del usuario
         usuarioRef.addValueEventListener(new ValueEventListener() {
@@ -537,7 +501,7 @@ public class ProfileActivity extends AppCompatActivity {
                     String nombre = dataSnapshot.child("NombreUsuario").getValue(String.class);
                     String correo = dataSnapshot.child("Correo").getValue(String.class);
                     String direccion = dataSnapshot.child("DireccionUsuario").getValue(String.class);
-                    String urlFotoPerfil= dataSnapshot.child("urlFotoPerfil").getValue(String.class);
+                    String urlFotoPerfil = dataSnapshot.child("urlFotoPerfil").getValue(String.class);
 
                     // Establece los valores en los TextViews
                     txtId.setText(idUsuario);
@@ -547,14 +511,13 @@ public class ProfileActivity extends AppCompatActivity {
                     // Carga la imagen de perfil desde Firebase Storage y la establece en el ImageView
                     if (urlFotoPerfil != null && !urlFotoPerfil.isEmpty()) {
                         cargarImagenPerfil(urlFotoPerfil);
-                    }
-                    else{
+                    } else {
                         mostrarToast("No se ha podido cargar la foto de perfil");
                     }
 
                     if (direccion == null || direccion.isEmpty()) {
                         // Si la dirección está en blanco o es nula, llama al método solicitarDireccion
-                        solicitarDireccion("Aviso Direccion","Debes introducir una direccion para poder " +
+                        solicitarDireccion("Aviso Direccion", "Debes introducir una direccion para poder " +
                                 "enviarte los pedidos. La dirección debe empezar por C/");
                     } else {
                         txtDireccionUsuario.setText(direccion);
@@ -568,6 +531,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
     // Método para cargar la imagen de perfil desde Firebase Storage y establecerla en el ImageView con Glide
     private void cargarImagenPerfil(String urlFotoPerfil) {
         //Obténemos una referencia al archivo en Firebase Storage
@@ -593,21 +557,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-    private void actualizarUrlFotoPerfil(String nuevaUrl) {
-        // Obtén el ID del usuario actual
-        String idUsuario = firebaseUser.getUid();
-
-        // Actualiza el campo urlFotoPerfil en la base de datos
-        usuariosRef.child(idUsuario).child("urlFotoPerfil").setValue(nuevaUrl)
-                .addOnSuccessListener(aVoid -> {
-                    mostrarToast("Imagen subida y perfil actualizado con éxito");
-                    // Puedes realizar cualquier otra acción después de la actualización exitosa
-                })
-                .addOnFailureListener(e -> {
-                    mostrarToast("Error al actualizar el perfil");
-                });
-    }
-
 
     //Metodo que muestra mensajes personalizados
     private void mostrarToast(String mensaje) {
