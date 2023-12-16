@@ -17,10 +17,12 @@ import com.example.foodfriends.Modelo.Pedido;
 import com.example.foodfriends.R;
 import com.example.foodfriends.Utilidades.AdaptadorHistorial;
 import com.example.foodfriends.Utilidades.AdaptadorLineasPedidos;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -71,28 +73,33 @@ public class HistorialActivity extends AppCompatActivity {
 
     //Método que recorre la tabla pedidos recuperando cada pedido del usuario actual
     private void cargarPedidos() {
+        // Obtenemos el ID del usuario actual de Firebase
+        String idUsuarioActual = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");
         DatabaseReference pedidosReference = firebaseDatabase.getReference("Pedidos");
 
-        pedidosReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        // Realiza la consulta para obtener los pedidos del usuario actual
+        Query query = pedidosReference.orderByChild("ClienteId").equalTo(idUsuarioActual);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //Limpiamos la lista actual de pedidos
+                // Limpia la lista actual de pedidos
                 listaPedidos.clear();
 
-                //Iteramos sobre los nodos hijos para obtener la información de cada pedido
+                // Itera sobre los nodos hijos para obtener la información de cada pedido
                 for (DataSnapshot pedidoSnapshot : dataSnapshot.getChildren()) {
                     String id = pedidoSnapshot.getKey();
                     String idCliente = pedidoSnapshot.child("ClienteId").getValue(String.class);
                     Double precio = pedidoSnapshot.child("PrecioTotal").getValue(Double.class);
                     String fecha = pedidoSnapshot.child("FechaPedido").getValue(String.class);
 
-                    //Creamos un objeto Pedido con la información obtenida y agregarlo a la lista
+                    // Crea un objeto Pedido con la información obtenida y agregarlo a la lista
                     Pedido pedido = new Pedido(id, idCliente, precio, fecha);
                     listaPedidos.add(pedido);
                 }
 
-                //Notificamos al adaptador que los datos han cambiado
+                // Notifica al adaptador que los datos han cambiado
                 adapter.notifyDataSetChanged();
             }
 

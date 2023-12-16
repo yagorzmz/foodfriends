@@ -154,10 +154,12 @@ public class ProfileActivity extends AppCompatActivity {
         btnCerrarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if(listaLineasPedidosTemp!=null){
+                    listaLineasPedidosTemp.clear();
+                }
                 //Cerramos sesion
                 cerrarSesion();
-                // Limpiar o reiniciar la lista de lineasPedidosTemp
-                listaLineasPedidosTemp.clear();
             }
         });
         //Metodo que borra la cuenta del usuario
@@ -199,24 +201,28 @@ public class ProfileActivity extends AppCompatActivity {
         if (id == R.id.item_inicio) {
             Intent i = new Intent(getApplicationContext(), InicioActivity.class);
             startActivity(i);
-            finish();
+            finish(); // Cierra la actividad actual
+            return true;
         } else if (id == R.id.item_carrito) {
             Intent i = new Intent(getApplicationContext(), CarritoActivity.class);
             startActivity(i);
             finish();
+            return true;
         } else if (id == R.id.item_masvendidos) {
             Intent i = new Intent(getApplicationContext(), MasVendidosActivity.class);
             startActivity(i);
             finish();
+            return true;
         } else if (id == R.id.item_acercade) {
             Intent i = new Intent(getApplicationContext(), AcercaDeActivity.class);
             startActivity(i);
             finish();
+            return true;
         }
-
 
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     protected void onActivityResult(
@@ -344,25 +350,24 @@ public class ProfileActivity extends AppCompatActivity {
         return nombreArchivo;
     }
 
-    //Metodo que cierra sesion y vuelve a la pantalla de Login
+    // Método que cierra sesión y vuelve a la pantalla de Login
     private void cerrarSesion() {
-        //Obtenemos el usuario y erramos sesion
+        // Obtenemos el usuario y cerramos sesión
         FirebaseAuth.getInstance().signOut();
 
-        //Mensaje que comunica al usuario que cerramos sesion
+        // Mensaje que comunica al usuario que cerramos sesión
         mostrarToast("Se ha cerrado sesión.");
 
         // Cuando el usuario cierra sesión
         SessionManager session = new SessionManager(getApplicationContext());
         session.logout();
 
-        //Volvemos a la pantalla de login
+        // Volvemos a la pantalla de login y limpiamos la pila de actividades
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-
+        finish();  // Cierra la actividad actual
     }
-
     //Método que elimina la cuenta del usuario.
     public void eliminarCuenta() {
         // Mostrar un cuadro de diálogo de confirmación antes de eliminar la cuenta

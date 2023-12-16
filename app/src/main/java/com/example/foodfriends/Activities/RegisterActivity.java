@@ -61,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Establece un filtro para limitar el número de caracteres
         InputFilter[] inputFilters = new InputFilter[1];
-        inputFilters[0] = new InputFilter.LengthFilter(24);
+        inputFilters[0] = new InputFilter.LengthFilter(36);
         editEmail.setFilters(inputFilters);
         editNombre.setFilters(inputFilters);
         editPassword.setFilters(inputFilters);
