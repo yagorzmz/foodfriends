@@ -101,6 +101,11 @@ public class HistorialActivity extends AppCompatActivity {
 
                 // Notifica al adaptador que los datos han cambiado
                 adapter.notifyDataSetChanged();
+
+                // Verifica si la lista de pedidos está vacía y muestra un Toast en consecuencia
+                if (listaPedidos.isEmpty()) {
+                    mostrarToast("No hay pedidos realizados.");
+                }
             }
 
             @Override
