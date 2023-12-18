@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.foodfriends.Modelo.Empresa;
@@ -37,6 +38,7 @@ public class HistorialActivity extends AppCompatActivity {
 
     //Elementos de la activity
     private androidx.appcompat.widget.Toolbar toolbar;
+    private TextView txtHistorialVacio;
     private ImageView iconoToolbar;
     private ListView listViewHistorial;
     private List<Pedido> listaPedidos;
@@ -49,6 +51,8 @@ public class HistorialActivity extends AppCompatActivity {
 
         //Inicializa la lista de pedidos
         listaPedidos = new ArrayList<>();
+
+        txtHistorialVacio=findViewById(R.id.txtHistorialVacio);
 
         //Configuración de la barra de herramientas
         toolbar = findViewById(R.id.toolbar7);
@@ -103,7 +107,9 @@ public class HistorialActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
 
                 // Verifica si la lista de pedidos está vacía y muestra un Toast en consecuencia
-                if (listaPedidos.isEmpty()) {
+                if (!listaPedidos.isEmpty()) {
+                    txtHistorialVacio.setVisibility(View.GONE);
+                }else{
                     mostrarToast("No hay pedidos realizados.");
                 }
             }

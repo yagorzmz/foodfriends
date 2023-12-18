@@ -365,9 +365,12 @@ public class ProfileActivity extends AppCompatActivity {
         // Volvemos a la pantalla de login y limpiamos la pila de actividades
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        // Inicia la actividad de inicio de sesión antes de cerrar la actividad actual
         startActivity(intent);
-        finish();  // Cierra la actividad actual
+        finish();  // Cierra la actividad actual después de que la nueva actividad se haya iniciado
     }
+
     //Método que elimina la cuenta del usuario.
     public void eliminarCuenta() {
         // Mostrar un cuadro de diálogo de confirmación antes de eliminar la cuenta
@@ -532,7 +535,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                mostrarToast("No se ha podido completar el perfil");
+                Log.e("FirebaseError", "Error al cargar los datos del perfil", databaseError.toException());
             }
         });
     }

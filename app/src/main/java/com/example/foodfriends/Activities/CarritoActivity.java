@@ -126,6 +126,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             listViewLineasPedido.setVisibility(View.GONE);
             btnRealizarPedido.setVisibility(View.GONE);
             txtTotalPedido.setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(),"Carrito vacio",Toast.LENGTH_SHORT).show();
         } else {
             // Si hay elementos en el carrito, configuramos el adaptador y mostramos la lista.
             adapter = new AdaptadorLineasPedidos(this, listaLineasPedidosTemp, this);

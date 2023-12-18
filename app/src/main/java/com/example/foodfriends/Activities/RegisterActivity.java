@@ -7,6 +7,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,6 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
     DatabaseReference usuariosRef = europeDatabaseReference.child("Usuarios");
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private Button btnRegister;
+    private TextView txtYaRegistrado;
     private EditText editEmail;
     private EditText editPassword;
     private EditText editNombre;
@@ -58,6 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
         editEmail = findViewById(R.id.editEmail2);
         editPassword = findViewById(R.id.editPassword2);
         editNombre = findViewById(R.id.editNombre);
+        txtYaRegistrado=findViewById(R.id.txtYaRegistrado);
 
         // Establece un filtro para limitar el número de caracteres
         InputFilter[] inputFilters = new InputFilter[1];
@@ -66,12 +69,21 @@ public class RegisterActivity extends AppCompatActivity {
         editNombre.setFilters(inputFilters);
         editPassword.setFilters(inputFilters);
 
-        //Configuración del listener para el botón de registro
+        //Click listener
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Inicia el registro del usuario
                 validarCamposYRegistrar();
+            }
+        });
+        //Click volver al inicio de sesión
+        txtYaRegistrado.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(getApplicationContext(),LoginActivity.class);
+                startActivity(i);
+                finish();
             }
         });
     }
