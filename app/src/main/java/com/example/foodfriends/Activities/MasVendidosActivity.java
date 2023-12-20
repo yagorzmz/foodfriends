@@ -11,7 +11,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,11 +65,42 @@ public class MasVendidosActivity extends AppCompatActivity {
     private TextView txtPrimerPuesto, txtSegundoPuesto, txtTercerPuesto, txtCuartoPuesto, txtQuintoPuesto;
     private ImageView imgPrimerPuesto, imgSegundoPuesto, imgTercerPuesto, imgCuartoPuesto, imgQuintoPuesto;
     private DatabaseReference productosReference;
+    private int diasSeleccionados = 7;
+    private Spinner spinnerDias;
+    private Button btnUltimos15Dias,btnUltimos30Dias;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mas_vendidos);
+
+        spinnerDias=findViewById(R.id.spinnerDias);
+        // Configuramos el adaptador para el Spinner con el array de días
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.dias_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerDias.setAdapter(adapter);
+        spinnerDias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                diasSeleccionados = obtenerNumeroDiasDesdePosicion(position);
+
+                // Llama al método para obtener pedidos de los últimos N días
+                obtenerPedidosUltimosDias(diasSeleccionados, new OnPedidosLoadedListener() {
+                    @Override
+                    public void onPedidosLoaded(List<String> idPedidos) {
+                        // Procesa los pedidos según sea necesario
+                        cargarTopProductos(); // Cambiado para pasar idPedidos a cargarTopProductos
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Toast.makeText(getApplicationContext(), "Error al cargar los productos", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         //Creamos la lista de los 5 productos mas vendidos
         top5Productos = new ArrayList<>();
@@ -74,6 +109,7 @@ public class MasVendidosActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar6);
         setSupportActionBar(toolbar);
         iconoToolbar = findViewById(R.id.iconoToolbar);
+
 
         // Eliminar el título del Toolbar
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -129,20 +165,77 @@ public class MasVendidosActivity extends AppCompatActivity {
         lineasPedidosReference = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/").getReference("LineasPedidos");
         productosReference = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Productos");
 
-        // Obtenemos los pedidos de los últimos 7 días
-        obtenerPedidosUltimos7Dias(new OnPedidosLoadedListener() {
+        cargarTopProductos();
+    }
+    //Mñetodo que obtiene el numero de dias elegido en el spinner
+    private int obtenerNumeroDiasDesdePosicion(int position) {
+        switch (position) {
+            case 0:
+                return 7;
+            case 1:
+                return 15;
+            case 2:
+                return 30;
+            default:
+                return 7; // Valor predeterminado si la posición no se reconoce
+        }
+    }
+    // Método para cargar el top de productos según la opción seleccionada
+    private void cargarTopProductos() {
+        obtenerPedidosUltimosDias(diasSeleccionados, new OnPedidosLoadedListener() {
             @Override
             public void onPedidosLoaded(List<String> idPedidos) {
-                // Obtenemos los top 5 productos más vendidos
                 obtenerTop5Productos(idPedidos, new OnProductosIdLoadedListener() {
                     @Override
                     public void onProductosIdLoaded(List<String> top5Productos) {
-                        // Mostramos los detalles de los productos en las vistas
                         mostrarTop(top5Productos);
                     }
                 });
             }
         });
+    }
+    // Método para obtener pedidos de los últimos N días
+    private void obtenerPedidosUltimosDias(final int numDias, final OnPedidosLoadedListener listener) {
+        try {
+            final List<String> idPedidos = new ArrayList<>();
+
+            // Obtener la fecha actual
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            String fechaActual = sdf.format(calendar.getTime());
+
+            // Calcular la fecha de hace N días
+            calendar.add(Calendar.DAY_OF_YEAR, -numDias);
+            String fechaHaceNDias = sdf.format(calendar.getTime());
+
+            // Realizar la consulta con un rango de fechas
+            Query query = pedidosReference.orderByChild("FechaPedido").startAt(fechaHaceNDias + " 00:00:00").endAt(fechaActual + " 23:59:59");
+
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot pedidoSnapshot : dataSnapshot.getChildren()) {
+                        // Obtener el idPedido y agregarlo a la lista
+                        String idPedido = pedidoSnapshot.getKey();
+                        idPedidos.add(idPedido);
+                    }
+
+                    // Notificar que los datos han sido cargados
+                    if (listener != null) {
+                        listener.onPedidosLoaded(idPedidos);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Manejar errores si es necesario
+                    Toast.makeText(getApplicationContext(), "Error al obtener pedidos", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            // Manejar cualquier excepción que pueda ocurrir al obtener pedidos
+            e.printStackTrace();
+        }
     }
 
     // Método para abrir la ProductoActivity con la información del producto
@@ -277,49 +370,6 @@ public class MasVendidosActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //Metodo que recoge y devuelve la lista de pedidos realizados en los ultimos 7 dias
-    private void obtenerPedidosUltimos7Dias(final OnPedidosLoadedListener listener) {
-        try {
-            final List<String> idPedidos = new ArrayList<>();
-
-            //Obtener la fecha actual
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            String fechaActual = sdf.format(calendar.getTime());
-
-            //Calcular la fecha de hace 7 días
-            calendar.add(Calendar.DAY_OF_YEAR, -6);  // Cambia a -6 para incluir el día actual
-            String fechaHace7Dias = sdf.format(calendar.getTime());
-
-            //Realizar la consulta con un rango de fechas
-            Query query = pedidosReference.orderByChild("FechaPedido").startAt(fechaHace7Dias + " 00:00:00").endAt(fechaActual + " 23:59:59");
-
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot pedidoSnapshot : dataSnapshot.getChildren()) {
-                        // Obtener el idPedido y agregarlo a la lista
-                        String idPedido = pedidoSnapshot.getKey();
-                        idPedidos.add(idPedido);
-                    }
-
-                    // Notificar que los datos han sido cargados
-                    if (listener != null) {
-                        listener.onPedidosLoaded(idPedidos);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(getApplicationContext(), "Ha ocurrido un error. Reinicie la app", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public interface OnPedidosLoadedListener {
         void onPedidosLoaded(List<String> idPedidos);
     }
@@ -407,7 +457,7 @@ public class MasVendidosActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    // Manejar errores si es necesario
+                    Toast.makeText(getApplicationContext(),"No se han podido cargar los productos",Toast.LENGTH_SHORT).show();
                 }
             });
         }

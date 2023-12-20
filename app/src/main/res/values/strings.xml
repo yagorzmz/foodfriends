@@ -79,5 +79,10 @@
     <string name="fecha_pedido">Fecha Pedido</string>
     <string name="idpedido">IdPedido</string>
     <string name="precio_total">Precio total</string>
+    <string-array name="dias_array">
+        <item>7 días</item>
+        <item>15 días</item>
+        <item>30 días</item>
+    </string-array>
 
 </resources>
