@@ -142,7 +142,7 @@
         app:layout_constraintVertical_bias="0.456" />
 
     <TextView
-        android:id="@+id/txtIdPedido"
+        android:id="@+id/txtProductoLinea"
         android:layout_width="220dp"
         android:layout_height="64dp"
         android:maxLength="46"

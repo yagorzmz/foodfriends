@@ -1,10 +1,12 @@
 package com.example.foodfriends.Utilidades;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.foodfriends.Modelo.Pedido;
@@ -15,6 +17,7 @@ import java.util.List;
 
 
 public class AdaptadorHistorial extends ArrayAdapter<Pedido> {
+    ImageView imgMostrarLineas;
 
     // Constructor del adaptador
     public AdaptadorHistorial(Context context, List<Pedido> pedidos) {
@@ -34,9 +37,16 @@ public class AdaptadorHistorial extends ArrayAdapter<Pedido> {
 
         // Obtener referencias a los elementos de la interfaz de usuario (TextViews)
         TextView txtNumeroPedido = convertView.findViewById(R.id.txtNumeroPedido);
-        TextView txtIdPedido = convertView.findViewById(R.id.txtIdPedido);
-        TextView txtPrecioTotal = convertView.findViewById(R.id.txtPrecioTotal);
-        TextView txtFechaPedido = convertView.findViewById(R.id.txtFechaPedido);
+        TextView txtIdPedido = convertView.findViewById(R.id.txtProductoLinea);
+        TextView txtPrecioTotal = convertView.findViewById(R.id.txtUnidadesLinea);
+        TextView txtFechaPedido = convertView.findViewById(R.id.txtPrecioTotalLinea);
+        imgMostrarLineas = convertView.findViewById(R.id.imgMostrarLineas);
+        imgMostrarLineas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         // Establecer los valores correspondientes en los TextViews
         txtNumeroPedido.setText(String.valueOf(position + 1)); // Se suma 1 para mostrar números de pedido comenzando desde 1
@@ -47,6 +57,7 @@ public class AdaptadorHistorial extends ArrayAdapter<Pedido> {
         // Devolver la vista para mostrar en la posición actual
         return convertView;
     }
+
 
     // Método privado para formatear un número decimal con dos decimales
     private static String formatearDecimal(double numero) {

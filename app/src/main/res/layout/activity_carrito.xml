@@ -77,6 +77,7 @@
         android:id="@+id/txtCarritoVacio"
         android:layout_width="332dp"
         android:layout_height="251dp"
+        android:layout_marginBottom="130dp"
         android:text="@string/carrito_vacio"
         android:textAlignment="center"
         android:textSize="70sp"
@@ -84,5 +85,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgCarritoVacio"
+        android:layout_width="213dp"
+        android:layout_height="193dp"
+        android:layout_marginTop="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/carritovaciologo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

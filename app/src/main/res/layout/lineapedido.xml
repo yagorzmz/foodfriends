@@ -19,72 +19,70 @@
         android:background="#FFFFFF">
 
         <LinearLayout
-            android:layout_width="40dp"
+            android:layout_width="151dp"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="false"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="8dp"
-            android:orientation="vertical">
+            android:layout_marginEnd="1dp"
+            android:orientation="vertical"
+            tools:ignore="TextSizeCheck">
 
-            <ImageButton
-                android:id="@+id/imgButtonEliminarLinea"
+            <TextView
+                android:id="@+id/txtUnidadesLinea"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:backgroundTint="#FFFFFF"
-                android:contentDescription="@string/acerca_de"
-                app:srcCompat="@drawable/papelera"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:layout_height="29dp"
+                android:text="@string/unidades_pedidas"
+                android:textColor="#F80707"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txtPrecioUnidad"
+                android:layout_width="471dp"
+                android:layout_height="32dp"
+                android:text="Precio Unidad" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="243dp"
+            android:layout_width="199dp"
             android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="153dp"
             android:orientation="vertical"
             android:padding="8dp">
 
             <TextView
                 android:id="@+id/txtProductoLinea"
-                android:layout_width="376dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="37dp"
                 android:text="@string/nombre_producto"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 tools:ignore="VisualLintBounds" />
 
             <TextView
-                android:id="@+id/txtUnidadesLinea"
-                android:layout_width="220dp"
-                android:layout_height="wrap_content"
-                android:text="@string/unidades_pedidas"
-                android:textColor="#757575"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/txtPrecioLineaPedido"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/precio_linea_pedido"
-                android:textColor="#757575"
-                android:textSize="15sp" />
+                android:id="@+id/txtPrecioTotalLinea"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:text="@string/precio_total"
+                android:textAlignment="viewStart"
+                android:textColor="#73BA2C" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="100dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="49dp"
+            android:layout_marginEnd="9dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/txtNumeroPedido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/_1"
                 android:textAlignment="center"
-                android:textSize="35sp" />
+                android:textSize="20sp"
+                tools:ignore="DuplicateIds" />
         </LinearLayout>
 
     </RelativeLayout>

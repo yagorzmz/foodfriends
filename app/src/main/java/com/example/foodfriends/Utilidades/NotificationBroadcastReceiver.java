@@ -10,28 +10,28 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import androidx.core.app.NotificationCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import android.util.Log;
 
+import androidx.core.app.NotificationCompat;
 import com.example.foodfriends.Activities.CarritoActivity;
 import com.example.foodfriends.R;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.List;
 
 public class NotificationBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        // Cerrar la primera notificación
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(1);
+        String action = intent.getAction();
+        if ("com.example.foodfriends.ACCION_NOTIFICACION".equals(action)) {
+            // Cerrar la primera notificación
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(1);
+            // Asegúrate de que este código es ejecutado cuando haces clic en la notificación.
+            Log.d("Notificacion", "Acción de notificación recibida");
 
-        // Mostrar una nueva notificación con el mensaje "Pedido confirmado"
-        mostrarNotificacionPedidoConfirmado(context);
-        CarritoActivity.registrarPedidoYLineasPedido();
+            // Mostrar una nueva notificación con el mensaje "Pedido confirmado"
+            mostrarNotificacionPedidoConfirmado(context);
+            CarritoActivity.registrarPedidoYLineasPedido();
+            Log.d("Notificacion", "Acción de notificación recibida");
+        }
 
     }
 

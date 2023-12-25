@@ -17,6 +17,11 @@ public class LineaPedidoTemp implements Parcelable {
         this.precioProducto = precioProducto;
         this.unidades = unidades;
     }
+    public LineaPedidoTemp(String nombreProducto, double precioProducto, int unidades) {
+        this.nombreProducto = nombreProducto;
+        this.precioProducto = precioProducto;
+        this.unidades = unidades;
+    }
     // Métodos Getter
     public String getIdProducto() {
         return idProducto;

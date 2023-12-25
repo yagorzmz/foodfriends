@@ -2,18 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/listviewProductos"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.CatalogoActivity">
+    tools:context=".Activities.DetallesPedidoActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar3"
+        android:id="@+id/toolbar8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/black"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -27,22 +25,18 @@
             app:srcCompat="@drawable/ic_notificacion"
             tools:layout_editor_absoluteX="148dp"
             tools:layout_editor_absoluteY="32dp" /> <!-- Ajusta el tamaño deseado -->
-        android:layout_height="24dp" <!-- Ajusta el tamaño deseado -->
-        android:src="@drawable/tu_icono" <!-- Reemplaza con tu recurso de icono -->
-        android:layout_gravity="start"
-        android:layout_marginStart="16dp" <!-- Puedes ajustar el margen según sea necesario -->
-        android:layout_marginEnd="16dp" <!-- Puedes ajustar el margen según sea necesario -->
-        android:contentDescription="@string/desc_icono" />
+
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="0dp"
+    <ListView
+        android:id="@+id/listViewLineasPedido"
+        android:layout_width="407dp"
         android:layout_height="0dp"
-        android:background="@drawable/fondoempresas"
+        android:background="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

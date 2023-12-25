@@ -34,22 +34,23 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/txtIdPedido"
-                android:layout_width="221dp"
-                android:layout_height="47dp"
-                android:layout_marginTop="10dp"
+                android:id="@+id/txtProductoLinea"
+                android:layout_width="222dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:text="nombreProducto"
                 android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                android:textSize="22sp" />
 
             <TextView
-                android:id="@+id/txtPrecioTotal"
-                android:layout_width="220dp"
-                android:layout_height="68dp"
-                android:layout_marginBottom="8dp"
+                android:id="@+id/txtUnidadesLinea"
+                android:layout_width="221dp"
+                android:layout_height="110dp"
+                android:layout_marginBottom="2dp"
                 android:text="@string/tipo_de_comida"
+                android:textAlignment="textStart"
                 android:textColor="#757575"
-                android:textSize="15sp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
     </RelativeLayout>

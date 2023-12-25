@@ -1,21 +1,15 @@
 package com.example.foodfriends.Activities;
 
-import static com.example.foodfriends.Activities.CarritoActivity.*;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,13 +24,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.foodfriends.Modelo.LineaPedido;
 import com.example.foodfriends.Modelo.LineaPedidoTemp;
-import com.example.foodfriends.Modelo.Pedido;
 import com.example.foodfriends.R;
-import com.example.foodfriends.Utilidades.AdaptadorLineasPedidos;
+import com.example.foodfriends.Utilidades.AdaptadorLineasPedidosTemp;
 import com.example.foodfriends.Utilidades.ListaLineasPedidosTempHelper;
-import com.example.foodfriends.Utilidades.NotificationBroadcastReceiver;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -59,7 +50,7 @@ import java.util.Map;
  * La clase CarritoActivity muestra todos los productos añadidos al carrito
  * con sus unidades, el repcio de cada linea de pedido y el precio total del pedido
  */
-public class CarritoActivity extends AppCompatActivity implements AdaptadorLineasPedidos.OnLineaPedidoChangeListener {
+public class CarritoActivity extends AppCompatActivity implements AdaptadorLineasPedidosTemp.OnLineaPedidoChangeListener {
 
     //Elementos de la activity
     private static final String CHANNEL_ID = "mi_canal_de_notificaciones";
@@ -68,11 +59,12 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
     private androidx.appcompat.widget.Toolbar toolbar;
     static ListView listViewLineasPedido;
     private static Button btnRealizarPedido;
-    static AdaptadorLineasPedidos adapter;
+    static AdaptadorLineasPedidosTemp adapter;
     static List<LineaPedidoTemp> listaLineasPedidosTemp;
     static TextView txtTotalPedido;
     static TextView txtCarritoVacio;
     ImageView iconoToolbar;
+    static ImageView imgCarritoVacio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +78,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         btnRealizarPedido = findViewById(R.id.btnRealizarPedido);
 
+        imgCarritoVacio=findViewById(R.id.imgCarritoVacio);
         listViewLineasPedido = findViewById(R.id.listViewLineasPedido);
         listaLineasPedidosTemp = ListaLineasPedidosTempHelper.getListaLineasPedidosTemp();
         txtTotalPedido = findViewById(R.id.txtTotalPedido);
@@ -106,6 +99,252 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             }
         });
     }
+    //Método que muestra al usuario un dialogo para que elija el tiempo en que quiere
+    //recibir el pedido
+    private void mostrarOpcionesTiempoEntrega() {
+        // Obtener la hora actual del dispositivo
+        Calendar horaActual = Calendar.getInstance();
+        int horaActualInt = horaActual.get(Calendar.HOUR_OF_DAY);
+        int minutoActual = horaActual.get(Calendar.MINUTE);
+
+        // Calcular las opciones de tiempo según las especificaciones dadas
+        List<String> opcionesTiempo = new ArrayList<>();
+        opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt, minutoActual + 1)); // Primera opción
+        opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt, minutoActual + 45)); // Segunda opción
+        opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt + 1, minutoActual)); // Tercera opción
+        opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt + 1, minutoActual + 15)); // Cuarta opción
+        opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt + 1, minutoActual + 30)); // Quinta opción
+
+        // Crear y configurar el diálogo
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Selecciona el tiempo de entrega")
+                .setItems(opcionesTiempo.toArray(new String[0]), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        long milisegundos = 0;
+                        switch (which) {
+                            case 0:
+                                milisegundos = convertirMinutosAMilisegundos(1);
+                                break;
+                            case 1:
+                                milisegundos = convertirMinutosAMilisegundos(45);
+                                break;
+                            case 2:
+                                milisegundos = convertirMinutosAMilisegundos(60);
+                                break;
+                            case 3:
+                                milisegundos = convertirMinutosAMilisegundos(75);
+                                break;
+                            case 4:
+                                milisegundos = convertirMinutosAMilisegundos(90);
+                                break;
+                        }
+                        //Mostramos un dialogo para avisar al usuario de que le pedido se esta realizando
+                        mostrarDialogoEnMarcha();
+                        //Programamos el tiempo de recibo de la notificacion para confirmar el pedido
+                        programarNotificacionDespuesDe(milisegundos);
+                    }
+                });
+        builder.create().show();
+    }
+
+    //Mostramos un cuadro de dialogo para preguntar si realmente quiere hacer el pedido
+    private void mostrarDialogoRealizarPedido() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirmación de Pedido")
+                .setMessage("¿Estás seguro de que deseas realizar el pedido?")
+                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // El usuario ha confirmado, mostrar opciones de tiempo y programar la notificación
+                        mostrarOpcionesTiempoEntrega();
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // El usuario ha cancelado, no realizar ninguna acción
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    //Método que programa cuando enviar la notificacion de confirmacion de entrega de pedido
+    private void programarNotificacionDespuesDe(long milisegundos) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                mostrarNotificacion();
+            }
+        }, milisegundos);
+    }
+    // Método que crea el canal de notificaciones al inicio de la actividad.
+    private void crearCanalNotificacion() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Confirmacion de entrega de pedido";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription("Haz clic aquí para confirmar la entrega de tu pedido");
+
+            // Registrar el canal con el sistema
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+    // Método que muestra la notificación de confirmación al usuario
+    private void mostrarNotificacion() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Confirmacion de entrega de pedido";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription("Haz clic aquí para confirmar la entrega de tu pedido");
+
+            // Registrar el canal con el sistema
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+
+            // Agregar un mensaje de registro (Log) para verificar si la notificación se muestra
+            Log.d("Notificacion", "Mostrando notificación");
+
+            // Crear un intent para enviar una difusión (broadcast) cuando se haga clic en la notificación
+            Intent broadcastIntent = new Intent("com.example.foodfriends.ACCION_NOTIFICACION");
+            PendingIntent clickPendingIntent = PendingIntent.getBroadcast(this, 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+            Log.d("Notificacion", "Despues del intent");
+            // Crear y mostrar la notificación con un PendingIntent para la acción de clic
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_notificacion) // Reemplazar ic_notificacion con el nombre de tu icono de notificación
+                    .setContentTitle("Confirmacion de entrega de pedido")
+                    .setContentText("Haz clic aquí para confirmar la entrega del pedido.")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setContentIntent(clickPendingIntent)  // Configurar el PendingIntent para la acción de clic
+                    .setAutoCancel(true);  // Hacer que la notificación se cierre automáticamente al hacer clic en ella
+
+            notificationManager.notify(NOTIFICATION_ID, builder.build());
+            Log.d("Notificacion", "Aparece notificacion?");
+        }
+    }
+
+
+    //Método que pasa minutos a milisegundos
+    public static long convertirMinutosAMilisegundos(int minutos) {
+        return minutos * 60 * 1000L;
+    }
+
+    //Método para obtener la hora en formato HH:mm
+    private String obtenerTiempoFormateado(int hora, int minuto) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, hora);
+        cal.set(Calendar.MINUTE, minuto);
+
+        SimpleDateFormat formato = new SimpleDateFormat("HH:mm");
+        return formato.format(cal.getTime());
+    }
+
+    //Método que registra el pedido y las lineas del pedido una vez confirmado el pedido
+    public static void registrarPedidoYLineasPedido() {
+        // Limpiar la lista de líneas de pedidos
+        listaLineasPedidosTemp.clear();
+
+        // Configuración de Firebase
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");
+        DatabaseReference lineaspedidosReference = firebaseDatabase.getReference("LineasPedidos");
+        DatabaseReference pedidosReference = firebaseDatabase.getReference("Pedidos");
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser usuarioFirebase = mAuth.getCurrentUser();
+
+        //Obtenemos una referencia a la base de datos de Firebase
+        DatabaseReference databaseReference = firebaseDatabase.getReference();
+        //Generar un nuevo ID para el pedido utilizando push() de Firebase
+        String nuevoPedidoId = databaseReference.child("Pedidos").push().getKey();
+        String fechaPedido = obtenerFechaActual();
+        String clienteId = usuarioFirebase.getUid();
+        double precioTotal = totalConGastosEnvio;
+
+        //Creamos un mapa para contener los datos del pedido
+        Map<String, Object> pedidoData = new HashMap<>();
+        pedidoData.put("FechaPedido", fechaPedido);
+        pedidoData.put("PrecioTotal", precioTotal);
+        pedidoData.put("ClienteId", clienteId);
+
+        //Registramos pedido en DB
+        pedidosReference.child(nuevoPedidoId).setValue(pedidoData);
+
+        //Registramos cada línea de pedido en la base de datos
+        for (LineaPedidoTemp lineaPedidoTemp : listaLineasPedidosTemp) {
+            String idLineaPedido = lineaspedidosReference.push().getKey();
+            // Crear un mapa para contener los datos de la línea de pedido
+            Map<String, Object> lineaData = new HashMap<>();
+            lineaData.put("PedidoId", nuevoPedidoId);
+            lineaData.put("ProductoId", lineaPedidoTemp.getIdProducto());
+            lineaData.put("Unidades", lineaPedidoTemp.getUnidades());
+
+            //Registramos línea en DB
+            lineaspedidosReference.child(idLineaPedido).setValue(lineaData);
+
+            //Actualizamos el campo NumeroVentas del producto
+            actualizarNumeroVentas(lineaPedidoTemp.getIdProducto());
+        }
+
+        //Limpiamos la lista y notificar al adaptador después de procesar todas las líneas de pedido
+        listaLineasPedidosTemp.clear();
+        adapter.notifyDataSetChanged();
+        carritoVacio();
+    }
+
+    //Muestra el dialogo al usuario de que el pedido se esta realizando y deberá
+    //confirmar su entrega
+    private void mostrarDialogoEnMarcha() {
+        // Crear y configurar el diálogo
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Pedido en marcha")
+                .setMessage("Su pedido está en camino. Recibirá una notificación para confirmar la entrega.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Puedes agregar acciones adicionales si es necesario
+                    }
+                });
+        builder.create().show();
+    }
+
+    //Método que suma el numero de ventas de cada producto en la base de datos
+    private static void actualizarNumeroVentas(String productoId) {
+        try {
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");
+            DatabaseReference productosReference = firebaseDatabase.getReference("Productos");
+
+            //Obtenemos el valor actual de NumeroVentas
+            productosReference.child(productoId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        //Obtenemos el valor actual de NumeroVentas
+                        Long numeroVentasActual = (Long) snapshot.child("NumeroVentas").getValue();
+
+                        //Incrementamos el valor de NumeroVentas
+                        long nuevoNumeroVentas = numeroVentasActual + 1;
+
+                        //Actualizamos el campo NumeroVentas en la base de datos
+                        productosReference.child(productoId).child("NumeroVentas").setValue(nuevoNumeroVentas);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(adapter.getContext(), "Ha ocurrido un error en el calculo del precio", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(adapter.getContext(), "Ha ocurrido un error en el calculo del precio", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //Método para obtener la fecha actual en un formato específico (puedes ajustar esto según tus necesidades)
+    private static String obtenerFechaActual() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        return sdf.format(new Date());
+    }
     //Método que maneja la interacción con el botón realizar pedido
     private void manejarBotonRealizarPedido() {
         if (listaLineasPedidosTemp.isEmpty()) {
@@ -122,15 +361,13 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         // Comprobamos si el carrito está vacío.
         if (listaLineasPedidosTemp.isEmpty()) {
             // Si está vacío, mostramos un mensaje y ocultamos elementos.
-            txtCarritoVacio.setVisibility(View.VISIBLE);
-            listViewLineasPedido.setVisibility(View.GONE);
-            btnRealizarPedido.setVisibility(View.GONE);
-            txtTotalPedido.setVisibility(View.GONE);
+            carritoVacio();
             Toast.makeText(getApplicationContext(),"Carrito vacio",Toast.LENGTH_SHORT).show();
         } else {
             // Si hay elementos en el carrito, configuramos el adaptador y mostramos la lista.
-            adapter = new AdaptadorLineasPedidos(this, listaLineasPedidosTemp, this);
+            adapter = new AdaptadorLineasPedidosTemp(this, listaLineasPedidosTemp, this);
             txtCarritoVacio.setVisibility(View.GONE);
+            imgCarritoVacio.setVisibility(View.GONE);
             listViewLineasPedido.setAdapter(adapter);
         }
     }
@@ -254,256 +491,8 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         listViewLineasPedido.setVisibility(View.GONE);
         btnRealizarPedido.setVisibility(View.GONE);
         txtTotalPedido.setVisibility(View.GONE);
+        imgCarritoVacio.setVisibility(View.VISIBLE);
     }
 
-    //Método que muestra al usuario un dialogo para que elija el tiempo en que quiere
-    //recibir el pedido
-    private void mostrarOpcionesTiempoEntrega() {
-        // Obtener la hora actual del dispositivo
-        Calendar horaActual = Calendar.getInstance();
-        int horaActualInt = horaActual.get(Calendar.HOUR_OF_DAY);
-        int minutoActual = horaActual.get(Calendar.MINUTE);
-
-        // Calcular las opciones de tiempo según las especificaciones dadas
-        List<String> opcionesTiempo = new ArrayList<>();
-        opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt, minutoActual + 1)); // Primera opción
-        opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt, minutoActual + 45)); // Segunda opción
-        opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt + 1, minutoActual)); // Tercera opción
-        opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt + 1, minutoActual + 15)); // Cuarta opción
-        opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt + 1, minutoActual + 30)); // Quinta opción
-
-        // Crear y configurar el diálogo
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Selecciona el tiempo de entrega")
-                .setItems(opcionesTiempo.toArray(new String[0]), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        long milisegundos = 0;
-                        switch (which) {
-                            case 0:
-                                milisegundos = convertirMinutosAMilisegundos(30);
-                                break;
-                            case 1:
-                                milisegundos = convertirMinutosAMilisegundos(45);
-                                break;
-                            case 2:
-                                milisegundos = convertirMinutosAMilisegundos(60);
-                                break;
-                            case 3:
-                                milisegundos = convertirMinutosAMilisegundos(75);
-                                break;
-                            case 4:
-                                milisegundos = convertirMinutosAMilisegundos(90);
-                                break;
-                        }
-                        //Mostramos un dialogo para avisar al usuario de que le pedido se esta realizando
-                        mostrarDialogoEnMarcha();
-                        //Programamos el tiempo de recibo de la notificacion para confirmar el pedido
-                        programarNotificacionDespuesDe(milisegundos);
-                    }
-                });
-        builder.create().show();
-    }
-
-    //Mostramos un cuadro de dialogo para preguntar si realmente quiere hacer el pedido
-    private void mostrarDialogoRealizarPedido() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Confirmación de Pedido")
-                .setMessage("¿Estás seguro de que deseas realizar el pedido?")
-                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // El usuario ha confirmado, mostrar opciones de tiempo y programar la notificación
-                        mostrarOpcionesTiempoEntrega();
-                    }
-                })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // El usuario ha cancelado, no realizar ninguna acción
-                        dialog.dismiss();
-                    }
-                })
-                .show();
-    }
-
-    //Método que programa cuando enviar la notificacion de confirmacion de entrega de pedido
-    private void programarNotificacionDespuesDe(long milisegundos) {
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mostrarNotificacion();
-            }
-        }, milisegundos);
-    }
-
-    //Método que crea el canal de las notificaciones
-    private void crearCanalNotificacion() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Confirmacion de entrega de pedido";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription("Haz click aqui para confirmar la entrega de tu pedido");
-
-            // Registrar el canal con el sistema
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    //Método que muestra la notificacion de confirmacion al usuario
-    private void mostrarNotificacion() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Confirmacion de entrega de pedido";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription("Haz click aquí para confirmar la entrega de tu pedido");
-
-            // Registrar el canal con el sistema
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-
-            // Agregar un mensaje de registro (Log) para verificar si la notificación se muestra
-            Log.d("Notificacion", "Mostrando notificación");
-
-            IntentFilter filter = new IntentFilter("com.example.foodfriends.ACCION_NOTIFICACION");
-            NotificationBroadcastReceiver receiver = new NotificationBroadcastReceiver();
-            registerReceiver(receiver, filter);
-
-            // Crear un intent para enviar una difusión (broadcast) cuando se haga clic en la notificación
-            Intent broadcastIntent = new Intent("com.example.foodfriends.ACCION_NOTIFICACION");
-            PendingIntent clickPendingIntent = PendingIntent.getBroadcast(this, 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-            // Crea y muestra la notificación con un PendingIntent para la acción de clic
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_notificacion) // Reemplaza ic_notificacion con el nombre de tu icono de notificación
-                    .setContentTitle("Confirmacion de entrega de pedido")
-                    .setContentText("Haz click aquí para confirmar la entrega del pedido.")
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setContentIntent(clickPendingIntent)  // Configura el PendingIntent para la acción de clic
-                    .setAutoCancel(true);  // Hace que la notificación se cierre automáticamente al hacer clic en ella
-
-            notificationManager.notify(1, builder.build());
-        }
-    }
-
-    //Método que pasa minutos a milisegundos
-    public static long convertirMinutosAMilisegundos(int minutos) {
-        return minutos * 60 * 1000L;
-    }
-
-    //Método para obtener la hora en formato HH:mm
-    private String obtenerTiempoFormateado(int hora, int minuto) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, hora);
-        cal.set(Calendar.MINUTE, minuto);
-
-        SimpleDateFormat formato = new SimpleDateFormat("HH:mm");
-        return formato.format(cal.getTime());
-    }
-
-    //Método que registra el pedido y las lineas del pedido una vez confirmado el pedido
-    public static void registrarPedidoYLineasPedido() {
-        // Limpiar la lista de líneas de pedidos
-        listaLineasPedidosTemp.clear();
-
-        // Configuración de Firebase
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");
-        DatabaseReference lineaspedidosReference = firebaseDatabase.getReference("LineasPedidos");
-        DatabaseReference pedidosReference = firebaseDatabase.getReference("Pedidos");
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser usuarioFirebase = mAuth.getCurrentUser();
-
-        //Obtenemos una referencia a la base de datos de Firebase
-        DatabaseReference databaseReference = firebaseDatabase.getReference();
-        //Generar un nuevo ID para el pedido utilizando push() de Firebase
-        String nuevoPedidoId = databaseReference.child("Pedidos").push().getKey();
-        String fechaPedido = obtenerFechaActual();
-        String clienteId = usuarioFirebase.getUid();
-        double precioTotal = totalConGastosEnvio;
-
-        //Creamos un mapa para contener los datos del pedido
-        Map<String, Object> pedidoData = new HashMap<>();
-        pedidoData.put("FechaPedido", fechaPedido);
-        pedidoData.put("PrecioTotal", precioTotal);
-        pedidoData.put("ClienteId", clienteId);
-
-        //Registramos pedido en DB
-        pedidosReference.child(nuevoPedidoId).setValue(pedidoData);
-
-        //Registramos cada línea de pedido en la base de datos
-        for (LineaPedidoTemp lineaPedidoTemp : listaLineasPedidosTemp) {
-            String idLineaPedido = lineaspedidosReference.push().getKey();
-            // Crear un mapa para contener los datos de la línea de pedido
-            Map<String, Object> lineaData = new HashMap<>();
-            lineaData.put("PedidoId", nuevoPedidoId);
-            lineaData.put("ProductoId", lineaPedidoTemp.getIdProducto());
-            lineaData.put("Unidades", lineaPedidoTemp.getUnidades());
-
-            //Registramos línea en DB
-            lineaspedidosReference.child(idLineaPedido).setValue(lineaData);
-
-            //Actualizamos el campo NumeroVentas del producto
-            actualizarNumeroVentas(lineaPedidoTemp.getIdProducto());
-        }
-
-        //Limpiamos la lista y notificar al adaptador después de procesar todas las líneas de pedido
-        listaLineasPedidosTemp.clear();
-        adapter.notifyDataSetChanged();
-        carritoVacio();
-    }
-
-    //Muestra el dialogo al usuario de que el pedido se esta realizando y deberá
-    //confirmar su entrega
-    private void mostrarDialogoEnMarcha() {
-        // Crear y configurar el diálogo
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Pedido en marcha")
-                .setMessage("Su pedido está en camino. Recibirá una notificación para confirmar la entrega.")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Puedes agregar acciones adicionales si es necesario
-                    }
-                });
-        builder.create().show();
-    }
-
-    //Método que suma el numero de ventas de cada producto en la base de datos
-    private static void actualizarNumeroVentas(String productoId) {
-        try {
-            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");
-            DatabaseReference productosReference = firebaseDatabase.getReference("Productos");
-
-            //Obtenemos el valor actual de NumeroVentas
-            productosReference.child(productoId).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        //Obtenemos el valor actual de NumeroVentas
-                        Long numeroVentasActual = (Long) snapshot.child("NumeroVentas").getValue();
-
-                        //Incrementamos el valor de NumeroVentas
-                        long nuevoNumeroVentas = numeroVentasActual + 1;
-
-                        //Actualizamos el campo NumeroVentas en la base de datos
-                        productosReference.child(productoId).child("NumeroVentas").setValue(nuevoNumeroVentas);
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(adapter.getContext(), "Ha ocurrido un error en el calculo del precio", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } catch (Exception e) {
-            Toast.makeText(adapter.getContext(), "Ha ocurrido un error en el calculo del precio", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    //Método para obtener la fecha actual en un formato específico (puedes ajustar esto según tus necesidades)
-    private static String obtenerFechaActual() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        return sdf.format(new Date());
-    }
 
 }

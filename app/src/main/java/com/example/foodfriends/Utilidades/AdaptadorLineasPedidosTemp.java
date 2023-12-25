@@ -14,13 +14,12 @@ import com.example.foodfriends.R;
 import java.util.List;
 
 
-public class AdaptadorLineasPedidos extends ArrayAdapter<LineaPedidoTemp>
+public class AdaptadorLineasPedidosTemp extends ArrayAdapter<LineaPedidoTemp>
 {
     private OnLineaPedidoChangeListener mListener;
 
 
-
-    public AdaptadorLineasPedidos(Context context, List<LineaPedidoTemp> lineasPedidos, OnLineaPedidoChangeListener listener) {
+    public AdaptadorLineasPedidosTemp(Context context, List<LineaPedidoTemp> lineasPedidos, OnLineaPedidoChangeListener listener) {
         super(context, 0, lineasPedidos);
         mListener = listener;
     }
@@ -38,9 +37,9 @@ public class AdaptadorLineasPedidos extends ArrayAdapter<LineaPedidoTemp>
 
         // Obtener referencias a las vistas en el layout
         TextView txtNumeroItem = convertView.findViewById(R.id.txtNumeroPedido);
-        TextView txtNombreProducto = convertView.findViewById(R.id.txtIdPedido);
+        TextView txtNombreProducto = convertView.findViewById(R.id.txtProductoLinea);
         TextView txtPrecioUnidad = convertView.findViewById(R.id.txtPrecioLineaPedido);
-        TextView txtUnidades = convertView.findViewById(R.id.txtPrecioTotal);
+        TextView txtUnidades = convertView.findViewById(R.id.txtUnidadesLinea);
         ImageButton btnEliminarLinea = convertView.findViewById(R.id.imgButtonEliminarLinea);
 
         // Asignar los datos del objeto a las vistas

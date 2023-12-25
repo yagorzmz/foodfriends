@@ -85,8 +85,8 @@ public class AdaptadorEmpresas extends RecyclerView.Adapter<AdaptadorEmpresas.Vi
 
             //Obtiene referencias a las vistas dentro de cada elemento
             imgRestaurante = itemView.findViewById(R.id.imgProductoLineaPedido);
-            nombre = itemView.findViewById(R.id.txtIdPedido);
-            tipo = itemView.findViewById(R.id.txtPrecioTotal);
+            nombre = itemView.findViewById(R.id.txtProductoLinea);
+            tipo = itemView.findViewById(R.id.txtUnidadesLinea);
             telefono= itemView.findViewById(R.id.txtNumeroTelefono);
             valoracion = itemView.findViewById(R.id.ratingBarRecycler);
         }

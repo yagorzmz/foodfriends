@@ -197,6 +197,7 @@ public class CatalogoActivity extends AppCompatActivity implements AdaptadorProd
     @Override
     public void onBackPressed() {
         //Abre la actividad del catálogo al presionar el botón de atrás
+        super.onBackPressed();
         Intent intent = new Intent(this, InicioActivity.class);
         startActivity(intent);
         finish();

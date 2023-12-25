@@ -20,16 +20,21 @@
         android:theme="@style/Theme.Foodfriends.NoActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".Activities.DetallesPedidoActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.HistorialActivity"
             android:exported="false" />
 
         <receiver
             android:name=".Utilidades.NotificationBroadcastReceiver"
+            android:enabled="true"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.example.foodfriends.ACCION_NOTIFICACION" />
             </intent-filter>
         </receiver>
+
         <activity
             android:name=".Utilidades.SplashScreenActivity"
             android:exported="true">
