@@ -20,6 +20,9 @@
         android:theme="@style/Theme.Foodfriends.NoActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".Activities.LineasPedidosActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.DetallesPedidoActivity"
             android:exported="false" />
         <activity

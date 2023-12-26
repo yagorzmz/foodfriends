@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.foodfriends.Activities.LineasPedidosActivity;
 import com.example.foodfriends.Modelo.Pedido;
 import com.example.foodfriends.R;
 
@@ -36,15 +37,23 @@ public class AdaptadorHistorial extends ArrayAdapter<Pedido> {
         }
 
         // Obtener referencias a los elementos de la interfaz de usuario (TextViews)
-        TextView txtNumeroPedido = convertView.findViewById(R.id.txtNumeroPedido);
-        TextView txtIdPedido = convertView.findViewById(R.id.txtProductoLinea);
-        TextView txtPrecioTotal = convertView.findViewById(R.id.txtUnidadesLinea);
-        TextView txtFechaPedido = convertView.findViewById(R.id.txtPrecioTotalLinea);
+        TextView txtNumeroPedido = convertView.findViewById(R.id.txtNumeroLineaPedido);
+        TextView txtIdPedido = convertView.findViewById(R.id.txtNombreProducto);
+        TextView txtPrecioTotal = convertView.findViewById(R.id.txtUnidades);
+        TextView txtFechaPedido = convertView.findViewById(R.id.txtTotalLinea);
         imgMostrarLineas = convertView.findViewById(R.id.imgMostrarLineas);
         imgMostrarLineas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Obtén el ID del pedido
+                String idPedido = getItem(position).getIdPedido();
 
+                // Crea un Intent y agrega el ID del pedido como extra
+                Intent intent = new Intent(getContext(), LineasPedidosActivity.class);
+                intent.putExtra("ID_PEDIDO", idPedido);
+
+                // Inicia la actividad DetallesPedidoActivity
+                getContext().startActivity(intent);
             }
         });
 

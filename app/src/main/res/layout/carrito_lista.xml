@@ -44,7 +44,7 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/txtProductoLinea"
+                android:id="@+id/txtNombreProducto"
                 android:layout_width="376dp"
                 android:layout_height="wrap_content"
                 android:text="@string/nombre_producto"
@@ -53,7 +53,7 @@
                 tools:ignore="VisualLintBounds" />
 
             <TextView
-                android:id="@+id/txtUnidadesLinea"
+                android:id="@+id/txtUnidades"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
                 android:text="@string/unidades_pedidas"
@@ -78,7 +78,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/txtNumeroPedido"
+                android:id="@+id/txtNumeroLineaPedido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"

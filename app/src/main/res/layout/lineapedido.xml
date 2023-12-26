@@ -27,7 +27,7 @@
             tools:ignore="TextSizeCheck">
 
             <TextView
-                android:id="@+id/txtUnidadesLinea"
+                android:id="@+id/txtUnidades"
                 android:layout_width="match_parent"
                 android:layout_height="29dp"
                 android:text="@string/unidades_pedidas"
@@ -35,7 +35,7 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/txtPrecioUnidad"
+                android:id="@+id/txtPrecioProducto"
                 android:layout_width="471dp"
                 android:layout_height="32dp"
                 android:text="Precio Unidad" />
@@ -50,7 +50,7 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/txtProductoLinea"
+                android:id="@+id/txtNombreProducto"
                 android:layout_width="match_parent"
                 android:layout_height="37dp"
                 android:text="@string/nombre_producto"
@@ -59,7 +59,7 @@
                 tools:ignore="VisualLintBounds" />
 
             <TextView
-                android:id="@+id/txtPrecioTotalLinea"
+                android:id="@+id/txtTotalLinea"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:text="@string/precio_total"
@@ -75,7 +75,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/txtNumeroPedido"
+                android:id="@+id/txtNumeroLineaPedido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"

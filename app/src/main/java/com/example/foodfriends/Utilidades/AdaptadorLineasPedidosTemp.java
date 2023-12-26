@@ -36,10 +36,10 @@ public class AdaptadorLineasPedidosTemp extends ArrayAdapter<LineaPedidoTemp>
         }
 
         // Obtener referencias a las vistas en el layout
-        TextView txtNumeroItem = convertView.findViewById(R.id.txtNumeroPedido);
-        TextView txtNombreProducto = convertView.findViewById(R.id.txtProductoLinea);
+        TextView txtNumeroItem = convertView.findViewById(R.id.txtNumeroLineaPedido);
+        TextView txtNombreProducto = convertView.findViewById(R.id.txtNombreProducto);
         TextView txtPrecioUnidad = convertView.findViewById(R.id.txtPrecioLineaPedido);
-        TextView txtUnidades = convertView.findViewById(R.id.txtUnidadesLinea);
+        TextView txtUnidades = convertView.findViewById(R.id.txtUnidades);
         ImageButton btnEliminarLinea = convertView.findViewById(R.id.imgButtonEliminarLinea);
 
         // Asignar los datos del objeto a las vistas
