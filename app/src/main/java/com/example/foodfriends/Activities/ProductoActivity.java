@@ -133,7 +133,7 @@ public class ProductoActivity extends AppCompatActivity
     private void obtenerInformacionProducto(Producto producto) {
         txtNombreProducto.setText(producto.getNombreProducto());
         txtDescripcion.setText(producto.getDescripcion());
-        txtPrecio.setText("Precio: "+producto.getPrecio().toString()+"€");
+        txtPrecio.setText("Precio: "+producto.getPrecio().toString()+"€/Unidad");
 
         // Obtén una referencia al archivo en Firebase Storage
         String imageUrl = producto.getUrlProducto();

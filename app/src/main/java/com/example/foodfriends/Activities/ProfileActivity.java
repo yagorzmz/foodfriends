@@ -267,8 +267,6 @@ public class ProfileActivity extends AppCompatActivity {
             // La imagen no existe, procedemos a subirla
             storageReference.putFile(uriImagen)
                     .addOnSuccessListener(taskSnapshot -> {
-                        //La imagen se ha subido exitosamente
-                        mostrarToast("Imagen subida con éxito");
 
                         //Obtenemos la URL de descarga de la imagen recién cargada
                         storageReference.getDownloadUrl().addOnSuccessListener(uri -> {

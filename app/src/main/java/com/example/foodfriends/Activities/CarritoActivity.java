@@ -400,10 +400,11 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
 
         //Crear el mensaje con el formato deseado
         StringBuilder mensaje = new StringBuilder();
-        mensaje.append("Precio pedido sin IVA = ").append(formatearPrecio(totalSinIVA)).append("€\n");
-        mensaje.append("IVA adicional = ").append(formatearPrecio(totalIVA)).append("€\n");
-        mensaje.append("Coste de envío = ").append(formatearPrecio(costeEnvio)).append("€\n");
-        mensaje.append("Total pedido = ").append(formatearPrecio(totalConGastosEnvio)).append("€");
+        mensaje.append("Precio sin IVA ................... ").append(formatearPrecio(totalSinIVA)).append("€\n");
+        mensaje.append("IVA adicional .................... ").append(formatearPrecio(totalIVA)).append("€\n");
+        mensaje.append("Costos de envío .................. ").append(formatearPrecio(costeEnvio)).append("€\n");
+        mensaje.append("____________________________________ \n");
+        mensaje.append("Total                              ").append(formatearPrecio(totalConGastosEnvio)).append("€");
 
         //Mostrar el mensaje
         TextView txtTotal = findViewById(R.id.txtTotalPedido);

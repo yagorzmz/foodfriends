@@ -4,8 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="@color/black"
     tools:context=".Activities.LoginActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:foregroundTint="@color/white"
+        android:text="@string/version_1_0"
+        android:textColor="#FFFFFF"
+        android:textColorHint="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.955"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.022" />
 
     <ImageView
         android:id="@+id/icono"
@@ -19,42 +36,19 @@
         app:layout_constraintVertical_bias="0.119"
         app:srcCompat="@drawable/logo" />
 
-    <EditText
-        android:id="@+id/editEmail"
-        android:layout_width="266dp"
-        android:layout_height="48dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/email"
-        android:inputType="text"
-        android:minHeight="48dp"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#757575"
+    <TextView
+        android:id="@+id/txtMensajeRegistro2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bienvenido_a_food_friends"
+        android:textColor="#F6F5F5"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.528"
-        tools:ignore="DuplicateSpeakableTextCheck,LabelFor,TextFields" />
-
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="266dp"
-        android:layout_height="48dp"
-        android:backgroundTint="#FFFFFF"
-        android:text="@string/login"
-        android:textColor="#000000"
-        android:textColorHighlight="#FFFFFF"
-        android:textColorLink="#FFFFFF"
-        android:textSize="20sp"
-        app:cornerRadius="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.749" />
+        app:layout_constraintVertical_bias="0.424" />
 
     <Button
         android:id="@+id/btnRegister"
@@ -72,7 +66,44 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.844" />
+        app:layout_constraintVertical_bias="0.896" />
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="266dp"
+        android:layout_height="48dp"
+        android:backgroundTint="#FFFFFF"
+        android:text="@string/login"
+        android:textColor="#000000"
+        android:textColorHighlight="#FFFFFF"
+        android:textColorLink="#000000"
+        android:textSize="20sp"
+        app:cornerRadius="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.796" />
+
+    <EditText
+        android:id="@+id/editEmail"
+        android:layout_width="266dp"
+        android:layout_height="48dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/email"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#757575"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.54"
+        tools:ignore="DuplicateSpeakableTextCheck,LabelFor,TextFields" />
 
     <EditText
         android:id="@+id/editPassword"
@@ -90,39 +121,7 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.614"
+        app:layout_constraintVertical_bias="0.645"
         tools:ignore="LabelFor" />
 
-    <TextView
-        android:id="@+id/txtBienvenida"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
-        android:text="@string/bienvenido_a_food_friends"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.431" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        android:foregroundTint="@color/white"
-        android:text="@string/version_1_0"
-        android:textColor="#FFFFFF"
-        android:textColorHint="@color/white"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.955"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.022"
-        tools:ignore="SmallSp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
