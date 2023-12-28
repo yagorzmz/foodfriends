@@ -88,7 +88,7 @@ public class ProfileActivity extends AppCompatActivity {
         btnBorrarCuenta = findViewById(R.id.btnBorrarCuenta);
         btnHistorial = findViewById(R.id.btnHistorial);
         imgEditarDireccion = findViewById(R.id.imgEditarDireccion);
-        txtId = findViewById(R.id.txtNombreProducto);
+        txtId = findViewById(R.id.txtIdUsuario);
         txtNombre = findViewById(R.id.txtNombreUsuario);
         txtCorreo = findViewById(R.id.txtCorreo);
         txtDireccionUsuario = findViewById(R.id.txtDireccionUsuario);

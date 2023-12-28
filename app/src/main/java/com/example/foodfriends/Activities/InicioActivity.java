@@ -126,6 +126,7 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
             Intent i = new Intent(getApplicationContext(), AcercaDeActivity.class);
             startActivity(i);
             finish();
+
         }
 
         return super.onOptionsItemSelected(item);

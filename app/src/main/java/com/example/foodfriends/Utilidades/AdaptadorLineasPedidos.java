@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.example.foodfriends.Modelo.LineaPedido;
 import com.example.foodfriends.Modelo.LineaPedidoTemp;
 import com.example.foodfriends.R;
 
@@ -32,7 +31,7 @@ public class AdaptadorLineasPedidos extends ArrayAdapter<LineaPedidoTemp> {
 
         // Obtén referencias a los elementos de la interfaz de usuario (TextViews)
         TextView txtNumeroLineaPedido = convertView.findViewById(R.id.txtNumeroLineaPedido);
-        TextView txtNombreProducto = convertView.findViewById(R.id.txtNombreProducto);
+        TextView txtNombreProducto = convertView.findViewById(R.id.txtIdUsuario);
         TextView txtPrecioProducto = convertView.findViewById(R.id.txtPrecioProducto);
         TextView txtUnidades = convertView.findViewById(R.id.txtUnidades);
         TextView txtTotalLinea = convertView.findViewById(R.id.txtTotalLinea);

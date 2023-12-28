@@ -163,4 +163,17 @@ public class HistorialActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    public void onBackPressed() {
+        // Verifica si puedes volver atrás en la pila de actividades
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            // Si hay fragmentos en la pila, maneja el retroceso normal
+            super.onBackPressed();
+        } else {
+            // Si no hay fragmentos en la pila, inicia la actividad Profile
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
 }

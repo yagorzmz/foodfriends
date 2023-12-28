@@ -5,182 +5,166 @@
     android:id="@+id/txtCorreoUsuario"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    android:backgroundTint="#FFFFFF"
+    android:background="@drawable/aaa"
     tools:context=".Activities.ProfileActivity">
 
 
-    <Button
-        android:id="@+id/btnBorrarCuenta"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:backgroundTint="#000000"
-        android:text="@string/borrar_cuenta"
-        android:textColorHighlight="#E42121"
-        android:textColorLink="#673AB7"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        tools:ignore="VisualLintButtonSize" />
-
-    <Button
-        android:id="@+id/btnCerrarSesion"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:backgroundTint="#000000"
-        android:text="@string/cerrar_sesi_n"
-        android:textColorHighlight="#E42121"
-        android:textColorLink="#673AB7"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.459"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.916"
-        tools:ignore="VisualLintButtonSize" />
-
-    <Button
-        android:id="@+id/btnHistorial"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:backgroundTint="#000000"
-        android:text="Historial"
-        android:textColorHighlight="#E42121"
-        android:textColorLink="#673AB7"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.459"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.832"
-        tools:ignore="VisualLintButtonSize" />
-
-    <ImageView
-        android:id="@+id/imgPerfil"
-        android:layout_width="155dp"
-        android:layout_height="155dp"
-        android:contentDescription="TODO"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.138"
-        app:srcCompat="@drawable/iconousuario" />
-
     <TextView
-        android:id="@+id/txtNombreUsuario"
-        android:layout_width="277dp"
-        android:layout_height="31dp"
-        android:text="@string/nombre_usuario"
-        android:textAlignment="center"
-        android:textSize="22sp"
+        android:id="@+id/txtIdUsuario"
+        android:layout_width="220dp"
+        android:layout_height="64dp"
+        android:maxLength="46"
+        android:maxLines="2"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintHorizontal_bias="0.664"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.377"
-        tools:ignore="TextSizeCheck" />
+        app:layout_constraintVertical_bias="0.524" />
 
     <TextView
         android:id="@+id/txtCorreo"
         android:layout_width="220dp"
         android:layout_height="64dp"
         android:maxLength="46"
+        android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.649"
+        app:layout_constraintHorizontal_bias="0.664"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.614" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="92dp"
-        android:layout_height="31dp"
-        android:text="@string/direcci_n"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.053"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.705" />
-
-    <ImageView
-        android:id="@+id/imgEditarDireccion"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.955"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.709"
-        app:srcCompat="@drawable/editar" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="80dp"
-        android:layout_height="32dp"
-        android:text="Id:"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.054"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.456" />
-
-    <TextView
-        android:id="@+id/txtNombreProducto"
-        android:layout_width="220dp"
-        android:layout_height="64dp"
-        android:maxLength="46"
-        android:maxLines="2"
-        android:textColor="#E11313"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.649"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.478" />
-
-    <TextView
-        android:id="@+id/txtDireccionUsuario"
-        android:layout_width="220dp"
-        android:layout_height="64dp"
-        android:maxLength="46"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.649"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.74" />
+        app:layout_constraintVertical_bias="0.632" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="80dp"
         android:layout_height="32dp"
         android:text="@string/correo"
+        android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.054"
+        app:layout_constraintHorizontal_bias="0.096"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.586" />
+        app:layout_constraintVertical_bias="0.603" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="80dp"
+        android:layout_height="32dp"
+        android:text="Id:"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.096"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtDireccionUsuario"
+        android:layout_width="220dp"
+        android:layout_height="64dp"
+        android:maxLength="46"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.664"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.746" />
+
+    <ImageView
+        android:id="@+id/imgEditarDireccion"
+        android:layout_width="45dp"
+        android:layout_height="43dp"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.956"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.694"
+        app:srcCompat="@drawable/ed" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="92dp"
+        android:layout_height="31dp"
+        android:text="@string/direcci_n"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.71" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="411dp"
+        android:layout_height="120dp"
+        android:background="#121212"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.996">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#121212"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnHistorial"
+                android:layout_width="204dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="3dp"
+                android:backgroundTint="#000000"
+                android:text="Historial"
+                android:textColor="#FFFFFF"
+                android:textColorHighlight="#E42121"
+                android:textColorLink="#673AB7"
+                android:textSize="20sp"
+                app:cornerRadius="0dp"
+                tools:ignore="VisualLintButtonSize" />
+
+            <Button
+                android:id="@+id/btnCerrarSesion"
+                android:layout_width="204dp"
+                android:layout_height="60dp"
+                android:backgroundTint="#000000"
+                android:text="@string/cerrar_sesi_n"
+                android:textColor="#FFFFFF"
+                android:textColorHighlight="#E42121"
+                android:textColorLink="#673AB7"
+                android:textSize="20sp"
+                app:cornerRadius="0dp"
+                tools:ignore="VisualLintButtonSize" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnBorrarCuenta"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:backgroundTint="#000000"
+            android:text="@string/borrar_cuenta"
+            android:textColorHighlight="#E42121"
+            android:textColorLink="#673AB7"
+            android:textSize="20sp"
+            app:cornerRadius="0dp"
+            tools:ignore="VisualLintButtonSize" />
+    </LinearLayout>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -204,6 +188,41 @@
             tools:layout_editor_absoluteY="32dp" /> <!-- Ajusta el tamaño deseado -->
     </androidx.appcompat.widget.Toolbar>
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="411dp"
+        android:layout_height="245dp"
+        android:backgroundTint="#FEFEFE"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <ImageView
+            android:id="@+id/imgPerfil"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
+            android:layout_marginLeft="120dp"
+            android:layout_marginTop="15dp"
+            android:contentDescription="TODO"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/iconousuario" />
+
+        <TextView
+            android:id="@+id/txtNombreUsuario"
+            android:layout_width="277dp"
+            android:layout_height="31dp"
+            android:layout_marginLeft="65dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/nombre_usuario"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:ignore="TextSizeCheck" />
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

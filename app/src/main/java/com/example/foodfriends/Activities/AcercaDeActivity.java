@@ -17,6 +17,7 @@ public class AcercaDeActivity extends AppCompatActivity {
     // Botón para volver a la pantalla principal
     Button btnVolver;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,16 +31,18 @@ public class AcercaDeActivity extends AppCompatActivity {
         btnVolver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Crear un Intent para volver a la pantalla principal (MainActivity)
-                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                // Iniciar la actividad correspondiente al Intent
-                startActivity(i);
+                volver();
             }
         });
     }
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        volver();
+    }
+    private void volver(){
+        Intent i=new Intent(getApplicationContext(),InicioActivity.class);
+        startActivity(i);
         finish();
     }
 }

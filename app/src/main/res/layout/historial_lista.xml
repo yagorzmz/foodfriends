@@ -55,7 +55,7 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/txtNombreProducto"
+                android:id="@+id/txtIdUsuario"
                 android:layout_width="match_parent"
                 android:layout_height="37dp"
                 android:text="@string/idpedido"
