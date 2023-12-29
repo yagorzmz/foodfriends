@@ -34,7 +34,7 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/txtIdUsuario"
+                android:id="@+id/txtIdPedido"
                 android:layout_width="222dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"

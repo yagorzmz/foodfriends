@@ -31,7 +31,7 @@ public class AdaptadorLineasPedidos extends ArrayAdapter<LineaPedidoTemp> {
 
         // Obtén referencias a los elementos de la interfaz de usuario (TextViews)
         TextView txtNumeroLineaPedido = convertView.findViewById(R.id.txtNumeroLineaPedido);
-        TextView txtNombreProducto = convertView.findViewById(R.id.txtIdUsuario);
+        TextView txtNombreProducto = convertView.findViewById(R.id.txtIdPedido);
         TextView txtPrecioProducto = convertView.findViewById(R.id.txtPrecioProducto);
         TextView txtUnidades = convertView.findViewById(R.id.txtUnidades);
         TextView txtTotalLinea = convertView.findViewById(R.id.txtTotalLinea);

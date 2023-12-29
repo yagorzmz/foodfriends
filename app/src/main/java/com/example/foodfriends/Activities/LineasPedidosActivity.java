@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,14 +31,27 @@ public class LineasPedidosActivity extends AppCompatActivity {
     private ListView listViewLineasPedido;
     private List<LineaPedidoTemp> listaLineas;
     private AdaptadorLineasPedidos adapter;
+    TextView txtIdPedidoElegido,txtIdFechaPedidoElegido,txtPrecioPedidoElegido;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lineas_pedidos);
 
+        txtIdPedidoElegido=findViewById(R.id.txtIdPedidoElegido);
+        txtIdFechaPedidoElegido=findViewById(R.id.txtFechaPedidoElegido);
+        txtPrecioPedidoElegido=findViewById(R.id.txtPrecioPedidoElegido);
+
         // Obtén el ID del pedido de los extras del Intent
         String idPedido = getIntent().getStringExtra("ID_PEDIDO");
+        txtIdPedidoElegido.setText("ID PEDIDO "+idPedido);
+        String fechaPedido = getIntent().getStringExtra("FECHA_PEDIDO");
+        txtIdFechaPedidoElegido.setText("FECHA PEDIDO "+fechaPedido);
+        // Crear un formato decimal con dos dígitos
+        DecimalFormat formato = new DecimalFormat("#.##");
+        Double precio = getIntent().getDoubleExtra("PRECIO_PEDIDO",0.0);
+        String precioPedido=formato.format(precio);
+        txtPrecioPedidoElegido.setText("PRECIO TOTAL "+String.valueOf(precioPedido));
 
         listViewLineasPedido = findViewById(R.id.listviewLineas);
         listaLineas = new ArrayList<>();

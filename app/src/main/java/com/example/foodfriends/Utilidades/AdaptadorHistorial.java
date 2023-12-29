@@ -38,7 +38,7 @@ public class AdaptadorHistorial extends ArrayAdapter<Pedido> {
 
         // Obtener referencias a los elementos de la interfaz de usuario (TextViews)
         TextView txtNumeroPedido = convertView.findViewById(R.id.txtNumeroLineaPedido);
-        TextView txtIdPedido = convertView.findViewById(R.id.txtIdUsuario);
+        TextView txtIdPedido = convertView.findViewById(R.id.txtIdPedido);
         TextView txtPrecioTotal = convertView.findViewById(R.id.txtUnidades);
         TextView txtFechaPedido = convertView.findViewById(R.id.txtTotalLinea);
         imgMostrarLineas = convertView.findViewById(R.id.imgMostrarLineas);
@@ -47,10 +47,14 @@ public class AdaptadorHistorial extends ArrayAdapter<Pedido> {
             public void onClick(View v) {
                 // Obtén el ID del pedido
                 String idPedido = getItem(position).getIdPedido();
+                String fechaPedido=getItem(position).getFechaPedido();
+                Double precioPedido=getItem(position).getPrecioTotal();
 
                 // Crea un Intent y agrega el ID del pedido como extra
                 Intent intent = new Intent(getContext(), LineasPedidosActivity.class);
                 intent.putExtra("ID_PEDIDO", idPedido);
+                intent.putExtra("FECHA_PEDIDO",fechaPedido);
+                intent.putExtra("PRECIO_PEDIDO",precioPedido);
 
                 // Inicia la actividad DetallesPedidoActivity
                 getContext().startActivity(intent);
@@ -59,7 +63,7 @@ public class AdaptadorHistorial extends ArrayAdapter<Pedido> {
 
         // Establecer los valores correspondientes en los TextViews
         txtNumeroPedido.setText(String.valueOf(position + 1)); // Se suma 1 para mostrar números de pedido comenzando desde 1
-        txtIdPedido.setText("ID Pedido: " + pedido.getIdPedido());
+        txtIdPedido.setText("Id Pedido: " + pedido.getIdPedido());
         txtPrecioTotal.setText("Precio: " + String.valueOf(formatearDecimal(pedido.getPrecioTotal())));
         txtFechaPedido.setText("Fecha: " + pedido.getFechaPedido());
 

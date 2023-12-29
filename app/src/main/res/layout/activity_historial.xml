@@ -4,13 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondoempresas"
+    android:background="@drawable/aaa"
     tools:context=".Activities.HistorialActivity">
 
     <TextView
         android:id="@+id/txtHistorialVacio"
         android:layout_width="407dp"
         android:layout_height="207dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
         android:text="HISTORIAL VACIO"
         android:textAlignment="center"
         android:textColor="@color/black"
@@ -52,6 +54,7 @@
         android:id="@+id/listviewHistorial"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:divider="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
