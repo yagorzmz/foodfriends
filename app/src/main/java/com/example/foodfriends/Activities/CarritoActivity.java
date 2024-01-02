@@ -2,18 +2,24 @@ package com.example.foodfriends.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +34,7 @@ import com.example.foodfriends.Modelo.LineaPedidoTemp;
 import com.example.foodfriends.R;
 import com.example.foodfriends.Utilidades.AdaptadorLineasPedidosTemp;
 import com.example.foodfriends.Utilidades.ListaLineasPedidosTempHelper;
+import com.example.foodfriends.Utilidades.NotificationReceiver;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -53,8 +60,6 @@ import java.util.Map;
 public class CarritoActivity extends AppCompatActivity implements AdaptadorLineasPedidosTemp.OnLineaPedidoChangeListener {
 
     //Elementos de la activity
-    private static final String CHANNEL_ID = "mi_canal_de_notificaciones";
-    private static final int NOTIFICATION_ID = 1;
     private static double totalConGastosEnvio;
     private androidx.appcompat.widget.Toolbar toolbar;
     static ListView listViewLineasPedido;
@@ -86,8 +91,6 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
 
         //Siempre que entremos actualizamos la situacion del carrito
         actualizarCarrito();
-        // Crear el canal de notificaciones al inicio de la actividad.
-        crearCanalNotificacion();
 
         listViewLineasPedido.setAdapter(adapter);
 
@@ -99,6 +102,49 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             }
         });
     }
+
+    private void mostrarNotificacion() {
+        String channelId = "my_channel_id";
+        String channelName = "My Channel Name";
+        String channelDescription = "My Channel Description";
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+        NotificationChannel channel = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            channel = new NotificationChannel(channelId, channelName, importance);
+            channel.setDescription(channelDescription);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+
+            int notificationId = 1;
+            int icon = R.drawable.ic_notificacion;
+            String title = "Confirma aqui la entrega del pedido";
+            String text = "Haz click en esta notificacion si ha recibido tu pedido correctamente!";
+
+            Intent intent = new Intent(this, CarritoActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+            // Crea un Intent para el BroadcastReceiver
+            Intent confirmIntent = new Intent(this, NotificationReceiver.class);
+
+            // Crea un PendingIntent para la acción
+            PendingIntent confirmPendingIntent = PendingIntent.getBroadcast(this, 0, confirmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                    .setSmallIcon(icon)
+                    .setContentTitle(title)
+                    .setContentText(text)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setAutoCancel(true)
+                    .addAction(R.drawable.ic_notificacion, "Confirmar", confirmPendingIntent)  // Usa el PendingIntent del BroadcastReceiver aquí
+                    .setContentIntent(pendingIntent);
+
+            notificationManager.notify(notificationId, builder.build());
+        }
+    }
+
     //Método que muestra al usuario un dialogo para que elija el tiempo en que quiere
     //recibir el pedido
     private void mostrarOpcionesTiempoEntrega() {
@@ -173,56 +219,9 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-
                 mostrarNotificacion();
             }
         }, milisegundos);
-    }
-    // Método que crea el canal de notificaciones al inicio de la actividad.
-    private void crearCanalNotificacion() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Confirmacion de entrega de pedido";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription("Haz clic aquí para confirmar la entrega de tu pedido");
-
-            // Registrar el canal con el sistema
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-    // Método que muestra la notificación de confirmación al usuario
-    private void mostrarNotificacion() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Confirmacion de entrega de pedido";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription("Haz clic aquí para confirmar la entrega de tu pedido");
-
-            // Registrar el canal con el sistema
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-
-            // Agregar un mensaje de registro (Log) para verificar si la notificación se muestra
-            Log.d("Notificacion", "Mostrando notificación");
-
-            // Crear un intent para enviar una difusión (broadcast) cuando se haga clic en la notificación
-            Intent broadcastIntent = new Intent("com.example.foodfriends.ACCION_NOTIFICACION");
-            PendingIntent clickPendingIntent = PendingIntent.getBroadcast(this, 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-            Log.d("Notificacion", "Despues del intent");
-            // Crear y mostrar la notificación con un PendingIntent para la acción de clic
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_notificacion) // Reemplazar ic_notificacion con el nombre de tu icono de notificación
-                    .setContentTitle("Confirmacion de entrega de pedido")
-                    .setContentText("Haz clic aquí para confirmar la entrega del pedido.")
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setContentIntent(clickPendingIntent)  // Configurar el PendingIntent para la acción de clic
-                    .setAutoCancel(true);  // Hacer que la notificación se cierre automáticamente al hacer clic en ella
-
-            notificationManager.notify(NOTIFICATION_ID, builder.build());
-            Log.d("Notificacion", "Aparece notificacion?");
-        }
     }
 
 
@@ -301,7 +300,6 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
                 .setMessage("Su pedido está en camino. Recibirá una notificación para confirmar la entrega.")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // Puedes agregar acciones adicionales si es necesario
                     }
                 });
         builder.create().show();

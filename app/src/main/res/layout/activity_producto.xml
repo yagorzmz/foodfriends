@@ -34,7 +34,7 @@
                 android:text="Nombre del Producto"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp" />
+                android:textSize="22sp" />
 
             <View
                 android:id="@+id/view"
@@ -45,7 +45,7 @@
             <TextView
                 android:id="@+id/txtPrecio"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="64dp"
                 android:layout_below="@id/txtNombreProducto2"
                 android:foregroundTint="#FFFFFF"
                 android:padding="20dp"
@@ -63,7 +63,7 @@
             <TextView
                 android:id="@+id/txtDescripcionProducto2"
                 android:layout_width="match_parent"
-                android:layout_height="145dp"
+                android:layout_height="135dp"
                 android:layout_below="@id/txtPrecio"
                 android:padding="16dp"
                 android:text="Descripción del Producto"

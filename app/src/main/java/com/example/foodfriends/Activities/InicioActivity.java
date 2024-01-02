@@ -1,6 +1,10 @@
 package com.example.foodfriends.Activities;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,6 +13,8 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,7 +39,7 @@ import java.util.List;
 public class InicioActivity extends AppCompatActivity implements AdaptadorEmpresas.OnItemClickListener {
 
     //Elementos de la activity
-    private static final int REQUEST_FILTRO = 1;
+    private static final int REQUEST_CODE = 1;
     private androidx.appcompat.widget.Toolbar toolbar;
     RecyclerView recycler;
     private FirebaseDatabase firebaseDatabase;
@@ -48,6 +54,15 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inicio);
 
+        if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+        } else {
+            // Request permission
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                    REQUEST_CODE
+            );
+        }
         //Configuración de la barra de herramientas
         toolbar = findViewById(R.id.toolbar7);
         setSupportActionBar(toolbar);
@@ -238,5 +253,47 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
     //Método que muestra mensajes personalizados
     private void mostrarToast(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
+    }
+
+    private void requestNotificationPermission() {
+        if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            // User has already granted permission
+            // Send push notifications
+        } else {
+            // Request permission
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Permisos de notificación");
+            builder.setMessage("Para recibir notificaciones de confirmación de pedido, necesitamos que nos otorgues permisos de notificación.");
+            builder.setPositiveButton("Permitir", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ActivityCompat.requestPermissions(
+                            InicioActivity.this,
+                            new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                            REQUEST_CODE
+                    );
+                }
+            });
+            builder.setNegativeButton("No permitir", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Toast.makeText(InicioActivity.this, "No podrás recibir notificaciones de confirmación de pedido.", Toast.LENGTH_SHORT).show();
+                }
+            });
+            builder.show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                    Toast.makeText(this, "No podrás recibir notificaciones de confirmación de pedido.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 }
