@@ -37,7 +37,7 @@
                 android:id="@+id/txtIdPedido"
                 android:layout_width="222dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="3dp"
                 android:text="nombreProducto"
                 android:textColor="@android:color/black"
                 android:textSize="22sp" />
@@ -46,7 +46,7 @@
                 android:id="@+id/txtUnidades"
                 android:layout_width="221dp"
                 android:layout_height="110dp"
-                android:layout_marginBottom="2dp"
+                android:layout_marginBottom="1dp"
                 android:text="@string/tipo_de_comida"
                 android:textAlignment="textStart"
                 android:textColor="#757575"

@@ -124,13 +124,24 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
 
             Intent intent = new Intent(this, CarritoActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+            PendingIntent pendingIntent;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+            } else {
+                pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            }
 
             // Crea un Intent para el BroadcastReceiver
             Intent confirmIntent = new Intent(this, NotificationReceiver.class);
+            confirmIntent.putExtra("notificationId", notificationId);
 
             // Crea un PendingIntent para la acción
-            PendingIntent confirmPendingIntent = PendingIntent.getBroadcast(this, 0, confirmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent confirmPendingIntent;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                confirmPendingIntent = PendingIntent.getBroadcast(this, 0, confirmIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+            } else {
+                confirmPendingIntent = PendingIntent.getBroadcast(this, 0, confirmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            }
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
                     .setSmallIcon(icon)
@@ -144,6 +155,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             notificationManager.notify(notificationId, builder.build());
         }
     }
+
 
     //Método que muestra al usuario un dialogo para que elija el tiempo en que quiere
     //recibir el pedido
@@ -242,8 +254,6 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
 
     //Método que registra el pedido y las lineas del pedido una vez confirmado el pedido
     public static void registrarPedidoYLineasPedido() {
-        // Limpiar la lista de líneas de pedidos
-        listaLineasPedidosTemp.clear();
 
         // Configuración de Firebase
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");

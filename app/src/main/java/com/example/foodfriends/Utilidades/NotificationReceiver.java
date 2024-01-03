@@ -13,5 +13,14 @@ public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         CarritoActivity.registrarPedidoYLineasPedido();
+
+        // Obtén el ID de la notificación desde el Intent
+        int notificationId = intent.getIntExtra("notificationId", 0);
+
+        // Crea una instancia del NotificationManager
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Cancela la notificación
+        notificationManager.cancel(notificationId);
     }
 }
