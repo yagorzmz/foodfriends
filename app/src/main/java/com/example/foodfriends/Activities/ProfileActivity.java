@@ -199,7 +199,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != Activity.RESULT_OK) {
-            mostrarToast("Se ha producido un error al cargar la imagen");
+            mostrarToast("No has seleccionado la imagen");
             return;
         }
         switch (requestCode) {

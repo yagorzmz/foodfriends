@@ -9,6 +9,11 @@ public class LineaPedidoTemp implements Parcelable {
     private String idProducto;
     private String nombreProducto;
     private Double precioProducto;
+
+    public void setUnidades(Integer unidades) {
+        this.unidades = unidades;
+    }
+
     private Integer unidades;
     // Constructor
     public LineaPedidoTemp(String idProducto, String nombreProducto, double precioProducto, int unidades) {
@@ -72,4 +77,5 @@ public class LineaPedidoTemp implements Parcelable {
     public double calcularPrecioTotal() {
         return getPrecioProducto() * getUnidades();
     }
+
 }

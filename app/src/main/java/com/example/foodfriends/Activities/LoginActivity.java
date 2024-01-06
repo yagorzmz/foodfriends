@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     Button btnLogin, btnRegister;
     EditText editEmail, editPassword;
+    TextView txtNoTeHasRegistrado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +53,12 @@ public class LoginActivity extends AppCompatActivity {
 
         //Relacionamos los elementos de la interfaz de usuario con sus respectivos ID
         btnLogin = findViewById(R.id.btnLogin);
-        btnRegister = findViewById(R.id.btnRegister);
+        txtNoTeHasRegistrado=findViewById(R.id.txNoTeHasRegistrado);
         editEmail = findViewById(R.id.editEmail);
         editPassword = findViewById(R.id.editPassword);
 
         //Configuramos el listener para el botón de registro
-        btnRegister.setOnClickListener(new View.OnClickListener() {
+        txtNoTeHasRegistrado.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Al hacer click en el botón de registro, nos dirigimos a la pantalla de registro

@@ -44,7 +44,7 @@ public class AdaptadorLineasPedidos extends ArrayAdapter<LineaPedidoTemp> {
         txtNombreProducto.setText("Producto: " + lineaPedido.getNombreProducto());
         txtPrecioProducto.setText("Precio/uni: " + formatearDecimal(lineaPedido.getPrecioProducto())+"€");
         txtUnidades.setText("Unidades: " + String.valueOf(lineaPedido.getUnidades()));
-        txtTotalLinea.setText("Total: " + formatearDecimal(totalLinea)+"€");
+        txtTotalLinea.setText("Precio neto: " + formatearDecimal(totalLinea)+"€");
 
         return convertView;
     }

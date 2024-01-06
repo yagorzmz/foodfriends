@@ -364,7 +364,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
     }
 
 
-    //Método que comprueba el estado del carrito, si esta vacio yo contiene lineas de pedido
+    //Método que comprueba el estado del carrito, si esta vacio o contiene lineas de pedido
     private void actualizarCarrito() {
         // Comprobamos si el carrito está vacío.
         if (listaLineasPedidosTemp.isEmpty()) {
