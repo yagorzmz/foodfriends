@@ -2,14 +2,6 @@ package com.example.foodfriends.Modelo;
 
 public class Producto
 {
-    public String getIdProducto() {
-        return idProducto;
-    }
-
-    public void setIdProducto(String idProducto) {
-        this.idProducto = idProducto;
-    }
-
     private String idProducto;
     private String nombreProducto,descripcion,empresaId;
     private String urlProducto;
@@ -22,6 +14,13 @@ public class Producto
         this.empresaId = empresaId;
         this.urlProducto = urlProducto;
         this.precio = precio;
+    }
+    public String getIdProducto() {
+        return idProducto;
+    }
+
+    public void setIdProducto(String idProducto) {
+        this.idProducto = idProducto;
     }
 
     public String getNombreProducto() {

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.foodfriends.Modelo.Empresa;
 import com.example.foodfriends.Modelo.Producto;
 import com.example.foodfriends.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -20,21 +21,37 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.ViewHolder>
 {
+    private List<Producto> listaProductos;
+    private List<Producto> listaProductosCompleta;
     // Constructor
     public AdaptadorProductos(List<Producto> itemList, Context context, AdaptadorProductos.OnItemClickListener listener) {
         this.nInflater = LayoutInflater.from(context);
         this.context = context;
-        this.listaCompleta = itemList;
+        this.listaProductosCompleta = itemList;
         this.listener=listener;
 
     }
-    // Elementos del adaptador
+    public void filtrar(String texto) {
+        listaProductos.clear();
+        if(texto.isEmpty()){
+            listaProductos.addAll(listaProductosCompleta);
+        } else{
+            texto = texto.toLowerCase();
+            for(Producto producto: listaProductosCompleta){
+                if(producto.getNombreProducto().toLowerCase().contains(texto)){
+                    listaProductos.add(producto);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
 
-    private List<Producto> listaCompleta;
+    // Elementos del adaptador
     final AdaptadorProductos.OnItemClickListener listener;
     public interface OnItemClickListener{
         void onItemClick(Producto item);
@@ -55,19 +72,9 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         // Llama al método bindData del ViewHolder para establecer los datos en la posición actual
-        holder.bindData(listaCompleta.get(position));
+        holder.bindData(listaProductosCompleta.get(position));
     }
 
-    @Override
-    public int getItemCount() {
-        // Devuelve la cantidad de elementos en la lista de datos
-        return listaCompleta.size();
-    }
-
-    // Método para actualizar la lista de datos
-    public void setItem(List<Producto> items) {
-        listaCompleta = items;
-    }
 
     // Clase interna ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -120,9 +127,20 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
             });
         }
     }
-    public void setItems(List<Producto> itemList) {
-        listaCompleta = itemList;
-        notifyDataSetChanged(); // Asegúrate de llamar a este método
+
+    @Override
+    public int getItemCount() {
+        //Devuelve la cantidad de elementos en la lista de datos
+        return listaProductosCompleta.size();
     }
+
+    //Método para actualizar la lista de datos
+    public void setItem(List<Producto> items) {
+        listaProductosCompleta = items;
+    }
+    public void setFilteredList(List<Producto> listaFiltrada){
+        this.listaProductosCompleta=listaFiltrada;
+    }
+
 
 }

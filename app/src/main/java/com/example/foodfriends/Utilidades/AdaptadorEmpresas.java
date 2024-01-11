@@ -36,18 +36,13 @@ public class AdaptadorEmpresas extends RecyclerView.Adapter<AdaptadorEmpresas.Vi
     }
     //Elementos del adaptador
 
-    private List<Empresa> listaCompleta; // Lista de empresas sin filtrar
     final AdaptadorEmpresas.OnItemClickListener listener;
-    public void setFilteredList(List<Empresa> listaFiltrada){
-        this.listaCompleta=listaFiltrada;
-    }
     public interface OnItemClickListener{
         void onItemClick(Empresa item);
     }
     private LayoutInflater nInflater;
     private Context context;
 
-    StorageReference storagereference;
 
     @NonNull
     @Override
@@ -57,22 +52,6 @@ public class AdaptadorEmpresas extends RecyclerView.Adapter<AdaptadorEmpresas.Vi
         return new AdaptadorEmpresas.ViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull final AdaptadorEmpresas.ViewHolder holder, final int position) {
-        //Llama al método bindData del ViewHolder para establecer los datos en la posición actual
-        holder.bindData(listaCompleta.get(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        //Devuelve la cantidad de elementos en la lista de datos
-        return listaCompleta.size();
-    }
-
-    //Método para actualizar la lista de datos
-    public void setItem(List<Empresa> items) {
-        listaCompleta = items;
-    }
 
     //Clase interna ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -131,8 +110,28 @@ public class AdaptadorEmpresas extends RecyclerView.Adapter<AdaptadorEmpresas.Vi
     }
     public void setItems(List<Empresa> itemList) {
         listaCompleta = itemList;
-        notifyDataSetChanged(); // Asegúrate de llamar a este método
+        notifyDataSetChanged();
     }
+    @Override
+    public void onBindViewHolder(@NonNull final AdaptadorEmpresas.ViewHolder holder, final int position) {
+        //Llama al método bindData del ViewHolder para establecer los datos en la posición actual
+        holder.bindData(listaCompleta.get(position));
+    }
+
+    @Override
+    public int getItemCount() {
+        //Devuelve la cantidad de elementos en la lista de datos
+        return listaCompleta.size();
+    }
+
+    //Método para actualizar la lista de datos
+    public void setItem(List<Empresa> items) {
+        listaCompleta = items;
+    }
+    public void setFilteredList(List<Empresa> listaFiltrada){
+        this.listaCompleta=listaFiltrada;
+    }
+    private List<Empresa> listaCompleta; // Lista de empresas sin filtrar
 }
 
 

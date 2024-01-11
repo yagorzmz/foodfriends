@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -48,11 +50,13 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
     List<Empresa> listaEmpresas;
     private SearchView searchview;
     ImageView iconoToolbar;
+    private Button btnTodosProductos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inicio);
+        btnTodosProductos=findViewById(R.id.btnTodosProductos);
 
         if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
         } else {
@@ -70,7 +74,7 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         recycler = findViewById(R.id.recyclerView);
-        searchview = findViewById(R.id.buscador);
+        searchview = findViewById(R.id.buscadorProductos);
         searchview.clearFocus();
 
         //Establecemos el listener del filtro
@@ -101,6 +105,13 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
             }
         });
 
+        btnTodosProductos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(getApplicationContext(),TodosProductosActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     //Inflamos el menu

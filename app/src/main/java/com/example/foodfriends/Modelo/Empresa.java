@@ -9,6 +9,21 @@ import java.net.URL;
 public class Empresa implements Serializable {
     public String id;
     public String imagenRestaurante;
+    public String nombreEmpresa;
+    public String direccionEmpresa;
+    public float valoracion;
+    public Long telefono;
+    public String tipoComida;
+    public Empresa(String id,String imagenRestaurante,String nombreEmpresa, String direccionEmpresa,
+                   float valoracion, Long telefono, String tipoComida) {
+        this.id=id;
+        this.imagenRestaurante=imagenRestaurante;
+        this.nombreEmpresa = nombreEmpresa;
+        this.direccionEmpresa = direccionEmpresa;
+        this.valoracion = valoracion;
+        this.telefono = telefono;
+        this.tipoComida = tipoComida;
+    }
 
     public String getId() {
         return id;
@@ -66,21 +81,7 @@ public class Empresa implements Serializable {
         this.tipoComida = tipoComida;
     }
 
-    public String nombreEmpresa;
-    public String direccionEmpresa;
-    public float valoracion;
-    public Long telefono;
-    public String tipoComida;
 
-    public Empresa(String id,String imagenRestaurante,String nombreEmpresa, String direccionEmpresa, float valoracion, Long telefono, String tipoComida) {
-        this.id=id;
-        this.imagenRestaurante=imagenRestaurante;
-        this.nombreEmpresa = nombreEmpresa;
-        this.direccionEmpresa = direccionEmpresa;
-        this.valoracion = valoracion;
-        this.telefono = telefono;
-        this.tipoComida = tipoComida;
-    }
 
 
 }

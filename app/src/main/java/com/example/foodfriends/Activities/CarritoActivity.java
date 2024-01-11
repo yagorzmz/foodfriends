@@ -181,7 +181,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
                         long milisegundos = 0;
                         switch (which) {
                             case 0:
-                                milisegundos = convertirMinutosAMilisegundos(1);
+                                milisegundos = convertirMinutosAMilisegundos(30);
                                 break;
                             case 1:
                                 milisegundos = convertirMinutosAMilisegundos(45);

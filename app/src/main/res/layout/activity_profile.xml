@@ -133,7 +133,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:backgroundTint="#121212"
-                android:text="Historial"
+                android:text="Tus pedidos"
                 android:textColor="#FFFFFF"
                 android:textColorHighlight="#E42121"
                 android:textColorLink="#673AB7"
