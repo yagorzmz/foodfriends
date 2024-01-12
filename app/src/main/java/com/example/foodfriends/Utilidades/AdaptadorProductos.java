@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.foodfriends.Modelo.Empresa;
 import com.example.foodfriends.Modelo.Producto;
 import com.example.foodfriends.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -21,7 +20,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.ViewHolder>
@@ -85,7 +83,7 @@ public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.
             super(itemView);
 
             // Obtiene referencias a las vistas dentro de cada elemento
-            nombreProducto = itemView.findViewById(R.id.txtIdPedido);
+            nombreProducto = itemView.findViewById(R.id.txtIdUsuario);
             descripcion=itemView.findViewById(R.id.txtUnidades);
             imgProducto = itemView.findViewById(R.id.imgProductoLineaPedido);
         }

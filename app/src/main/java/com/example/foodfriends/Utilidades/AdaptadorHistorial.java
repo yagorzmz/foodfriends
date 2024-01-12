@@ -38,7 +38,7 @@ public class AdaptadorHistorial extends ArrayAdapter<Pedido> {
 
         // Obtener referencias a los elementos de la interfaz de usuario (TextViews)
         TextView txtNumeroPedido = convertView.findViewById(R.id.txtNumeroLineaPedido);
-        TextView txtIdPedido = convertView.findViewById(R.id.txtIdPedido);
+        TextView txtIdPedido = convertView.findViewById(R.id.txtIdUsuario);
         TextView txtPrecioTotal = convertView.findViewById(R.id.txtUnidades);
         TextView txtFechaPedido = convertView.findViewById(R.id.txtTotalLinea);
         imgMostrarLineas = convertView.findViewById(R.id.imgMostrarLineas);

@@ -183,12 +183,6 @@ public class TodosProductosActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menuprincipal, menu);
-
-        //Deshabilita el ítem del menú correspondiente a esta actividad
-        MenuItem item = menu.findItem(R.id.item_inicio);
-        if (item != null) {
-            item.setEnabled(false);
-        }
         return true;
     }
 
@@ -198,8 +192,8 @@ public class TodosProductosActivity extends AppCompatActivity {
         //Manejamos las opciones del menú
         int id = item.getItemId();
         if (id == R.id.item_inicio) {
-            // Iniciar la actividad del Carrito
-            Intent i = new Intent(getApplicationContext(), CarritoActivity.class);
+            // Iniciar la actividad de Inicio
+            Intent i = new Intent(getApplicationContext(), InicioActivity.class);
             startActivity(i);
             finish();
         }
