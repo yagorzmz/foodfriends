@@ -18,16 +18,23 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.foodfriends.Modelo.Empresa;
 import com.example.foodfriends.Modelo.LineaPedidoTemp;
 import com.example.foodfriends.Modelo.Producto;
 import com.example.foodfriends.R;
 import com.example.foodfriends.Utilidades.ListaLineasPedidosTempHelper;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
+
 /**
  * La clase ProductoActivity permite al usuario añadir el producto
  * seleccionado previamente al carrito, escogiendo la cantidad del
@@ -36,6 +43,8 @@ import com.google.firebase.storage.StorageReference;
 public class ProductoActivity extends AppCompatActivity
 {
     //Elementos de la activity
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference empresasReference;
     private static final int CANTIDAD_MINIMA = 1;
     private static final int CANTIDAD_MAXIMA = 5;
     private int cantidadActual=1;
@@ -44,6 +53,7 @@ public class ProductoActivity extends AppCompatActivity
     private TextView txtPrecio;
     private TextView txtDescripcion;
     private TextView txtCantidadProducto;
+    private TextView txtNombreRestaurante;
     private ImageView imgProducto;
     Button btnAgregarAlCarrito;
     ImageButton btnSumarCantidad,btnRestarCantidad;
@@ -55,6 +65,10 @@ public class ProductoActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_producto);
 
+        //Configuración de Firebase
+        firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");
+        empresasReference = firebaseDatabase.getReference("Empresas");
+
         // Configuración de la barra de herramientas
         toolbar = findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);
@@ -64,6 +78,7 @@ public class ProductoActivity extends AppCompatActivity
         txtNombreProducto = findViewById(R.id.txtNombreProducto2);
         txtPrecio = findViewById(R.id.txtPrecio);
         txtDescripcion = findViewById(R.id.txtDescripcionProducto2);
+        txtNombreRestaurante = findViewById(R.id.txtNombreRestaurante);
         imgProducto = findViewById(R.id.imgProducto2);
         btnAgregarAlCarrito = findViewById(R.id.btnAgregarCarrito);
         btnSumarCantidad= findViewById(R.id.btnSumarCantidad);
@@ -133,7 +148,7 @@ public class ProductoActivity extends AppCompatActivity
     private void obtenerInformacionProducto(Producto producto) {
         txtNombreProducto.setText(producto.getNombreProducto());
         txtDescripcion.setText(producto.getDescripcion());
-        txtPrecio.setText("Precio: "+producto.getPrecio().toString()+"€/Unidad");
+        txtPrecio.setText("Precio: " + producto.getPrecio().toString() + "€/Unidad");
 
         // Obtén una referencia al archivo en Firebase Storage
         String imageUrl = producto.getUrlProducto();
@@ -157,7 +172,26 @@ public class ProductoActivity extends AppCompatActivity
                 e.printStackTrace();
             }
         });
-
+        try {
+            String idEmpresa = producto.getEmpresaId();
+            empresasReference.child(idEmpresa).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    //Obtenemos los datos de la empresa desde la base de datos
+                    String nombreEmpresa = dataSnapshot.child("NombreEmpresa").getValue(String.class);
+                    String localidad = dataSnapshot.child("Localidad").getValue(String.class);
+                    txtNombreRestaurante.setText(nombreEmpresa+", "+localidad);
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    mostrarToast("No se han podido cargar las empresas. Por favor, intente entrar más tarde.");
+                    finish();
+                }
+            });
+        } catch (Exception e) {
+            // Manejar cualquier excepción que pueda ocurrir al cargar las empresas
+            e.printStackTrace();
+        }
     }
     //Inflamos el menu
     @Override

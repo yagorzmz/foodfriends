@@ -59,21 +59,15 @@
                 android:layout_marginTop="4dp"
                 android:text="Numero Telefono"
                 android:textColor="#FF0000"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
-            <RatingBar
-                android:id="@+id/ratingBarRecycler"
-                android:layout_width="235dp"
+            <TextView
+                android:id="@+id/txtDireccionRestaurante"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:isIndicator="true"
-                android:numStars="5"
-                android:progressTint="#FFC107"
-                android:scaleX="0.8"
-                android:scaleY="0.8"
-                android:stepSize="1.0"
-                android:textAlignment="textEnd"
-                tools:ignore="RtlCompat" />
+                android:text="Direccion Empresa"
+                android:textSize="14sp" />
+
         </LinearLayout>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

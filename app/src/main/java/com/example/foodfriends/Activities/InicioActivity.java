@@ -195,12 +195,14 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
                         String urlLogo = empresaSnapshot.child("LogoEmpresa").getValue(String.class);
                         String direccion = empresaSnapshot.child("DireccionEmpresa").getValue(String.class);
                         String nombre = empresaSnapshot.child("NombreEmpresa").getValue(String.class);
-                        Float estrellas = empresaSnapshot.child("Estrellas").getValue(Float.class);
                         Long telefono = empresaSnapshot.child("Telefono").getValue(Long.class);
                         String tipo = empresaSnapshot.child("TipoComida").getValue(String.class);
+                        String provincia = empresaSnapshot.child("Provincia").getValue(String.class);
+                        String municipio = empresaSnapshot.child("Municipio").getValue(String.class);
+                        String localidad = empresaSnapshot.child("Localidad").getValue(String.class);
 
                         // Crear un objeto Empresa y añadirlo a la lista
-                        Empresa empresa = new Empresa(id, urlLogo, nombre, direccion, estrellas, telefono, tipo);
+                        Empresa empresa = new Empresa(id, urlLogo, nombre, direccion, telefono, tipo,provincia,municipio,localidad);
                         listaEmpresas.add(empresa);
 
                     }

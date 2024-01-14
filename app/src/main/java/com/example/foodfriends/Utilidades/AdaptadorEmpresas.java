@@ -56,8 +56,7 @@ public class AdaptadorEmpresas extends RecyclerView.Adapter<AdaptadorEmpresas.Vi
     //Clase interna ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imgRestaurante;
-        TextView nombre,telefono, tipo;
-        RatingBar valoracion;
+        TextView nombre,telefono, tipo,direccionRestaurante;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -67,7 +66,7 @@ public class AdaptadorEmpresas extends RecyclerView.Adapter<AdaptadorEmpresas.Vi
             nombre = itemView.findViewById(R.id.txtIdUsuario);
             tipo = itemView.findViewById(R.id.txtUnidades);
             telefono= itemView.findViewById(R.id.txtNumeroTelefono);
-            valoracion = itemView.findViewById(R.id.ratingBarRecycler);
+            direccionRestaurante=itemView.findViewById(R.id.txtDireccionRestaurante);
         }
 
         //Método para establecer los datos en las vistas
@@ -75,7 +74,8 @@ public class AdaptadorEmpresas extends RecyclerView.Adapter<AdaptadorEmpresas.Vi
             nombre.setText(item.getNombreEmpresa());
             tipo.setText(item.getTipoComida());
             telefono.setText("+34 "+item.getTelefono().toString());
-            valoracion.setRating(item.getValoracion());
+            direccionRestaurante.setText(item.getDireccionEmpresa()+", "+item.getLocalidad());
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
