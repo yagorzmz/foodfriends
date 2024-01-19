@@ -4,6 +4,9 @@ public class Usuario {
     private String idUsuario;
     private String nombreUsuario;
     private String correo;
+    private String provinciaUsuario;
+    private String municipioUsuario;
+    private String localidadUsuario;
     private String direccionUsuario;
     private String urlImagenUsuario;
     public Usuario(String id, String nombre, String correo, String direccionUsuario,String urlImagenUsuario)
@@ -51,5 +54,17 @@ public class Usuario {
 
     public void setUrlImagenUsuario(String urlImagenUsuario) {
         this.urlImagenUsuario = urlImagenUsuario;
+    }
+
+    public String getProvinciaUsuario() {
+        return provinciaUsuario;
+    }
+
+    public String getMunicipioUsuario() {
+        return municipioUsuario;
+    }
+
+    public String getLocalidadUsuario() {
+        return localidadUsuario;
     }
 }

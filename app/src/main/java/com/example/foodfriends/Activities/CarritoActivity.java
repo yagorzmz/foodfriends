@@ -103,6 +103,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         });
     }
 
+
     private void mostrarNotificacion() {
         String channelId = "my_channel_id";
         String channelName = "My Channel Name";
@@ -355,14 +356,24 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
     }
     //Método que maneja la interacción con el botón realizar pedido
     private void manejarBotonRealizarPedido() {
+        // Obtén la hora actual.
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
         if (listaLineasPedidosTemp.isEmpty()) {
             Toast.makeText(getApplicationContext(), "No hay productos para realizar el pedido", Toast.LENGTH_SHORT).show();
         } else {
-            // Mostramos un diálogo de confirmación antes de realizar el pedido.
-            mostrarDialogoRealizarPedido();
+            // Verifica si la hora actual está entre las 22 y las 12.
+            if (hour >= 22 || hour <= 10) {
+                // Muestra un mensaje al usuario.
+                Toast.makeText(this, "El pedido no se puede realizar, las cocinas están cerradas./n Puede realizar el pedido" +
+                        "entre las 10 y las 22h ", Toast.LENGTH_LONG).show();
+            } else {
+                // Mostramos un diálogo de confirmación antes de realizar el pedido.
+                mostrarDialogoRealizarPedido();
+            }
         }
     }
-
 
     //Método que comprueba el estado del carrito, si esta vacio o contiene lineas de pedido
     private void actualizarCarrito() {

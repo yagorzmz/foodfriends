@@ -7,15 +7,15 @@ import java.io.Serializable;
 import java.net.URL;
 
 public class Empresa implements Serializable {
-    public String id;
-    public String imagenRestaurante;
-    public String nombreEmpresa;
-    public String provincia;
-    public String municipio;
-    public String localidad;
-    public String direccionEmpresa;
-    public Long telefono;
-    public String tipoComida;
+    private String id;
+    private String imagenRestaurante;
+    private String nombreEmpresa;
+    private String provincia;
+    private String municipio;
+    private String localidad;
+    private String direccionEmpresa;
+    private Long telefono;
+    private String tipoComida;
     public Empresa(String id,String imagenRestaurante,String nombreEmpresa, String direccionEmpresa,
                     Long telefono, String tipoComida,String provincia,String municipio,String localidad) {
         this.id=id;

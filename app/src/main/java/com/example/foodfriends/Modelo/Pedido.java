@@ -3,7 +3,7 @@ package com.example.foodfriends.Modelo;
 public class Pedido {
     private String idPedido,idCliente;
     private double precioTotal;
-    private String fechaPedido;
+    private String fechaPedido,fechaEntrega;
 
     public Pedido(String idPedido, String idCliente, double precioTotal, String fechaPedido) {
         this.idPedido = idPedido;
@@ -42,5 +42,13 @@ public class Pedido {
 
     public void setFechaPedido(String fechaPedido) {
         this.fechaPedido = fechaPedido;
+    }
+
+    public String getFechaEntrega() {
+        return fechaEntrega;
+    }
+
+    public void setFechaEntrega(String fechaEntrega) {
+        this.fechaEntrega = fechaEntrega;
     }
 }
