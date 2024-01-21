@@ -84,5 +84,35 @@
         <item>15 días</item>
         <item>30 días</item>
     </string-array>
+    <string-array name="provincias_array">
+        <item>Asturias</item>
+    </string-array>
+
+    <string-array name="municipios_array">
+        <item>Oviedo</item>
+        <item>Avilés</item>
+        <item>Gijón</item>
+    </string-array>
+
+    <string-array name="localidades_oviedo_array">
+        <item>Oviedo</item>
+        <item>La Corredoira</item>
+        <item>Colloto</item>
+    </string-array>
+
+    <string-array name="localidades_aviles_array">
+        <item>Avilés</item>
+        <item>La Sablera</item>
+        <item>Heros</item>
+        <item>Miranda</item>
+    </string-array>
+
+    <string-array name="localidades_gijon_array">
+        <item>Gijón</item>
+        <item>La Camocha</item>
+        <item>Cimavilla</item>
+        <item>Marea de Riba</item>
+    </string-array>
+
 
 </resources>

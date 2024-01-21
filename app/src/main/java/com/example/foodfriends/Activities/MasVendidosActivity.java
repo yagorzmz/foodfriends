@@ -67,7 +67,6 @@ public class MasVendidosActivity extends AppCompatActivity {
     private DatabaseReference productosReference;
     private int diasSeleccionados = 7;
     private Spinner spinnerDias;
-    private Button btnUltimos15Dias,btnUltimos30Dias;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

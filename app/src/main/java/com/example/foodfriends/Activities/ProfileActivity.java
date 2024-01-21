@@ -17,9 +17,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,19 +65,70 @@ public class ProfileActivity extends AppCompatActivity {
     DatabaseReference usuariosRef = europeDatabaseReference.child("Usuarios");
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-    TextView txtId, txtNombre, txtCorreo, txtDireccionUsuario;
+    TextView txtNombre, txtCorreo, txtDireccionUsuario;
     Button btnCerrarSesion, btnBorrarCuenta, btnHistorial;
     ImageView imgEditarDireccion, imgPerfil;
     ImageView iconoToolbar;
     StorageReference storageReference;
     Uri uri;
     ActivityResultLauncher<Intent> resultLauncher;
+    Spinner spinnerProvincias,spinnerMunicipios,spinnerLocalidades;
 
     @SuppressLint({"MissingInflatedId", "UseSupportActionBar"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        spinnerProvincias=findViewById(R.id.spinnerProvincias);
+        spinnerMunicipios=findViewById(R.id.spinnerMunicipios);
+        spinnerLocalidades=findViewById(R.id.spinnerLocalidades);
+
+        spinnerProvincias = findViewById(R.id.spinnerProvincias);
+        ArrayAdapter<CharSequence> adapterProvincias = ArrayAdapter.createFromResource(this,
+                R.array.provincias_array, android.R.layout.simple_spinner_item);
+        adapterProvincias.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerProvincias.setAdapter(adapterProvincias);
+
+        spinnerMunicipios = findViewById(R.id.spinnerMunicipios);
+        ArrayAdapter<CharSequence> adapterMunicipios = ArrayAdapter.createFromResource(this,
+                R.array.municipios_array, android.R.layout.simple_spinner_item);
+        adapterMunicipios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerMunicipios.setAdapter(adapterMunicipios);
+
+        spinnerLocalidades = findViewById(R.id.spinnerLocalidades);
+
+        spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int arrayId;
+                switch (position) {
+                    case 0: // Oviedo
+                        arrayId = R.array.localidades_oviedo_array;
+                        break;
+                    case 1: // Avilés
+                        arrayId = R.array.localidades_aviles_array;
+                        break;
+                    case 2: // Gijón
+                        arrayId = R.array.localidades_gijon_array;
+                        break;
+                    default:
+                        arrayId = 0;
+                }
+
+                if (arrayId != 0) {
+                    ArrayAdapter<CharSequence> adapterLocalidades = ArrayAdapter.createFromResource(getApplicationContext(),
+                            arrayId, android.R.layout.simple_spinner_item);
+                    adapterLocalidades.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerLocalidades.setAdapter(adapterLocalidades);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // No hacer nada
+            }
+        });
 
         FirebaseApp.initializeApp(getApplicationContext());
         storageReference = FirebaseStorage.getInstance().getReference().child("urlPerfiles");
@@ -88,7 +142,6 @@ public class ProfileActivity extends AppCompatActivity {
         btnBorrarCuenta = findViewById(R.id.btnBorrarCuenta);
         btnHistorial = findViewById(R.id.btnHistorial);
         imgEditarDireccion = findViewById(R.id.imgEditarDireccion);
-        txtId = findViewById(R.id.txtIdUsuario);
         txtNombre = findViewById(R.id.txtNombreUsuario);
         txtCorreo = findViewById(R.id.txtCorreo);
         txtDireccionUsuario = findViewById(R.id.txtDireccionUsuario);
@@ -338,12 +391,11 @@ public class ProfileActivity extends AppCompatActivity {
         finish();  // Cierra la actividad actual después de que la nueva actividad se haya iniciado
     }
 
-    //Método que elimina la cuenta del usuario.
     public void eliminarCuenta() {
         // Mostrar un cuadro de diálogo de confirmación antes de eliminar la cuenta
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Eliminar cuenta");
-        builder.setMessage("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.");
+        builder.setMessage("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer. Ten en cuenta que, aunque tu cuenta se eliminará, la información de tus pedidos realizados seguirá formando parte de la empresa y no se borrará.");
 
         builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
             @Override
@@ -366,8 +418,8 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         builder.show();
-
     }
+
 
     //Método que borra al usuario mediante su id de la base de datos y de la autenticacion
     public void borrarUsuario(String idUsuario) {
@@ -479,7 +531,6 @@ public class ProfileActivity extends AppCompatActivity {
                     String urlFotoPerfil = dataSnapshot.child("urlFotoPerfil").getValue(String.class);
 
                     // Establece los valores en los TextViews
-                    txtId.setText(idUsuario);
                     txtNombre.setText(nombre);
                     txtCorreo.setText(correo);
 
