@@ -101,4 +101,17 @@ public class Empresa implements Serializable {
     public void setLocalidad(String localidad) {
         this.localidad = localidad;
     }
+
+    public int getProximityScore(String userLocation) {
+        if (this.getLocalidad().equals(userLocation)) {
+            return 0; // mismo lugar
+        } else if (this.getMunicipio().equals(userLocation)) {
+            return 1; // mismo municipio
+        } else if (this.getProvincia().equals(userLocation)) {
+            return 2; // misma provincia
+        } else {
+            return 3; // diferente provincia
+        }
+    }
+
 }

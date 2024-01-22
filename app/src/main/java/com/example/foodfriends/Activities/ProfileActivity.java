@@ -49,6 +49,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * La clase ProfileActivity muestra la información del usuario,
  * cambiar su direccion de envio, su foto de perfil y su
@@ -57,6 +60,8 @@ import com.google.firebase.storage.StorageReference;
 public class ProfileActivity extends AppCompatActivity {
 
     //Elementos de la activity
+    // Agrega aquí los demás municipios y sus localidades correspondientes
+
     private static final int PHOTO_PICKER_REQUEST_CODE = 1001;
     Uri imageUri;
     private androidx.appcompat.widget.Toolbar toolbar;
@@ -98,13 +103,34 @@ public class ProfileActivity extends AppCompatActivity {
 
         spinnerLocalidades = findViewById(R.id.spinnerLocalidades);
 
+        spinnerProvincias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String provincia = spinnerProvincias.getSelectedItem().toString();
+                DatabaseReference usuarioRef = usuariosRef.child(firebaseUser.getUid());
+                usuarioRef.child("Provincia").setValue(provincia);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Another interface callback
+            }
+        });
+
+
         spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                String municipio = spinnerMunicipios.getSelectedItem().toString();
+                DatabaseReference usuarioRef = usuariosRef.child(firebaseUser.getUid());
+                usuarioRef.child("Municipio").setValue(municipio);
+
                 int arrayId;
                 switch (position) {
                     case 0: // Oviedo
                         arrayId = R.array.localidades_oviedo_array;
+
                         break;
                     case 1: // Avilés
                         arrayId = R.array.localidades_aviles_array;
@@ -115,7 +141,6 @@ public class ProfileActivity extends AppCompatActivity {
                     default:
                         arrayId = 0;
                 }
-
                 if (arrayId != 0) {
                     ArrayAdapter<CharSequence> adapterLocalidades = ArrayAdapter.createFromResource(getApplicationContext(),
                             arrayId, android.R.layout.simple_spinner_item);
@@ -127,6 +152,19 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // No hacer nada
+            }
+        });
+        spinnerLocalidades.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String localidad = spinnerLocalidades.getSelectedItem().toString();
+                DatabaseReference usuarioRef = usuariosRef.child(firebaseUser.getUid());
+                usuarioRef.child("Localidad").setValue(localidad);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Another interface callback
             }
         });
 
@@ -548,6 +586,14 @@ public class ProfileActivity extends AppCompatActivity {
                     } else {
                         txtDireccionUsuario.setText(direccion);
                     }
+
+                    String provincia = dataSnapshot.child("Provincia").getValue(String.class);
+                    String municipio = dataSnapshot.child("Municipio").getValue(String.class);
+                    String localidad = dataSnapshot.child("Localidad").getValue(String.class);
+
+                    spinnerProvincias.setSelection(getIndex(spinnerProvincias, provincia));
+                    spinnerMunicipios.setSelection(getIndex(spinnerMunicipios, municipio));
+                    spinnerLocalidades.setSelection(getIndex(spinnerLocalidades, localidad));
                 }
             }
 
@@ -558,6 +604,14 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    private int getIndex(Spinner spinner, String myString){
+        for (int i=0;i<spinner.getCount();i++){
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+                return i;
+            }
+        }
+        return 0;
+    }
     // Método para cargar la imagen de perfil desde Firebase Storage y establecerla en el ImageView con Glide
     private void cargarImagenPerfil(String urlFotoPerfil) {
         //Obténemos una referencia al archivo en Firebase Storage

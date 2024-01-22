@@ -1,15 +1,19 @@
 package com.example.foodfriends.Activities;
 
+import static androidx.fragment.app.FragmentManager.TAG;
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -23,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.foodfriends.Modelo.Empresa;
 import com.example.foodfriends.R;
 import com.example.foodfriends.Utilidades.AdaptadorEmpresas;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +35,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -42,15 +49,19 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
 
     //Elementos de la activity
     private static final int REQUEST_CODE = 1;
+    String urlBase = "https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/";
+    DatabaseReference europeDatabaseReference = FirebaseDatabase.getInstance(urlBase).getReference();
+    DatabaseReference usuariosRef = europeDatabaseReference.child("Usuarios");
     private androidx.appcompat.widget.Toolbar toolbar;
     RecyclerView recycler;
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference empresasReference;
+    private DatabaseReference empresasReference,usuariosReference;
     private AdaptadorEmpresas adaptadorEmpresas;
     List<Empresa> listaEmpresas;
     private SearchView searchview;
     ImageView iconoToolbar;
     private Button btnTodosProductos;
+    private ImageView imgLocalizacion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +106,7 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
         //Configuración de Firebase
         firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");
         empresasReference = firebaseDatabase.getReference("Empresas");
+        usuariosReference = firebaseDatabase.getReference("Usuarios");
 
         //Iniciamos la carga de empresas desde Firebase
         cargarEmpresas(new OnDataLoadedListener() {
@@ -112,6 +124,25 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
                 startActivity(i);
             }
         });
+
+        imgLocalizacion=findViewById(R.id.imgLocalizacion);
+        imgLocalizacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                infoLocalizacion();
+            }
+        });
+
+    }
+    //Metodo que muestra un mensaje de informacion al usuario
+    private void infoLocalizacion(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Cuando buscas restaurantes, los resultados se organizan según tu ubicación." +
+                " Primero verás los restaurantes más cercanos.\n" +
+                "Así, siempre tendrás a mano las opciones más relevantes para ti.");
+        builder.setPositiveButton("Entendido", null);
+        builder.show();
+
     }
 
     //Inflamos el menu
@@ -202,10 +233,27 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
                         String localidad = empresaSnapshot.child("Localidad").getValue(String.class);
 
                         // Crear un objeto Empresa y añadirlo a la lista
-                        Empresa empresa = new Empresa(id, urlLogo, nombre, direccion, telefono, tipo,provincia,municipio,localidad);
+                        Empresa empresa = new Empresa(id, urlLogo, nombre, direccion, telefono, tipo, provincia, municipio, localidad);
                         listaEmpresas.add(empresa);
 
                     }
+                    obtenerLocalidad(new LocalidadCallback() {
+                        @Override
+                        public void onCallback(String localidad) {
+                            Log.d("FirebaseDebug", "Localidad devuelta: " + localidad);
+                            // Aquí puedes usar la localidad para ordenar tu lista de empresas
+                            Collections.sort(listaEmpresas, new Comparator<Empresa>() {
+                                @Override
+                                public int compare(Empresa e1, Empresa e2) {
+                                    return e1.getProximityScore(localidad) - e2.getProximityScore(localidad);
+                                }
+                            });
+                            // Notificar que los datos han sido cargados y ordenados
+                            if (listener != null) {
+                                listener.onDataLoaded(listaEmpresas);
+                            }
+                        }
+                    });
 
                     // Notificar que los datos han sido cargados
                     if (listener != null) {
@@ -219,10 +267,34 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
                     finish();
                 }
             });
+
         } catch (Exception e) {
             // Manejar cualquier excepción que pueda ocurrir al cargar las empresas
             e.printStackTrace();
         }
+    }
+    interface LocalidadCallback {
+        void onCallback(String localidad);
+    }
+    private void obtenerLocalidad(LocalidadCallback myCallback) {
+        DatabaseReference usuarioRef = usuariosRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        usuarioRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String localidadUsuario = dataSnapshot.child("Localidad").getValue(String.class);
+                    Log.d("FirebaseDebug", "Localidad recuperada: " + localidadUsuario);
+                    myCallback.onCallback(localidadUsuario);
+                } else {
+                    Log.d("FirebaseDebug", "DataSnapshot no existe");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("FirebaseError", "Error al cargar los datos del perfil", databaseError.toException());
+            }
+        });
     }
 
     //Método que filtra las empresas mediante el searcher
@@ -309,4 +381,7 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
                 break;
         }
     }
+
+
+
 }

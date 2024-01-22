@@ -37,7 +37,7 @@
 
     <SearchView
         android:id="@+id/buscadorProductos"
-        android:layout_width="270dp"
+        android:layout_width="245dp"
         android:layout_height="51dp"
         android:background="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,7 +49,7 @@
 
     <Button
         android:id="@+id/btnTodosProductos"
-        android:layout_width="135dp"
+        android:layout_width="125dp"
         android:layout_height="50dp"
         android:backgroundTint="#E09C55"
         android:text="Productos"
@@ -69,5 +69,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buscadorProductos"
         app:layout_constraintVertical_bias="0.717" />
+
+    <ImageView
+        android:id="@+id/imgLocalizacion"
+        android:layout_width="41dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="1dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnTodosProductos"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar7"
+        app:srcCompat="@drawable/localization" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,6 +21,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -116,6 +118,7 @@ public class AdaptadorEmpresas extends RecyclerView.Adapter<AdaptadorEmpresas.Vi
     public void onBindViewHolder(@NonNull final AdaptadorEmpresas.ViewHolder holder, final int position) {
         //Llama al método bindData del ViewHolder para establecer los datos en la posición actual
         holder.bindData(listaCompleta.get(position));
+
     }
 
     @Override
@@ -132,6 +135,8 @@ public class AdaptadorEmpresas extends RecyclerView.Adapter<AdaptadorEmpresas.Vi
         this.listaCompleta=listaFiltrada;
     }
     private List<Empresa> listaCompleta; // Lista de empresas sin filtrar
+
+
 }
 
 
