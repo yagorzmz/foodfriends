@@ -237,15 +237,42 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
                         listaEmpresas.add(empresa);
 
                     }
-                    obtenerLocalidad(new LocalidadCallback() {
+
+                    obtenerUbicacionUsuario(new LocalidadCallback() {
                         @Override
-                        public void onCallback(String localidad) {
+                        public void onCallback(String localidad,String municipio,String provincia) {
                             Log.d("FirebaseDebug", "Localidad devuelta: " + localidad);
-                            // Aquí puedes usar la localidad para ordenar tu lista de empresas
+
+                            // Ordena la lista de restaurantes
                             Collections.sort(listaEmpresas, new Comparator<Empresa>() {
                                 @Override
-                                public int compare(Empresa e1, Empresa e2) {
-                                    return e1.getProximityScore(localidad) - e2.getProximityScore(localidad);
+                                public int compare(Empresa r1, Empresa r2) {
+                                    // Comparamos por localidad
+                                    if (localidad.equals(r1.getLocalidad()) && !localidad.equals(r2.getLocalidad())) {
+                                        return -1;
+                                    }
+                                    if (!localidad.equals(r1.getLocalidad()) && localidad.equals(r2.getLocalidad())) {
+                                        return 1;
+                                    }
+                                    // Si las localidades son iguales, comparamos por municipio
+                                    if (municipio.equals(r1.getMunicipio()) && !municipio.equals(r2.getMunicipio())) {
+                                        return -1;
+                                    }
+                                    if (!municipio.equals(r1.getMunicipio()) && municipio.equals(r2.getMunicipio())) {
+                                        return 1;
+                                    }
+                                    // Si los municipios son iguales, comparamos por provincia
+                                    if (provincia.equals(r1.getProvincia()) && !provincia.equals(r2.getProvincia())) {
+                                        return -1;
+                                    }
+                                    if (!provincia.equals(r1.getProvincia()) && provincia.equals(r2.getProvincia())) {
+                                        return 1;
+                                    }
+                                    // Si las provincias son iguales, comparamos por municipio de nuevo
+                                    if (r1.getMunicipio().equals(r2.getMunicipio())) {
+                                        return 0;
+                                    }
+                                    return r1.getMunicipio().compareTo(r2.getMunicipio());
                                 }
                             });
                             // Notificar que los datos han sido cargados y ordenados
@@ -254,6 +281,7 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
                             }
                         }
                     });
+
 
                     // Notificar que los datos han sido cargados
                     if (listener != null) {
@@ -274,17 +302,20 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
         }
     }
     interface LocalidadCallback {
-        void onCallback(String localidad);
+        void onCallback(String localidad,String municipio,String provincia);
     }
-    private void obtenerLocalidad(LocalidadCallback myCallback) {
+    //Metodo que obtiene a ubicacion del usuario
+    private void obtenerUbicacionUsuario(LocalidadCallback myCallback) {
         DatabaseReference usuarioRef = usuariosRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         usuarioRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     String localidadUsuario = dataSnapshot.child("Localidad").getValue(String.class);
+                    String municipioUsuario = dataSnapshot.child("Municipio").getValue(String.class);
+                    String provinciaUsuario = dataSnapshot.child("Provincia").getValue(String.class);
                     Log.d("FirebaseDebug", "Localidad recuperada: " + localidadUsuario);
-                    myCallback.onCallback(localidadUsuario);
+                    myCallback.onCallback(localidadUsuario,municipioUsuario,provinciaUsuario);
                 } else {
                     Log.d("FirebaseDebug", "DataSnapshot no existe");
                 }
