@@ -93,10 +93,11 @@ public class HistorialActivity extends AppCompatActivity {
                     String id = pedidoSnapshot.getKey();
                     String idCliente = pedidoSnapshot.child("ClienteId").getValue(String.class);
                     Double precio = pedidoSnapshot.child("PrecioTotal").getValue(Double.class);
-                    String fecha = pedidoSnapshot.child("FechaPedido").getValue(String.class);
+                    String fechaPedido = pedidoSnapshot.child("FechaPedido").getValue(String.class);
+                    String fechaEntrega = pedidoSnapshot.child("FechaEntrega").getValue(String.class);
 
                     // Crea un objeto Pedido con la información obtenida y agregarlo a la lista
-                    Pedido pedido = new Pedido(id, idCliente, precio, fecha);
+                    Pedido pedido = new Pedido(id, idCliente, precio, fechaPedido,fechaEntrega);
                     listaPedidos.add(pedido);
                 }
 

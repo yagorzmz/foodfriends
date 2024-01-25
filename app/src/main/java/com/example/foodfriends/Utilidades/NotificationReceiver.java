@@ -8,8 +8,11 @@ import android.widget.Toast;
 
 import com.example.foodfriends.Activities.CarritoActivity;
 
-public class NotificationReceiver extends BroadcastReceiver {
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
+public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         CarritoActivity.registrarPedidoYLineasPedido();
@@ -23,4 +26,6 @@ public class NotificationReceiver extends BroadcastReceiver {
         // Cancela la notificación
         notificationManager.cancel(notificationId);
     }
+
+
 }

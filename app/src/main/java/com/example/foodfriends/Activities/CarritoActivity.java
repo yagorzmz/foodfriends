@@ -58,8 +58,8 @@ import java.util.Map;
  * con sus unidades, el repcio de cada linea de pedido y el precio total del pedido
  */
 public class CarritoActivity extends AppCompatActivity implements AdaptadorLineasPedidosTemp.OnLineaPedidoChangeListener {
-
     //Elementos de la activity
+    private static String fechaPedido;
     private static double totalConGastosEnvio;
     private androidx.appcompat.widget.Toolbar toolbar;
     static ListView listViewLineasPedido;
@@ -157,7 +157,6 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         }
     }
 
-
     //Método que muestra al usuario un dialogo para que elija el tiempo en que quiere
     //recibir el pedido
     private void mostrarOpcionesTiempoEntrega() {
@@ -199,6 +198,8 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
                         }
                         //Mostramos un dialogo para avisar al usuario de que le pedido se esta realizando
                         mostrarDialogoEnMarcha();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                        fechaPedido=sdf.format(new Date());
                         //Programamos el tiempo de recibo de la notificacion para confirmar el pedido
                         programarNotificacionDespuesDe(milisegundos);
                     }
@@ -267,13 +268,16 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         DatabaseReference databaseReference = firebaseDatabase.getReference();
         //Generar un nuevo ID para el pedido utilizando push() de Firebase
         String nuevoPedidoId = databaseReference.child("Pedidos").push().getKey();
-        String fechaPedido = obtenerFechaActual();
+        String fechaPedido = obtenerFechaPedido();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        String fechaEntrega=sdf.format(new Date());;
         String clienteId = usuarioFirebase.getUid();
         double precioTotal = totalConGastosEnvio;
 
         //Creamos un mapa para contener los datos del pedido
         Map<String, Object> pedidoData = new HashMap<>();
         pedidoData.put("FechaPedido", fechaPedido);
+        pedidoData.put("FechaEntrega", fechaEntrega);
         pedidoData.put("PrecioTotal", precioTotal);
         pedidoData.put("ClienteId", clienteId);
 
@@ -295,7 +299,6 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             //Actualizamos el campo NumeroVentas del producto
             actualizarNumeroVentas(lineaPedidoTemp.getIdProducto());
         }
-
         //Limpiamos la lista y notificar al adaptador después de procesar todas las líneas de pedido
         listaLineasPedidosTemp.clear();
         adapter.notifyDataSetChanged();
@@ -350,10 +353,11 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
     }
 
     //Método para obtener la fecha actual en un formato específico (puedes ajustar esto según tus necesidades)
-    private static String obtenerFechaActual() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        return sdf.format(new Date());
+    private static String obtenerFechaPedido() {
+        return fechaPedido;
     }
+    //Método para obtener la fecha actual en un formato específico (puedes ajustar esto según tus necesidades)
+
     //Método que maneja la interacción con el botón realizar pedido
     private void manejarBotonRealizarPedido() {
         // Obtén la hora actual.

@@ -5,11 +5,12 @@ public class Pedido {
     private double precioTotal;
     private String fechaPedido,fechaEntrega;
 
-    public Pedido(String idPedido, String idCliente, double precioTotal, String fechaPedido) {
+    public Pedido(String idPedido, String idCliente, double precioTotal, String fechaPedido,String fechaEntrega) {
         this.idPedido = idPedido;
         this.idCliente = idCliente;
         this.precioTotal = precioTotal;
         this.fechaPedido = fechaPedido;
+        this.fechaEntrega= fechaEntrega;
     }
 
     public String getIdPedido() {
@@ -51,4 +52,5 @@ public class Pedido {
     public void setFechaEntrega(String fechaEntrega) {
         this.fechaEntrega = fechaEntrega;
     }
+
 }
