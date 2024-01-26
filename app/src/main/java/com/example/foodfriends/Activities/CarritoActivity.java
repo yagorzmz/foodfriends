@@ -311,7 +311,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         // Crear y configurar el diálogo
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pedido en marcha")
-                .setMessage("Su pedido está en camino. Recibirá una notificación para confirmar la entrega.")
+                .setMessage("Su pedido está en camino. Recibirá una notificación a través de la aplicación para confirmar la entrega.")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                     }
@@ -368,9 +368,9 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             Toast.makeText(getApplicationContext(), "No hay productos para realizar el pedido", Toast.LENGTH_SHORT).show();
         } else {
             // Verifica si la hora actual está entre las 22 y las 12.
-            if (hour >= 22 || hour <= 10) {
+            if (hour >= 23 || hour <= 9) {
                 // Muestra un mensaje al usuario.
-                Toast.makeText(this, "El pedido no se puede realizar, las cocinas están cerradas./n Puede realizar el pedido" +
+                Toast.makeText(this, "El pedido no se puede realizar, las cocinas están cerradas.Puede realizar el pedido" +
                         "entre las 10 y las 22h ", Toast.LENGTH_LONG).show();
             } else {
                 // Mostramos un diálogo de confirmación antes de realizar el pedido.
