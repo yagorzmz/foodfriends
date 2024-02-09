@@ -7,11 +7,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,10 +49,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * La clase ProfileActivity muestra la información del usuario,
@@ -60,10 +64,10 @@ import java.util.Map;
 public class ProfileActivity extends AppCompatActivity {
 
     //Elementos de la activity
-    // Agrega aquí los demás municipios y sus localidades correspondientes
-
+    private String provinciaActual;
+    private String municipioActual;
+    private String localidadActual;
     private static final int PHOTO_PICKER_REQUEST_CODE = 1001;
-    Uri imageUri;
     private androidx.appcompat.widget.Toolbar toolbar;
     String urlBase = "https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/";
     DatabaseReference europeDatabaseReference = FirebaseDatabase.getInstance(urlBase).getReference();
@@ -75,9 +79,19 @@ public class ProfileActivity extends AppCompatActivity {
     ImageView imgEditarDireccion, imgPerfil;
     ImageView iconoToolbar;
     StorageReference storageReference;
-    Uri uri;
-    ActivityResultLauncher<Intent> resultLauncher;
-    Spinner spinnerProvincias,spinnerMunicipios,spinnerLocalidades;
+    // Listas para almacenar datos de los spinners
+    private Spinner spinnerProvincias;
+    private Spinner spinnerMunicipios;
+    private Spinner spinnerLocalidades;
+
+    private ArrayAdapter<String> provinciasAdapter;
+    private ArrayAdapter<String> municipiosAdapter;
+    private ArrayAdapter<String> localidadesAdapter;
+
+    private List<String> provinciasList;
+    private List<String> municipiosList;
+    private List<String> localidadesList;
+
 
     @SuppressLint({"MissingInflatedId", "UseSupportActionBar"})
     @Override
@@ -85,88 +99,15 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        // Inicializa los Spinners
         spinnerProvincias=findViewById(R.id.spinnerProvincias);
         spinnerMunicipios=findViewById(R.id.spinnerMunicipios);
         spinnerLocalidades=findViewById(R.id.spinnerLocalidades);
 
-        spinnerProvincias = findViewById(R.id.spinnerProvincias);
-        ArrayAdapter<CharSequence> adapterProvincias = ArrayAdapter.createFromResource(this,
-                R.array.provincias_array, android.R.layout.simple_spinner_item);
-        adapterProvincias.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerProvincias.setAdapter(adapterProvincias);
+        provinciasList=new ArrayList<>();
+        municipiosList=new ArrayList<>();
+        localidadesList=new ArrayList<>();
 
-        spinnerMunicipios = findViewById(R.id.spinnerMunicipios);
-        ArrayAdapter<CharSequence> adapterMunicipios = ArrayAdapter.createFromResource(this,
-                R.array.municipios_array, android.R.layout.simple_spinner_item);
-        adapterMunicipios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerMunicipios.setAdapter(adapterMunicipios);
-
-        spinnerLocalidades = findViewById(R.id.spinnerLocalidades);
-
-        spinnerProvincias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String provincia = spinnerProvincias.getSelectedItem().toString();
-                DatabaseReference usuarioRef = usuariosRef.child(firebaseUser.getUid());
-                usuarioRef.child("Provincia").setValue(provincia);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Another interface callback
-            }
-        });
-
-
-        spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                String municipio = spinnerMunicipios.getSelectedItem().toString();
-                DatabaseReference usuarioRef = usuariosRef.child(firebaseUser.getUid());
-                usuarioRef.child("Municipio").setValue(municipio);
-
-                int arrayId;
-                switch (position) {
-                    case 0: // Oviedo
-                        arrayId = R.array.localidades_oviedo_array;
-
-                        break;
-                    case 1: // Avilés
-                        arrayId = R.array.localidades_aviles_array;
-                        break;
-                    case 2: // Gijón
-                        arrayId = R.array.localidades_gijon_array;
-                        break;
-                    default:
-                        arrayId = 0;
-                }
-                if (arrayId != 0) {
-                    ArrayAdapter<CharSequence> adapterLocalidades = ArrayAdapter.createFromResource(getApplicationContext(),
-                            arrayId, android.R.layout.simple_spinner_item);
-                    adapterLocalidades.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinnerLocalidades.setAdapter(adapterLocalidades);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // No hacer nada
-            }
-        });
-        spinnerLocalidades.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String localidad = spinnerLocalidades.getSelectedItem().toString();
-                DatabaseReference usuarioRef = usuariosRef.child(firebaseUser.getUid());
-                usuarioRef.child("Localidad").setValue(localidad);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Another interface callback
-            }
-        });
 
         FirebaseApp.initializeApp(getApplicationContext());
         storageReference = FirebaseStorage.getInstance().getReference().child("urlPerfiles");
@@ -191,7 +132,6 @@ public class ProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        //Metodo para cambiar la foto de perfil
         // Configuración del OnClickListener para el ImageView
         imgPerfil.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,7 +155,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(listaLineasPedidosTemp!=null){
+                if (listaLineasPedidosTemp != null) {
                     listaLineasPedidosTemp.clear();
                 }
                 //Cerramos sesion
@@ -237,11 +177,171 @@ public class ProfileActivity extends AppCompatActivity {
                 solicitarDireccion("Edita tu direccion", "Introduce tu nueva direccion de envio");
             }
         });
-        //Actualizamos el perfil del usuario
-        completarPerfil(firebaseUser.getUid());
+        cargarProvincias();
+
 
     }
 
+
+
+    //Metodo que completa el perfil del usuario, obteniendo los datos de la base de datos
+    private void completarPerfil(String idUsuario) {
+        DatabaseReference usuarioRef = usuariosRef.child(idUsuario);
+        // Agrega un ValueEventListener para escuchar los cambios en los datos del usuario
+        usuarioRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Recupera los valores de los campos del usuario
+                    String nombre = dataSnapshot.child("NombreUsuario").getValue(String.class);
+                    String correo = dataSnapshot.child("Correo").getValue(String.class);
+                    String direccion = dataSnapshot.child("DireccionUsuario").getValue(String.class);
+                    String urlFotoPerfil = dataSnapshot.child("urlFotoPerfil").getValue(String.class);
+
+                    provinciaActual = dataSnapshot.child("Provincia").getValue(String.class);
+                    municipioActual = dataSnapshot.child("Municipio").getValue(String.class);
+                    localidadActual = dataSnapshot.child("Localidad").getValue(String.class);
+
+                    // Establece los valores en los TextViews
+                    txtNombre.setText(nombre);
+                    txtCorreo.setText(correo);
+
+                    // Carga la imagen de perfil desde Firebase Storage y la establece en el ImageView
+                    if (urlFotoPerfil != null && !urlFotoPerfil.isEmpty()) {
+                        cargarImagenPerfil(urlFotoPerfil);
+                    } else {
+                        mostrarToast("No se ha podido cargar la foto de perfil");
+                    }
+
+                    if (direccion == null || direccion.isEmpty()) {
+                        // Si la dirección está en blanco o es nula, llama al método solicitarDireccion
+                        solicitarDireccion("Aviso Direccion", "Debes introducir una direccion para poder " +
+                                "enviarte los pedidos. La dirección debe empezar por C/");
+                    } else {
+                        txtDireccionUsuario.setText(direccion);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("FirebaseError", "Error al cargar los datos del perfil", databaseError.toException());
+            }
+        });
+    }
+
+
+    private void cargarProvincias() {
+        completarPerfil(firebaseUser.getUid());
+        provinciasList.clear();
+        DatabaseReference ref = europeDatabaseReference.child("Provincias");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot provinciaSnapshot: dataSnapshot.getChildren()) {
+                    String provinciaName = provinciaSnapshot.getKey();
+                    provinciasList.add(provinciaName);
+
+                    // Verifica si la provincia obtenida coincide con la provincia actual y agrega primero esa provincia
+                    if (provinciaName.equals(provinciaActual)) {
+                        provinciasList.remove(provinciaName);
+                        provinciasList.add(0, provinciaName);
+                    }
+                }
+                provinciasAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, provinciasList);
+                spinnerProvincias.setAdapter(provinciasAdapter);
+                provinciasAdapter.notifyDataSetChanged();
+                spinnerProvincias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        String provinciaSeleccionada = parent.getItemAtPosition(position).toString();
+                        cargarMunicipios(provinciaSeleccionada);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // No action needed
+                    }
+                });
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Error handling
+            }
+        });
+    }
+
+    private void cargarMunicipios(String provincia) {
+        municipiosList.clear();
+        DatabaseReference ref = europeDatabaseReference.child("Provincias").child(provincia).child("Municipios");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot municipioSnapshot: dataSnapshot.getChildren()) {
+                    String municipioName = municipioSnapshot.getKey();
+                    municipiosList.add(municipioName);
+                    // Verifica si el municipio obtenido coincide con el municipio actual y agrega primero ese municipio
+
+                    if (municipioName.equals(municipioActual)) {
+                        municipiosList.remove(municipioName);
+                        municipiosList.add(0, municipioName);
+                    }
+                }
+                municipiosAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, municipiosList);
+                spinnerMunicipios.setAdapter(municipiosAdapter);
+                municipiosAdapter.notifyDataSetChanged();
+
+                spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        String municipioSeleccionado = parent.getItemAtPosition(position).toString();
+                        cargarLocalidades(provincia,municipioSeleccionado);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // No action needed
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Error handling
+            }
+        });
+    }
+    private void cargarLocalidades(String provincia,String municipio) {
+        localidadesList.clear();
+        DatabaseReference ref = europeDatabaseReference.child("Provincias").child(provincia).child("Municipios").child(municipio);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot localidadSnapshot: dataSnapshot.getChildren()) {
+                    String localidadName = (String)localidadSnapshot.getValue();
+                    localidadesList.add(localidadName);
+
+                    if (localidadName.equals(localidadActual)) {
+                        localidadesList.remove(localidadName);
+                        localidadesList.add(0, localidadName);
+                    }
+                }
+                localidadesAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, localidadesList);
+                spinnerLocalidades.setAdapter(localidadesAdapter);
+                localidadesAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Error handling
+            }
+        });
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menuprincipal, menu);
@@ -515,7 +615,7 @@ public class ProfileActivity extends AppCompatActivity {
                         } else if (!direccion.startsWith("C/")) {
                             mostrarToast("La dirección debe tener este formato: C/...");
                             solicitarDireccion(titulo, texto);
-                        } else if (direccion.startsWith("C/")) {
+                        } else {
                             // Guardar dirección ingresada
                             txtDireccionUsuario.setText(direccion);
 
@@ -552,65 +652,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-    }
-
-    //Metodo que completa el perfil del usuario, obteniendo los datos de la base de datos
-    private void completarPerfil(String idUsuario) {
-        DatabaseReference usuarioRef = usuariosRef.child(idUsuario);
-        // Agrega un ValueEventListener para escuchar los cambios en los datos del usuario
-        usuarioRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Recupera los valores de los campos del usuario
-                    String nombre = dataSnapshot.child("NombreUsuario").getValue(String.class);
-                    String correo = dataSnapshot.child("Correo").getValue(String.class);
-                    String direccion = dataSnapshot.child("DireccionUsuario").getValue(String.class);
-                    String urlFotoPerfil = dataSnapshot.child("urlFotoPerfil").getValue(String.class);
-
-                    // Establece los valores en los TextViews
-                    txtNombre.setText(nombre);
-                    txtCorreo.setText(correo);
-
-                    // Carga la imagen de perfil desde Firebase Storage y la establece en el ImageView
-                    if (urlFotoPerfil != null && !urlFotoPerfil.isEmpty()) {
-                        cargarImagenPerfil(urlFotoPerfil);
-                    } else {
-                        mostrarToast("No se ha podido cargar la foto de perfil");
-                    }
-
-                    if (direccion == null || direccion.isEmpty()) {
-                        // Si la dirección está en blanco o es nula, llama al método solicitarDireccion
-                        solicitarDireccion("Aviso Direccion", "Debes introducir una direccion para poder " +
-                                "enviarte los pedidos. La dirección debe empezar por C/");
-                    } else {
-                        txtDireccionUsuario.setText(direccion);
-                    }
-
-                    String provincia = dataSnapshot.child("Provincia").getValue(String.class);
-                    String municipio = dataSnapshot.child("Municipio").getValue(String.class);
-                    String localidad = dataSnapshot.child("Localidad").getValue(String.class);
-
-                    spinnerProvincias.setSelection(getIndex(spinnerProvincias, provincia));
-                    spinnerMunicipios.setSelection(getIndex(spinnerMunicipios, municipio));
-                    spinnerLocalidades.setSelection(getIndex(spinnerLocalidades, localidad));
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("FirebaseError", "Error al cargar los datos del perfil", databaseError.toException());
-            }
-        });
-    }
-
-    private int getIndex(Spinner spinner, String myString){
-        for (int i=0;i<spinner.getCount();i++){
-            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
-                return i;
-            }
-        }
-        return 0;
+        guardarUbicacionEnBaseDeDatos();
     }
     // Método para cargar la imagen de perfil desde Firebase Storage y establecerla en el ImageView con Glide
     private void cargarImagenPerfil(String urlFotoPerfil) {
@@ -642,4 +684,58 @@ public class ProfileActivity extends AppCompatActivity {
     private void mostrarToast(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
     }
+    private void borrarImagenStorage(String urlFotoPerfil) {
+        // Verificar si la URL de la imagen está vacía o nula
+        if (urlFotoPerfil == null || urlFotoPerfil.isEmpty()) {
+            mostrarToast("La URL de la imagen es nula o vacía");
+            return;
+        }
+        // Borra el archivo del Storage
+        storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // Manejar el éxito al borrar la imagen del Storage
+                mostrarToast("Imagen de perfil eliminada del Storage");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Manejar el fallo al borrar la imagen del Storage
+                String errorMessage = "Error al eliminar la imagen de perfil del Storage";
+
+                if (e instanceof StorageException) {
+                    StorageException storageException = (StorageException) e;
+                    int errorCode = storageException.getErrorCode();
+
+                    // Agregar mensajes específicos según el código de error
+                    switch (errorCode) {
+                        case StorageException.ERROR_OBJECT_NOT_FOUND:
+                            errorMessage = "La imagen no se encontró en el Storage";
+                            break;
+                        case StorageException.ERROR_NOT_AUTHENTICATED:
+                            errorMessage = "No estás autenticado para realizar esta operación";
+                            break;
+                        // Puedes agregar más casos según sea necesario
+                    }
+                }
+
+                mostrarToast(errorMessage);
+            }
+        });
+    }
+    private void guardarUbicacionEnBaseDeDatos() {
+        // Obtener los valores seleccionados de los spinners
+        String provinciaSeleccionada = spinnerProvincias.getSelectedItem().toString();
+        String municipioSeleccionado = spinnerMunicipios.getSelectedItem().toString();
+        String localidadSeleccionada = spinnerLocalidades.getSelectedItem().toString();
+
+        // Actualizar la información en la base de datos del usuario actual
+        DatabaseReference usuarioRef = usuariosRef.child(firebaseUser.getUid());
+        usuarioRef.child("Provincia").setValue(provinciaSeleccionada);
+        usuarioRef.child("Municipio").setValue(municipioSeleccionado);
+        usuarioRef.child("Localidad").setValue(localidadSeleccionada);
+
+    }
+
+
 }

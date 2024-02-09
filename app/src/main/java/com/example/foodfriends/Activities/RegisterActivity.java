@@ -168,13 +168,16 @@ public class RegisterActivity extends AppCompatActivity {
             userData.put("NombreUsuario", usuario.getNombreUsuario());
             userData.put("Correo", usuario.getCorreo());
             userData.put("DireccionUsuario", usuario.getDireccionUsuario());
+            userData.put("Provincia", "");
+            userData.put("Municipio", "");
+            userData.put("Localidad", "");
             userData.put("urlFotoPerfil", usuario.getUrlImagenUsuario());
 
             //Registrar usuario en DB
             usuariosRef.child(idUsuario).setValue(userData);
 
             //Redirigir a la actividad de inicio después del registro
-            Intent intent = new Intent(getApplicationContext(), InicioActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(intent);
         } catch (Exception e) {
             mostrarToast("Error al registrar. Por favor, inténtalo de nuevo.");

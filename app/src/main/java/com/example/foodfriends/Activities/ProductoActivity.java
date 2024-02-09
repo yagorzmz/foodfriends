@@ -46,7 +46,7 @@ public class ProductoActivity extends AppCompatActivity
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference empresasReference;
     private static final int CANTIDAD_MINIMA = 1;
-    private static final int CANTIDAD_MAXIMA = 5;
+    private static final int CANTIDAD_MAXIMA =99;
     private int cantidadActual=1;
     private androidx.appcompat.widget.Toolbar toolbar;
     private TextView txtNombreProducto;
