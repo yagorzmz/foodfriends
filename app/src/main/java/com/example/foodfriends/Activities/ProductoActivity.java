@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -78,6 +79,11 @@ public class ProductoActivity extends AppCompatActivity
         txtNombreProducto = findViewById(R.id.txtNombreProducto2);
         txtPrecio = findViewById(R.id.txtPrecio);
         txtDescripcion = findViewById(R.id.txtDescripcionProducto2);
+        // Crear un filtro para limitar la cantidad de caracteres
+        InputFilter[] filters = new InputFilter[1];
+        filters[0] = new InputFilter.LengthFilter(200);
+        // Aplicar el filtro al TextView
+        txtDescripcion.setFilters(filters);
         txtNombreRestaurante = findViewById(R.id.txtNombreRestaurante);
         imgProducto = findViewById(R.id.imgProducto2);
         btnAgregarAlCarrito = findViewById(R.id.btnAgregarCarrito);

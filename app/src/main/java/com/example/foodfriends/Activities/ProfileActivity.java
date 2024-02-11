@@ -64,6 +64,7 @@ import java.util.List;
 public class ProfileActivity extends AppCompatActivity {
 
     //Elementos de la activity
+    private boolean cuentaEliminada = false;
     private String provinciaActual;
     private String municipioActual;
     private String localidadActual;
@@ -232,7 +233,6 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     private void cargarProvincias() {
-        completarPerfil(firebaseUser.getUid());
         provinciasList.clear();
         DatabaseReference ref = europeDatabaseReference.child("Provincias");
         ref.addValueEventListener(new ValueEventListener() {
@@ -530,6 +530,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void eliminarCuenta() {
+        cuentaEliminada = true;
         // Mostrar un cuadro de diálogo de confirmación antes de eliminar la cuenta
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Eliminar cuenta");
@@ -654,6 +655,13 @@ public class ProfileActivity extends AppCompatActivity {
         super.onPause();
         guardarUbicacionEnBaseDeDatos();
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Cuando el usuario vuelve a la actividad, establece isDeletingAccount en false
+        cuentaEliminada = false;
+    }
     // Método para cargar la imagen de perfil desde Firebase Storage y establecerla en el ImageView con Glide
     private void cargarImagenPerfil(String urlFotoPerfil) {
         //Obténemos una referencia al archivo en Firebase Storage
@@ -684,56 +692,20 @@ public class ProfileActivity extends AppCompatActivity {
     private void mostrarToast(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
     }
-    private void borrarImagenStorage(String urlFotoPerfil) {
-        // Verificar si la URL de la imagen está vacía o nula
-        if (urlFotoPerfil == null || urlFotoPerfil.isEmpty()) {
-            mostrarToast("La URL de la imagen es nula o vacía");
-            return;
-        }
-        // Borra el archivo del Storage
-        storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                // Manejar el éxito al borrar la imagen del Storage
-                mostrarToast("Imagen de perfil eliminada del Storage");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // Manejar el fallo al borrar la imagen del Storage
-                String errorMessage = "Error al eliminar la imagen de perfil del Storage";
-
-                if (e instanceof StorageException) {
-                    StorageException storageException = (StorageException) e;
-                    int errorCode = storageException.getErrorCode();
-
-                    // Agregar mensajes específicos según el código de error
-                    switch (errorCode) {
-                        case StorageException.ERROR_OBJECT_NOT_FOUND:
-                            errorMessage = "La imagen no se encontró en el Storage";
-                            break;
-                        case StorageException.ERROR_NOT_AUTHENTICATED:
-                            errorMessage = "No estás autenticado para realizar esta operación";
-                            break;
-                        // Puedes agregar más casos según sea necesario
-                    }
-                }
-
-                mostrarToast(errorMessage);
-            }
-        });
-    }
     private void guardarUbicacionEnBaseDeDatos() {
-        // Obtener los valores seleccionados de los spinners
-        String provinciaSeleccionada = spinnerProvincias.getSelectedItem().toString();
-        String municipioSeleccionado = spinnerMunicipios.getSelectedItem().toString();
-        String localidadSeleccionada = spinnerLocalidades.getSelectedItem().toString();
+        if (!cuentaEliminada) {
+            // Obtener los valores seleccionados de los spinners
+            String provinciaSeleccionada = spinnerProvincias.getSelectedItem().toString();
+            String municipioSeleccionado = spinnerMunicipios.getSelectedItem().toString();
+            String localidadSeleccionada = spinnerLocalidades.getSelectedItem().toString();
 
-        // Actualizar la información en la base de datos del usuario actual
-        DatabaseReference usuarioRef = usuariosRef.child(firebaseUser.getUid());
-        usuarioRef.child("Provincia").setValue(provinciaSeleccionada);
-        usuarioRef.child("Municipio").setValue(municipioSeleccionado);
-        usuarioRef.child("Localidad").setValue(localidadSeleccionada);
+            // Actualizar la información en la base de datos del usuario actual
+            DatabaseReference usuarioRef = usuariosRef.child(firebaseUser.getUid());
+            usuarioRef.child("Provincia").setValue(provinciaSeleccionada);
+            usuarioRef.child("Municipio").setValue(municipioSeleccionado);
+            usuarioRef.child("Localidad").setValue(localidadSeleccionada);
+        }
+
 
     }
 
