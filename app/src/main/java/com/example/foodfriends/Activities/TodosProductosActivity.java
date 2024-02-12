@@ -70,7 +70,7 @@ public class TodosProductosActivity extends AppCompatActivity {
             }
         });
 
-
+        //Cargamos los productos filtrados
         cargarProductos(new CatalogoActivity.OnDataLoadedListener() {
             @Override
             public void onDataLoaded(List<Producto> lista) {

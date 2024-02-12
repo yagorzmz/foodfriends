@@ -28,6 +28,7 @@ import java.util.List;
 
 public class LineasPedidosActivity extends AppCompatActivity {
 
+    //Elementos de la activity
     private ListView listViewLineasPedido;
     private List<LineaPedidoTemp> listaLineas;
     private AdaptadorLineasPedidos adapter;
@@ -56,6 +57,7 @@ public class LineasPedidosActivity extends AppCompatActivity {
         listViewLineasPedido = findViewById(R.id.listviewLineas);
         listaLineas = new ArrayList<>();
 
+        //Cargamos las lineas de pedido de cada pedido
         cargarLineasPedidos(idPedido, new OnDataLoadedListener() {
             @Override
             public void onDataLoaded(List<LineaPedidoTemp> listaLineasPedido) {
@@ -68,6 +70,7 @@ public class LineasPedidosActivity extends AppCompatActivity {
         });
     }
 
+    //Metodo que carga las lineas de medido y las añade a la lista de lineas de pedido
     private void cargarLineasPedidos(String idPedido, OnDataLoadedListener listener) {
         listaLineas.clear();
 
@@ -106,7 +109,7 @@ public class LineasPedidosActivity extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-                            // Manejar el error al obtener la información del producto
+                            mostrarToast("No se han podido cargar las lineas del pedido");
                         }
                     });
                 }
@@ -120,6 +123,10 @@ public class LineasPedidosActivity extends AppCompatActivity {
     }
     public interface OnDataLoadedListener {
         void onDataLoaded(List<LineaPedidoTemp> listaLineasPedido);
+    }
+    //Método que muestra mensajes personalizados
+    private void mostrarToast(String mensaje) {
+        Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -16,7 +16,13 @@ import com.example.foodfriends.R;
 import java.text.DecimalFormat;
 import java.util.List;
 
-
+/**
+ * Clase AdaptadorHistorial
+ * Esta clase actúa como un adaptador para mostrar el historial de los pedidos realizados
+ * por el usuario.
+ * @autor Yago Rodríguez Martínez
+ * @version 1.0
+ */
 public class AdaptadorHistorial extends ArrayAdapter<Pedido> {
     ImageView imgMostrarLineas;
 

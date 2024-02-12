@@ -2,11 +2,17 @@ package com.example.foodfriends.Utilidades;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
+/**
+ * Clase SessionManager
+ * Esta clase gestiona la sesión de usuario, incluyendo el estado de inicio de sesión y el ID del usuario.
+ * Proporciona métodos para establecer, verificar y obtener el estado de inicio de sesión y el ID del usuario, así como para cerrar sesión.
+ * @autor Yago Rodríguez Martínez
+ * @version 1.0
+ */
 public class SessionManager {
-    private static final String PREF_NAME = "MyAppSession";
-    private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
-    private static final String KEY_USER_ID = "userId";
+    private static final String PREF_NAME = "MiSesion";
+    private static final String KEY_IS_LOGGED_IN = "EstaLogeado";
+    private static final String KEY_USER_ID = "IdUsuario";
 
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;

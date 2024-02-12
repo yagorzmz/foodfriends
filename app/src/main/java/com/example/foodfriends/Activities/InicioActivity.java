@@ -55,7 +55,7 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
     private androidx.appcompat.widget.Toolbar toolbar;
     RecyclerView recycler;
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference empresasReference,usuariosReference;
+    private DatabaseReference empresasReference;
     private AdaptadorEmpresas adaptadorEmpresas;
     List<Empresa> listaEmpresas;
     private SearchView searchview;
@@ -69,6 +69,7 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
         setContentView(R.layout.activity_inicio);
         btnTodosProductos=findViewById(R.id.btnTodosProductos);
 
+        //Pedimos el permiso de notificaciones
         if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
         } else {
             // Request permission
@@ -106,7 +107,6 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
         //Configuración de Firebase
         firebaseDatabase = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/");
         empresasReference = firebaseDatabase.getReference("Empresas");
-        usuariosReference = firebaseDatabase.getReference("Usuarios");
 
         //Iniciamos la carga de empresas desde Firebase
         cargarEmpresas(new OnDataLoadedListener() {
@@ -343,10 +343,7 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
         }
 
         //Verificamos si la lista filtrada está vacía
-        if (listaFiltrada.isEmpty()) {
-            //Mostramos un mensaje Toast indicando que no se encontraron resultados
-            Toast.makeText(this, "No se ha encontrado el restaurante", Toast.LENGTH_SHORT).show();
-        } else {
+        if (!listaFiltrada.isEmpty()) {
             //Si hay resultados, actualizamos el adaptador con la nueva lista filtrada
             adaptadorEmpresas.setFilteredList(listaFiltrada);
 
@@ -370,36 +367,7 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
     private void mostrarToast(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
     }
-
-    private void requestNotificationPermission() {
-        if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
-            // User has already granted permission
-            // Send push notifications
-        } else {
-            // Request permission
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Permisos de notificación");
-            builder.setMessage("Para recibir notificaciones de confirmación de pedido, necesitamos que nos otorgues permisos de notificación.");
-            builder.setPositiveButton("Permitir", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    ActivityCompat.requestPermissions(
-                            InicioActivity.this,
-                            new String[]{Manifest.permission.POST_NOTIFICATIONS},
-                            REQUEST_CODE
-                    );
-                }
-            });
-            builder.setNegativeButton("No permitir", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(InicioActivity.this, "No podrás recibir notificaciones de confirmación de pedido.", Toast.LENGTH_SHORT).show();
-                }
-            });
-            builder.show();
-        }
-    }
-
+    //Manejamos la respuesta ante la solicitud del permiso del usuario
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

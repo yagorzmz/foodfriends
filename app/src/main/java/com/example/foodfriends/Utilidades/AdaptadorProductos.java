@@ -21,7 +21,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
-
+/**
+ * Clase AdaptadorProductos
+ * Esta clase actúa como un adaptador para mostrar todos los productos de un restaurante seleccionado
+ * en un recyclerview.
+ * @autor Yago Rodríguez Martínez
+ * @version 1.0
+ */
 public class AdaptadorProductos extends RecyclerView.Adapter<AdaptadorProductos.ViewHolder>
 {
     private List<Producto> listaProductos;

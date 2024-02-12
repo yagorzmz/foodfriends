@@ -25,7 +25,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-
+/**
+ * Clase AdaptadorEmpresas
+ * Esta clase actúa como un adaptador para mostrar una lista de empresas en un recyclerview.
+ * @autor Yago Rodríguez Martínez
+ * @version 1.0
+ */
 public class AdaptadorEmpresas extends RecyclerView.Adapter<AdaptadorEmpresas.ViewHolder >
 {
     //Constructor

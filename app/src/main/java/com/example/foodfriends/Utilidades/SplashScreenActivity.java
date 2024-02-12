@@ -7,7 +7,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.foodfriends.Activities.LoginActivity;
 import com.example.foodfriends.R;
-
+/**
+ * Clase SplashScreenActivity
+ * Esta actividad muestra una pantalla de carga durante un período específico de tiempo y luego inicia la
+ * actividad principal de la aplicación.
+ * @autor Yago Rodríguez Martínez
+ * @version 1.0
+ */
 public class SplashScreenActivity extends AppCompatActivity {
 
     //Duración de la pantalla de carga en milisegundos

@@ -68,6 +68,7 @@ public class ProfileActivity extends AppCompatActivity {
     private String provinciaActual;
     private String municipioActual;
     private String localidadActual;
+    private String urlFotoActual;
     private static final int PHOTO_PICKER_REQUEST_CODE = 1001;
     private androidx.appcompat.widget.Toolbar toolbar;
     String urlBase = "https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/";
@@ -139,6 +140,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
                 startActivityForResult(intent, PHOTO_PICKER_REQUEST_CODE);
+
             }
         });
 
@@ -178,12 +180,11 @@ public class ProfileActivity extends AppCompatActivity {
                 solicitarDireccion("Edita tu direccion", "Introduce tu nueva direccion de envio");
             }
         });
-        cargarProvincias();
+        //Cargamos las provincias,municipios y localidades
+        cargarUbicaciones();
 
 
     }
-
-
 
     //Metodo que completa el perfil del usuario, obteniendo los datos de la base de datos
     private void completarPerfil(String idUsuario) {
@@ -202,6 +203,8 @@ public class ProfileActivity extends AppCompatActivity {
                     provinciaActual = dataSnapshot.child("Provincia").getValue(String.class);
                     municipioActual = dataSnapshot.child("Municipio").getValue(String.class);
                     localidadActual = dataSnapshot.child("Localidad").getValue(String.class);
+
+                    urlFotoActual=urlFotoPerfil;
 
                     // Establece los valores en los TextViews
                     txtNombre.setText(nombre);
@@ -231,9 +234,13 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    //Metodo que carga las provincias,municipios y localidades de la Base de datos de Firebase
+    private void cargarUbicaciones() {
+        //Completamos el perfil con la info del usuario
+        completarPerfil(firebaseUser.getUid());
 
-    private void cargarProvincias() {
         provinciasList.clear();
+
         DatabaseReference ref = europeDatabaseReference.child("Provincias");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -260,22 +267,17 @@ public class ProfileActivity extends AppCompatActivity {
 
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
-                        // No action needed
                     }
                 });
-
-
-
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Error handling
             }
         });
     }
 
+    //Metodo que carga los municipios de una provincia especifica
     private void cargarMunicipios(String provincia) {
         municipiosList.clear();
         DatabaseReference ref = europeDatabaseReference.child("Provincias").child(provincia).child("Municipios");
@@ -316,6 +318,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+    //Metodo que carga las localidades de un municipio especifico
     private void cargarLocalidades(String provincia,String municipio) {
         localidadesList.clear();
         DatabaseReference ref = europeDatabaseReference.child("Provincias").child(provincia).child("Municipios").child(municipio);
@@ -400,16 +403,14 @@ public class ProfileActivity extends AppCompatActivity {
                 subirImagenAlStorage(uriImagenSeleccionada);
                 storageReference.putFile(uriImagenSeleccionada)
                         .addOnSuccessListener(taskSnapshot -> {
-                            //La imagen se ha subido exitosamente
-                            mostrarToast("Imagen subida con éxito");
-
                             //Obtenemos la URL de descarga de la imagen recién cargada
                             storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
                                 //Actualizamos el campo urlFotoPerfil en la base de datos con la nueva URL
                                 actualizarUrlFotoPerfilEnBaseDeDatos(uri.toString());
+
+                                //Actualizamos urlFotoActual con la nueva URL
+                                urlFotoActual = uri.toString();
                             }).addOnFailureListener(exception -> {
-                                //Manejamos los errores al obtener la URL de descarga
-                                mostrarToast("Error al obtener la URL de descarga");
                                 exception.printStackTrace();
                             });
 
@@ -419,9 +420,12 @@ public class ProfileActivity extends AppCompatActivity {
                             mostrarToast("Error al subir la imagen");
                             exception.printStackTrace();
                         });
+
         }
     }
 
+
+    //Metodo que actuliza la foto de perfil del usuario
     private void actualizarUrlFotoPerfilEnBaseDeDatos(String urlFotoPerfil) {
         //Obténemos el ID del usuario actual
         String idUsuario = firebaseUser.getUid();
@@ -429,14 +433,12 @@ public class ProfileActivity extends AppCompatActivity {
         //Actualizamos el campo urlFotoPerfil en la base de datos
         usuariosRef.child(idUsuario).child("urlFotoPerfil").setValue(urlFotoPerfil)
                 .addOnSuccessListener(aVoid -> {
-                    mostrarToast("Se ha actualizado la foto con exito");
                 })
                 .addOnFailureListener(e -> {
                     mostrarToast("Error al actualizar la URL de la foto de perfil en la base de datos");
                     e.printStackTrace();
                 });
     }
-
     //Metodo que sube la imagen escogida de la galeria al storage de firebase
     private void subirImagenAlStorage(Uri uriImagen) {
         //Obtenemos el nombre del archivo original a partir de la URI
@@ -529,6 +531,7 @@ public class ProfileActivity extends AppCompatActivity {
         finish();  // Cierra la actividad actual después de que la nueva actividad se haya iniciado
     }
 
+    //Metodo que elimina la cuenta del usuario
     public void eliminarCuenta() {
         cuentaEliminada = true;
         // Mostrar un cuadro de diálogo de confirmación antes de eliminar la cuenta
@@ -558,28 +561,25 @@ public class ProfileActivity extends AppCompatActivity {
 
         builder.show();
     }
-
-
     //Método que borra al usuario mediante su id de la base de datos y de la autenticacion
     public void borrarUsuario(String idUsuario) {
+
         // Obtener la referencia específica al usuario que se desea borrar
         DatabaseReference usuarioAEliminarRef = usuariosRef.child(idUsuario);
+        borrarImagenPorUrl(urlFotoActual);
 
         // Eliminar el usuario de la base de datos
         usuarioAEliminarRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    // El usuario se eliminó con éxito de la base de datos
-                    mostrarToast("Usuario eliminado de la base de datos");
-
                     // Ahora, eliminar el usuario de Firebase Authentication
                     firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 // El usuario se eliminó con éxito de Firebase Authentication
-                                mostrarToast("Usuario eliminado de la autenticación");
+                                mostrarToast("Cuenta eliminada");
                                 finish(); // Cierra la actividad después de eliminar el usuario
                             } else {
                                 mostrarToast("Error al eliminar el usuario de la autenticación");
@@ -592,6 +592,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
 
     //Método que obliga al usuario a editar la direccion para poder usar la aplicacion
     public void solicitarDireccion(String titulo, String texto) {
@@ -692,6 +693,7 @@ public class ProfileActivity extends AppCompatActivity {
     private void mostrarToast(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
     }
+    //Meotodo que guarda la ubicacion en la base de datos del usuario
     private void guardarUbicacionEnBaseDeDatos() {
         if (!cuentaEliminada) {
             // Obtener los valores seleccionados de los spinners
@@ -705,9 +707,20 @@ public class ProfileActivity extends AppCompatActivity {
             usuarioRef.child("Municipio").setValue(municipioSeleccionado);
             usuarioRef.child("Localidad").setValue(localidadSeleccionada);
         }
-
-
     }
-
+    public void borrarImagenPorUrl(String url) {
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl(url);
+        mStorageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // La imagen se eliminó con éxito del almacenamiento
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Hubo un error al eliminar la imagen del almacenamiento
+            }
+        });
+    }
 
 }

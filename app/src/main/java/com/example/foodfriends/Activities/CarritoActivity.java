@@ -103,7 +103,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         });
     }
 
-
+    //Metodo que muestra la notificaion de confirmacion de entrega del pedido
     private void mostrarNotificacion() {
         String channelId = "my_channel_id";
         String channelName = "My Channel Name";
@@ -360,24 +360,59 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
 
     //Método que maneja la interacción con el botón realizar pedido
     private void manejarBotonRealizarPedido() {
-        // Obtén la hora actual.
-        Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-
-        if (listaLineasPedidosTemp.isEmpty()) {
-            Toast.makeText(getApplicationContext(), "No hay productos para realizar el pedido", Toast.LENGTH_SHORT).show();
+        // Comprueba si tienes los permisos de notificación.
+        if (!tienePermisosDeNotificacion()) {
+            // Muestra un diálogo al usuario explicando por qué necesitas los permisos.
+            mostrarDialogoDePermiso();
         } else {
-            // Verifica si la hora actual está entre las 22 y las 12.
-            if (hour >= 23 || hour <= 9) {
-                // Muestra un mensaje al usuario.
-                Toast.makeText(this, "El pedido no se puede realizar, las cocinas están cerradas.Puede realizar el pedido" +
-                        "entre las 10 y las 22h ", Toast.LENGTH_LONG).show();
+            // Obtén la hora actual.
+            Calendar calendar = Calendar.getInstance();
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
+            if (listaLineasPedidosTemp.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "No hay productos para realizar el pedido", Toast.LENGTH_SHORT).show();
             } else {
-                // Mostramos un diálogo de confirmación antes de realizar el pedido.
-                mostrarDialogoRealizarPedido();
+                // Verifica si la hora actual está entre las 22 y las 12.
+                if (hour >= 23 || hour <= 9) {
+                    // Muestra un mensaje al usuario.
+                    Toast.makeText(this, "El pedido no se puede realizar, las cocinas están cerradas.Puede realizar el pedido" +
+                            "entre las 10 y las 22h ", Toast.LENGTH_LONG).show();
+                } else {
+                    // Mostramos un diálogo de confirmación antes de realizar el pedido.
+                    mostrarDialogoRealizarPedido();
+                }
             }
         }
+
     }
+    //Metodo que comprueba si tiene permisos de nortificacion
+    private boolean tienePermisosDeNotificacion() {
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        return notificationManagerCompat.areNotificationsEnabled();
+    }
+
+    //Metodo que muestra el dialogo para que el usuario de permisos de notificacion si todavia no los tiene
+    private void mostrarDialogoDePermiso() {
+        new AlertDialog.Builder(this)
+                .setTitle("Permiso de notificación necesario")
+                .setMessage("Necesitamos su permiso para enviarle notificaciones de confirmación de pedidos. Por favor, habilite las notificaciones para nuestra aplicación en la configuración de su dispositivo.")
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Redirige al usuario a la configuración de la aplicación.
+                        Intent intent = new Intent();
+                        intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+
+                        // Para Android 8 y superior
+                        intent.putExtra("android.provider.extra.APP_PACKAGE", getPackageName());
+
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("Cancelar", null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
 
     //Método que comprueba el estado del carrito, si esta vacio o contiene lineas de pedido
     private void actualizarCarrito() {
@@ -411,11 +446,11 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         //Dependiendo del coste del pedido establecemos un gasto de envío
         double costeEnvio = 0.0;
         if (totalSinIVA < 10) {
-            costeEnvio = 3.5;
+            costeEnvio = 2;
         } else if (totalSinIVA >= 10 && totalSinIVA <= 20) {
-            costeEnvio = 2.5;
+            costeEnvio = 1;
         } else if (totalSinIVA > 20) {
-            costeEnvio = 1.5;
+            costeEnvio = 0.5;
         }
 
         //Precio final del pedido
@@ -428,7 +463,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         mensaje.append("Costos de envío .................. ").append(formatearPrecio(costeEnvio)).append("€\n");
         mensaje.append("____________________________________ \n");
         mensaje.append("Total                              ").append(formatearPrecio(totalConGastosEnvio)).append("€");
-
+        
         //Mostrar el mensaje
         TextView txtTotal = findViewById(R.id.txtTotalPedido);
         txtTotal.setText(mensaje.toString());
@@ -483,6 +518,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         return formato.format(precio);
     }
 
+    //Cuando cambie las lineas de pedido se actualziara el total del pedido
     @Override
     public void onLineaPedidoChanged() {
         actualizarTotal();

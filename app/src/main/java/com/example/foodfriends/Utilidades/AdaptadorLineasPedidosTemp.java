@@ -13,7 +13,13 @@ import com.example.foodfriends.R;
 
 import java.util.List;
 
-
+/**
+ * Clase AdaptadorLineasPedidosTemp
+ * Esta clase actúa como un adaptador para mostrar las lineas de pedido temporales que se crean
+ * cuando el usuario añade un producto al carrito y que conforman el pedido.
+ * @autor Yago Rodríguez Martínez
+ * @version 1.0
+ */
 public class AdaptadorLineasPedidosTemp extends ArrayAdapter<LineaPedidoTemp>
 {
     private OnLineaPedidoChangeListener mListener;

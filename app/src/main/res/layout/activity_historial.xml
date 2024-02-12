@@ -15,7 +15,7 @@
         android:dividerHeight="0dp"
         android:text="HISTORIAL VACIO"
         android:textAlignment="center"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="80sp"
         app:layout_constraintBottom_toBottomOf="@+id/listviewHistorial"
         app:layout_constraintEnd_toEndOf="parent"

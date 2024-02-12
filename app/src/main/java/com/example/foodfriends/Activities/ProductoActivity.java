@@ -195,7 +195,6 @@ public class ProductoActivity extends AppCompatActivity
                 }
             });
         } catch (Exception e) {
-            // Manejar cualquier excepción que pueda ocurrir al cargar las empresas
             e.printStackTrace();
         }
     }

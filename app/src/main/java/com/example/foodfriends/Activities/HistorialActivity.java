@@ -36,7 +36,6 @@ public class HistorialActivity extends AppCompatActivity {
     //Elementos de la activity
     private androidx.appcompat.widget.Toolbar toolbar;
     private TextView txtHistorialVacio;
-    private ImageView iconoToolbar;
     private ListView listViewHistorial;
     private List<Pedido> listaPedidos;
     private AdaptadorHistorial adapter;
@@ -54,7 +53,6 @@ public class HistorialActivity extends AppCompatActivity {
         //Configuración de la barra de herramientas
         toolbar = findViewById(R.id.toolbar7);
         setSupportActionBar(toolbar);
-        iconoToolbar = findViewById(R.id.iconoToolbar);
 
         //Elimina el título del Toolbar
         if (getSupportActionBar() != null) {
@@ -134,7 +132,7 @@ public class HistorialActivity extends AppCompatActivity {
     //Recogemos los items del menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Manejar las opciones del menú
+        // Manejamos las opciones del menú
         int id = item.getItemId();
         if (id == R.id.item_inicio) {
             // Iniciar la actividad del Carrito

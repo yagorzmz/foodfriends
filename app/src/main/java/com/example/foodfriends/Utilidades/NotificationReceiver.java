@@ -11,8 +11,15 @@ import com.example.foodfriends.Activities.CarritoActivity;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-public class NotificationReceiver extends BroadcastReceiver {
+/**
+ * Clase NotificationReceiver
+ * Esta clase es un BroadcastReceiver que recibe y maneja las acciones de las notificaciones.
+ * Cuando se recibe una notificación, se realiza una acción específica, como registrar un pedido y
+ * sus líneas de pedido en la actividad CarritoActivity, y luego cancelar la notificación.
+ * @autor Yago Rodríguez Martínez
+ * @version 1.0
+ */
+ public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         CarritoActivity.registrarPedidoYLineasPedido();

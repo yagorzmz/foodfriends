@@ -147,19 +147,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    //Manejo de resultados de solicitudes de permisos
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == NOTIFICATION_PERMISSION_REQUEST) {
-            //Verificamos el resultado de la solicitud de permiso de notificación
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //Permiso de notificación concedido, puedes realizar acciones relacionadas con notificaciones
-            }
-        }
-    }
-
     //Método que muestra mensajes personalizados utilizando Toast
     private void mostrarToast(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();

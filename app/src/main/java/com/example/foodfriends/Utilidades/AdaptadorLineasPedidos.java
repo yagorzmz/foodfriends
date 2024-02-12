@@ -13,6 +13,12 @@ import com.example.foodfriends.R;
 import java.text.DecimalFormat;
 import java.util.List;
 
+/**
+ * Clase AdaptadorLineasPedidos
+ * Esta clase actúa como un adaptador para mostrar las lineas de pedido de cada pèdido.
+ * @autor Yago Rodríguez Martínez
+ * @version 1.0
+ */
 public class AdaptadorLineasPedidos extends ArrayAdapter<LineaPedidoTemp> {
 
     public AdaptadorLineasPedidos(Context context, List<LineaPedidoTemp> lineasPedidos) {

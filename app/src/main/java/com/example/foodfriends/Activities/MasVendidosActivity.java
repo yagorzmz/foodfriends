@@ -59,7 +59,6 @@ public class MasVendidosActivity extends AppCompatActivity {
 
     //Elementos de la activity
     private androidx.appcompat.widget.Toolbar toolbar;
-    private ImageView iconoToolbar;
     private DatabaseReference pedidosReference, lineasPedidosReference;
     private List<String> top5Productos;
     private TextView txtPrimerPuesto, txtSegundoPuesto, txtTercerPuesto, txtCuartoPuesto, txtQuintoPuesto;
@@ -107,7 +106,6 @@ public class MasVendidosActivity extends AppCompatActivity {
         // Enlazamos los elementos
         toolbar = findViewById(R.id.toolbar6);
         setSupportActionBar(toolbar);
-        iconoToolbar = findViewById(R.id.iconoToolbar);
 
 
         // Eliminar el título del Toolbar
@@ -131,7 +129,7 @@ public class MasVendidosActivity extends AppCompatActivity {
         imgSegundoPuesto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                abrirProductoActivity(top5Productos.get(1)); // Pasa el ID del segundo producto
+                abrirProductoActivity(top5Productos.get(1));
             }
         });
 
@@ -164,6 +162,7 @@ public class MasVendidosActivity extends AppCompatActivity {
         lineasPedidosReference = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/").getReference("LineasPedidos");
         productosReference = FirebaseDatabase.getInstance("https://foodfriendsapp-f51dc-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Productos");
 
+        //Cargamos los productos mas vendidos
         cargarTopProductos();
     }
     //Mñetodo que obtiene el numero de dias elegido en el spinner
@@ -228,7 +227,7 @@ public class MasVendidosActivity extends AppCompatActivity {
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     // Manejar errores si es necesario
-                    Toast.makeText(getApplicationContext(), "Error al obtener pedidos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Error al obtener los pedidos", Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
