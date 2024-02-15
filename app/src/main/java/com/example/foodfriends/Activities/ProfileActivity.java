@@ -708,6 +708,7 @@ public class ProfileActivity extends AppCompatActivity {
             usuarioRef.child("Localidad").setValue(localidadSeleccionada);
         }
     }
+    //Metodo que borra la imagen de perfil del storage
     public void borrarImagenPorUrl(String url) {
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl(url);
         mStorageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {

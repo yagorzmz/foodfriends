@@ -46,9 +46,9 @@ public class LoginActivity extends AppCompatActivity {
         comprobarSesion();
 
         //Verificamos si se ha concedido el permiso de notificación
-        if (!hasNotificationPermission()) {
+        if (!tienePermisoNotificacion()) {
             // Si no se ha concedido, solicitamos el permiso
-            requestNotificationPermission();
+            pedirPermisoNotificacion();
         }
 
         //Relacionamos los elementos de la interfaz de usuario con sus respectivos ID
@@ -135,14 +135,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //Método que verifica si se tiene el permiso de notificaciones
-    private boolean hasNotificationPermission() {
+    private boolean tienePermisoNotificacion() {
         return (ContextCompat.checkSelfPermission(this, Manifest.permission.WAKE_LOCK) == PackageManager.PERMISSION_GRANTED);
     }
 
     //Método que solicita al usuario el permiso de notificación
-    private void requestNotificationPermission() {
+    private void pedirPermisoNotificacion() {
         //Solicita el permiso de notificación
-        if (!hasNotificationPermission()) {
+        if (!tienePermisoNotificacion()) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WAKE_LOCK}, NOTIFICATION_PERMISSION_REQUEST);
         }
     }
