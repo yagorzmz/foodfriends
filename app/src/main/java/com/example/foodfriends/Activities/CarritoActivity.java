@@ -109,12 +109,10 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         String channelName = "My Channel Name";
         String channelDescription = "My Channel Description";
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
-
         NotificationChannel channel = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             channel = new NotificationChannel(channelId, channelName, importance);
             channel.setDescription(channelDescription);
-
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
 
@@ -122,7 +120,6 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             int icon = R.drawable.ic_notificacion;
             String title = "Confirma aqui la entrega del pedido";
             String text = "Haz click en esta notificacion si ha recibido tu pedido correctamente!";
-
             Intent intent = new Intent(this, CarritoActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent pendingIntent;
@@ -131,11 +128,9 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             } else {
                 pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             }
-
             // Crea un Intent para el BroadcastReceiver
             Intent confirmIntent = new Intent(this, NotificationReceiver.class);
             confirmIntent.putExtra("notificationId", notificationId);
-
             // Crea un PendingIntent para la acción
             PendingIntent confirmPendingIntent;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
@@ -143,7 +138,6 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             } else {
                 confirmPendingIntent = PendingIntent.getBroadcast(this, 0, confirmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             }
-
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
                     .setSmallIcon(icon)
                     .setContentTitle(title)
@@ -152,13 +146,11 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
                     .setAutoCancel(true)
                     .addAction(R.drawable.ic_notificacion, "Confirmar", confirmPendingIntent)  // Usa el PendingIntent del BroadcastReceiver aquí
                     .setContentIntent(pendingIntent);
-
             notificationManager.notify(notificationId, builder.build());
         }
     }
 
-    //Método que muestra al usuario un dialogo para que elija el tiempo en que quiere
-    //recibir el pedido
+    //Método que muestra al usuario un dialogo para que elija el tiempo en que quiere recibir el pedido
     private void mostrarOpcionesTiempoEntrega() {
         // Obtener la hora actual del dispositivo
         Calendar horaActual = Calendar.getInstance();
@@ -167,7 +159,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
 
         // Calcular las opciones de tiempo según las especificaciones dadas
         List<String> opcionesTiempo = new ArrayList<>();
-        opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt, minutoActual + 1)); // Primera opción
+        opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt, minutoActual + 30)); // Primera opción
         opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt, minutoActual + 45)); // Segunda opción
         opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt + 1, minutoActual)); // Tercera opción
         opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt + 1, minutoActual + 15)); // Cuarta opción
@@ -180,20 +172,15 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
                     public void onClick(DialogInterface dialog, int which) {
                         long milisegundos = 0;
                         switch (which) {
-                            case 0:
-                                milisegundos = convertirMinutosAMilisegundos(30);
+                            case 0: milisegundos = convertirMinutosAMilisegundos(30);
                                 break;
-                            case 1:
-                                milisegundos = convertirMinutosAMilisegundos(45);
+                            case 1:milisegundos = convertirMinutosAMilisegundos(45);
                                 break;
-                            case 2:
-                                milisegundos = convertirMinutosAMilisegundos(60);
+                            case 2:milisegundos = convertirMinutosAMilisegundos(60);
                                 break;
-                            case 3:
-                                milisegundos = convertirMinutosAMilisegundos(75);
+                            case 3:milisegundos = convertirMinutosAMilisegundos(75);
                                 break;
-                            case 4:
-                                milisegundos = convertirMinutosAMilisegundos(90);
+                            case 4:milisegundos = convertirMinutosAMilisegundos(90);
                                 break;
                         }
                         //Mostramos un dialogo para avisar al usuario de que le pedido se esta realizando
@@ -374,9 +361,17 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             } else {
                 // Verifica si la hora actual está entre las 22 y las 12.
                 if (hour >= 23 || hour <= 9) {
-                    // Muestra un mensaje al usuario.
-                    Toast.makeText(this, "El pedido no se puede realizar, las cocinas están cerradas.Puede realizar el pedido" +
-                            "entre las 10 y las 22h ", Toast.LENGTH_LONG).show();
+                    // Las cocinas están cerradas, muestra un cuadro de diálogo al usuario.
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Cocinas cerradas");
+                    builder.setMessage("El pedido no se puede realizar, las cocinas están cerradas. Puede realizar el pedido entre las 9 y las 23h");
+                    builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Aquí puedes agregar cualquier acción adicional que desees realizar después de que el usuario haga clic en Aceptar.
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 } else {
                     // Mostramos un diálogo de confirmación antes de realizar el pedido.
                     mostrarDialogoRealizarPedido();

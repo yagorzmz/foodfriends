@@ -453,30 +453,70 @@ public class ProfileActivity extends AppCompatActivity {
         //Creamos una referencia en el Storage con el mismo nombre que el archivo original
         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("urlPerfiles").child(nombreImagen);
 
-        //Antes de subir la nueva imagen, verificamos si la imagen ya existe en el Storage
-        storageReference.getDownloadUrl().addOnSuccessListener(existingUri -> {
-            actualizarUrlFotoPerfilEnBaseDeDatos(existingUri.toString());
-        }).addOnFailureListener(exception -> {
-            // La imagen no existe, procedemos a subirla
-            storageReference.putFile(uriImagen)
-                    .addOnSuccessListener(taskSnapshot -> {
+        // Obtenemos la URL de la imagen actual del perfil desde la base de datos
+        usuariosRef.child(firebaseUser.getUid()).child("urlFotoPerfil").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String urlFotoPerfilActual = dataSnapshot.getValue(String.class);
+                if (urlFotoPerfilActual != null && !urlFotoPerfilActual.equals("gs://foodfriendsapp-f51dc.appspot.com/urlPerfiles/perfilvacio.jpg")) {
+                    // Creamos una referencia al archivo de la imagen actual del perfil en el Storage
+                    StorageReference referenciaImagenActual = FirebaseStorage.getInstance().getReferenceFromUrl(urlFotoPerfilActual);
 
-                        //Obtenemos la URL de descarga de la imagen recién cargada
-                        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-                            //Actualizamos el campo urlFotoPerfil en la base de datos con la nueva URL
-                            actualizarUrlFotoPerfilEnBaseDeDatos(uri.toString());
-                        }).addOnFailureListener(innerException -> {
-                            //Manejamos los errores al obtener la URL de descarga
-                            mostrarToast("Error al obtener la URL de descarga");
-                            innerException.printStackTrace();
-                        });
-
-                    })
-                    .addOnFailureListener(innerException -> {
-                        //Manejamos los errores durante la carga de la imagen
-                        mostrarToast("Error al subir la imagen al Storage");
-                        innerException.printStackTrace();
+                    // Eliminamos la imagen actual del perfil del Storage
+                    referenciaImagenActual.delete().addOnSuccessListener(aVoid -> {
+                        // La imagen actual del perfil ha sido eliminada correctamente o no existía.
+                        // Procedemos a subir la nueva imagen del perfil al Storage
+                        storageReference.putFile(uriImagen)
+                                .addOnSuccessListener(taskSnapshot -> {
+                                    //Obtenemos la URL de descarga de la nueva imagen del perfil
+                                    storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                                        //Actualizamos el campo urlFotoPerfil en la base de datos con la nueva URL
+                                        actualizarUrlFotoPerfilEnBaseDeDatos(uri.toString());
+                                    }).addOnFailureListener(innerException -> {
+                                        //Manejamos los errores al obtener la URL de descarga
+                                        mostrarToast("Error al obtener la URL de descarga");
+                                        innerException.printStackTrace();
+                                    });
+                                })
+                                .addOnFailureListener(innerException -> {
+                                    //Manejamos los errores durante la carga de la nueva imagen del perfil
+                                    mostrarToast("Error al subir la nueva imagen del perfil al Storage");
+                                    innerException.printStackTrace();
+                                });
+                    }).addOnFailureListener(exception -> {
+                        //Manejamos los errores al intentar eliminar la imagen actual del perfil
+                        mostrarToast("Error al eliminar la imagen actual del perfil del Storage");
+                        exception.printStackTrace();
                     });
+                } else {
+                    // No hay una imagen actual del perfil en la base de datos.
+                    // Procedemos a subir la nueva imagen del perfil al Storage
+                    storageReference.putFile(uriImagen)
+                            .addOnSuccessListener(taskSnapshot -> {
+                                //Obtenemos la URL de descarga de la nueva imagen del perfil
+                                storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                                    //Actualizamos el campo urlFotoPerfil en la base de datos con la nueva URL
+                                    actualizarUrlFotoPerfilEnBaseDeDatos(uri.toString());
+                                }).addOnFailureListener(innerException -> {
+                                    //Manejamos los errores al obtener la URL de descarga
+                                    mostrarToast("Error al obtener la URL de descarga");
+                                    innerException.printStackTrace();
+                                });
+                            })
+                            .addOnFailureListener(innerException -> {
+                                //Manejamos los errores durante la carga de la nueva imagen del perfil
+                                mostrarToast("Error al subir la nueva imagen del perfil al Storage");
+                                innerException.printStackTrace();
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Manejamos el error si la lectura de la URL de la imagen actual del perfil falla
+                mostrarToast("Error al leer la URL de la imagen actual del perfil en la base de datos");
+                databaseError.toException().printStackTrace();
+            }
         });
     }
 
