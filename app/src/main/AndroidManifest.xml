@@ -21,18 +21,23 @@
         android:theme="@style/Theme.Foodfriends.NoActionBar"
         tools:targetApi="31">
         <activity
+            android:screenOrientation="portrait"
             android:name=".Activities.TodosProductosActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
 
         <receiver android:name=".Utilidades.NotificationReceiver" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".Activities.LineasPedidosActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".Activities.HistorialActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".Utilidades.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
@@ -42,21 +47,27 @@
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".Activities.ProductoActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".Activities.CatalogoActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".Activities.MasVendidosActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".Activities.CarritoActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".Activities.AcercaDeActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".Activities.LoginActivity"
             android:exported="true"
             android:noHistory="true">
@@ -66,11 +77,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.RegisterActivity" />
+        <activity android:name=".Activities.RegisterActivity"
+            android:screenOrientation="portrait"/>
         <activity
+            android:screenOrientation="portrait"
             android:name=".Activities.ProfileActivity"
             android:noHistory="true" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".Activities.InicioActivity"
             android:noHistory="true" />
     </application>

@@ -59,6 +59,7 @@ public class MasVendidosActivity extends AppCompatActivity {
 
     //Elementos de la activity
     private androidx.appcompat.widget.Toolbar toolbar;
+    private List<String> idPedidos;
     private DatabaseReference pedidosReference, lineasPedidosReference;
     private List<String> top5Productos;
     private TextView txtPrimerPuesto, txtSegundoPuesto, txtTercerPuesto, txtCuartoPuesto, txtQuintoPuesto;
@@ -195,7 +196,8 @@ public class MasVendidosActivity extends AppCompatActivity {
     // Método para obtener pedidos de los últimos N días
     private void obtenerPedidosUltimosDias(final int numDias, final OnPedidosLoadedListener listener) {
         try {
-            final List<String> idPedidos = new ArrayList<>();
+
+            idPedidos = new ArrayList<>();
 
             // Obtener la fecha actual
             Calendar calendar = Calendar.getInstance();
@@ -376,31 +378,32 @@ public class MasVendidosActivity extends AppCompatActivity {
     //y obtiene los 5 mas vendidos
     private void obtenerTop5Productos(List<String> listaId, final OnProductosIdLoadedListener listener) {
         try {
-            final List<String> idProductos = new ArrayList<>();
             final Map<String, Integer> topProductos = new HashMap<>();
             lineasPedidosReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     try {
+                        // Limpiar la lista antes de agregar elementos
+                        top5Productos.clear();
+
+                        // Iterar sobre los datos de las líneas de pedido
                         for (String idPedido : listaId) {
                             for (DataSnapshot lineaSnapshot : dataSnapshot.getChildren()) {
                                 String idProducto = lineaSnapshot.child("ProductoId").getValue(String.class);
                                 String pedidoId = lineaSnapshot.child("PedidoId").getValue(String.class);
                                 Integer unidades = lineaSnapshot.child("Unidades").getValue(Integer.class);
                                 if (idPedido.equals(pedidoId)) {
-                                    //Sumar las unidades al producto correspondiente en el mapa
+                                    // Sumar las unidades al producto correspondiente en el mapa
                                     topProductos.put(idProducto, topProductos.getOrDefault(idProducto, 0) + unidades);
                                 }
                             }
                         }
-                        //Ordenar el mapa por valor en orden descendente para obtener el top 5
+
+                        // Ordenar el mapa por valor en orden descendente para obtener el top 5
                         List<Map.Entry<String, Integer>> listaOrdenada = new ArrayList<>(topProductos.entrySet());
                         listaOrdenada.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
 
-                        //Limpiar la lista antes de agregar elementos
-                        top5Productos.clear();
-
-                        //Tomar los primeros 5 elementos o menos si no hay suficientes
+                        // Tomar los primeros 5 elementos o menos si no hay suficientes
                         int count = 0;
                         for (Map.Entry<String, Integer> entry : listaOrdenada) {
                             top5Productos.add(entry.getKey());
@@ -409,26 +412,28 @@ public class MasVendidosActivity extends AppCompatActivity {
                                 break;
                             }
                         }
+
                         // Notificar que los datos han sido cargados
                         if (listener != null) {
                             listener.onProductosIdLoaded(top5Productos);
                         }
                     } catch (Exception e) {
-                        //Manejar cualquier excepción que pueda ocurrir al procesar los datos de las líneas de pedido
+                        // Manejar cualquier excepción que pueda ocurrir al procesar los datos de las líneas de pedido
                         e.printStackTrace();
                     }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    //Manejar errores si es necesario
+                    // Manejar errores si es necesario
                 }
             });
         } catch (Exception e) {
-            //Manejar cualquier excepción que pueda ocurrir al obtener el top 5 de productos
+            // Manejar cualquier excepción que pueda ocurrir al obtener el top 5 de productos
             e.printStackTrace();
         }
     }
+
 
 
     public interface OnProductosIdLoadedListener {

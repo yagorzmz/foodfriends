@@ -69,7 +69,7 @@ public class AdaptadorHistorial extends ArrayAdapter<Pedido> {
 
         // Establecer los valores correspondientes en los TextViews
         txtNumeroPedido.setText(String.valueOf(position + 1)); // Se suma 1 para mostrar números de pedido comenzando desde 1
-        txtIdPedido.setText("Id Pedido: " + pedido.getIdPedido());
+        txtIdPedido.setText("Id: " + pedido.getIdPedido());
         txtPrecioTotal.setText("Precio: " + String.valueOf(formatearDecimal(pedido.getPrecioTotal())));
         txtFechaPedido.setText("Fecha: " + pedido.getFechaPedido()+"€");
 

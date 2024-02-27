@@ -37,11 +37,10 @@
 
     <SearchView
         android:id="@+id/buscadorProductos"
-        android:layout_width="245dp"
+        android:layout_width="0dp"
         android:layout_height="51dp"
-        android:background="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintEnd_toStartOf="@+id/btnTodosProductos"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar7">
 
@@ -49,12 +48,16 @@
 
     <Button
         android:id="@+id/btnTodosProductos"
-        android:layout_width="125dp"
+        android:layout_width="wrap_content"
         android:layout_height="50dp"
+        android:layout_marginBottom="1dp"
         android:backgroundTint="#E09C55"
         android:text="Productos"
+        android:textColor="#FFFFFF"
         android:textSize="16dp"
         app:cornerRadius="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintEnd_toStartOf="@+id/imgLocalizacion"
         app:layout_constraintStart_toEndOf="@+id/buscadorProductos"
         app:layout_constraintTop_toBottomOf="@+id/toolbar7" />
 
@@ -73,8 +76,7 @@
     <ImageView
         android:id="@+id/imgLocalizacion"
         android:layout_width="41dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="1dp"
+        android:layout_height="0dp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"

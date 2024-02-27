@@ -399,29 +399,40 @@ public class ProfileActivity extends AppCompatActivity {
         switch (requestCode) {
             case PHOTO_PICKER_REQUEST_CODE:
                 Uri uriImagenSeleccionada = data.getData();
-                imgPerfil.setImageURI(uriImagenSeleccionada);
-                subirImagenAlStorage(uriImagenSeleccionada);
-                storageReference.putFile(uriImagenSeleccionada)
-                        .addOnSuccessListener(taskSnapshot -> {
-                            //Obtenemos la URL de descarga de la imagen recién cargada
-                            storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-                                //Actualizamos el campo urlFotoPerfil en la base de datos con la nueva URL
-                                actualizarUrlFotoPerfilEnBaseDeDatos(uri.toString());
 
-                                //Actualizamos urlFotoActual con la nueva URL
-                                urlFotoActual = uri.toString();
-                            }).addOnFailureListener(exception -> {
+                // Verificar si el archivo seleccionado es una imagen
+                if (esImagen(uriImagenSeleccionada)) {
+                    imgPerfil.setImageURI(uriImagenSeleccionada);
+                    subirImagenAlStorage(uriImagenSeleccionada);
+                    storageReference.putFile(uriImagenSeleccionada)
+                            .addOnSuccessListener(taskSnapshot -> {
+                                //Obtenemos la URL de descarga de la imagen recién cargada
+                                storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                                    //Actualizamos el campo urlFotoPerfil en la base de datos con la nueva URL
+                                    actualizarUrlFotoPerfilEnBaseDeDatos(uri.toString());
+
+                                    //Actualizamos urlFotoActual con la nueva URL
+                                    urlFotoActual = uri.toString();
+                                }).addOnFailureListener(exception -> {
+                                    exception.printStackTrace();
+                                });
+
+                            })
+                            .addOnFailureListener(exception -> {
+                                //Manejamos los errores durante la carga de la imagen
+                                mostrarToast("Error al subir la imagen");
                                 exception.printStackTrace();
                             });
-
-                        })
-                        .addOnFailureListener(exception -> {
-                            //Manejamos los errores durante la carga de la imagen
-                            mostrarToast("Error al subir la imagen");
-                            exception.printStackTrace();
-                        });
+                } else {
+                    mostrarToast("Por favor, selecciona una imagen");
+                }
 
         }
+    }
+    // Método para verificar si el archivo seleccionado es una imagen
+    private boolean esImagen(Uri uri) {
+        String mimeType = getContentResolver().getType(uri);
+        return mimeType != null && mimeType.startsWith("image");
     }
 
 
