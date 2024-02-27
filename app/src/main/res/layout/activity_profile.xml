@@ -16,27 +16,27 @@
         android:text="@string/correo"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/Provincia"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.039"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.611" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.439" />
 
     <TextView
         android:id="@+id/txtCorreo"
         android:layout_width="280dp"
-        android:layout_height="34dp"
+        android:layout_height="32dp"
         android:layout_marginStart="16dp"
         android:maxLength="46"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerProvincias"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.09"
         app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.66" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.437" />
 
     <TextView
         android:id="@+id/txtMunicipio"
@@ -81,19 +81,6 @@
         app:layout_constraintVertical_bias="0.51" />
 
     <TextView
-        android:id="@+id/txtDireccionUsuario"
-        android:layout_width="210dp"
-        android:layout_height="64dp"
-        android:layout_marginTop="236dp"
-        android:maxLength="46"
-        android:textColor="#FFFFFF"
-        android:textSize="19sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.056"
-        app:layout_constraintStart_toEndOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
-    <TextView
         android:id="@+id/textView3"
         android:layout_width="92dp"
         android:layout_height="31dp"
@@ -105,7 +92,33 @@
         app:layout_constraintHorizontal_bias="0.04"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.738" />
+        app:layout_constraintVertical_bias="0.725" />
+
+    <TextView
+        android:id="@+id/txtDireccionUsuario"
+        android:layout_width="210dp"
+        android:layout_height="64dp"
+        android:maxLength="46"
+        android:textColor="#FFFFFF"
+        android:textSize="19sp"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.062"
+        app:layout_constraintStart_toEndOf="@+id/textView3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.770" />
+
+    <Spinner
+        android:id="@+id/spinnerLocalidades"
+        android:layout_width="200dp"
+        android:layout_height="31dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.038"
+        app:layout_constraintStart_toEndOf="@+id/txtLocalidad"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.653" />
 
     <ImageView
         android:id="@+id/imgEditarDireccion"
@@ -126,35 +139,24 @@
         android:layout_height="31dp"
         android:background="@color/white"
         android:foregroundTint="#000000"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerMunicipios"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.056"
         app:layout_constraintStart_toEndOf="@+id/Provincia"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.819" />
-
-    <Spinner
-        android:id="@+id/spinnerLocalidades"
-        android:layout_width="200dp"
-        android:layout_height="31dp"
-        android:layout_marginTop="184dp"
-        android:background="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.038"
-        app:layout_constraintStart_toEndOf="@+id/txtLocalidad"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.51" />
 
     <Spinner
         android:id="@+id/spinnerMunicipios"
         android:layout_width="200dp"
         android:layout_height="31dp"
         android:background="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerLocalidades"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.038"
         app:layout_constraintStart_toEndOf="@+id/txtMunicipio"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.871" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.578" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -180,7 +182,10 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginEnd="2.5dp"
+                android:layout_weight="2"
                 android:backgroundTint="#121212"
                 android:text="Tus pedidos"
                 android:textColor="#FFFFFF"
@@ -194,6 +199,9 @@
                 android:id="@+id/btnCerrarSesion"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2.5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:backgroundTint="#121212"
                 android:text="@string/cerrar_sesi_n"
@@ -216,6 +224,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:backgroundTint="#121212"
                 android:text="@string/borrar_cuenta"
                 android:textAlignment="center"

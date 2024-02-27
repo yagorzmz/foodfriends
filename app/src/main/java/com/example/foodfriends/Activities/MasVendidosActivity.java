@@ -321,58 +321,6 @@ public class MasVendidosActivity extends AppCompatActivity {
         }
     }
 
-    // Interfaz para manejar la carga del producto
-    public interface OnProductoLoadedListener {
-        void onProductoLoaded(Producto producto);
-    }
-
-    //Inflamos el menu
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menuprincipal, menu);
-
-        // Deshabilita el ítem del menú correspondiente a esta actividad
-        MenuItem item = menu.findItem(R.id.item_masvendidos);
-        if (item != null) {
-            item.setEnabled(false);
-        }
-
-        return true;
-    }
-
-    //Recogemos los items del menu
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Manejar las opciones del menú
-        int id = item.getItemId();
-        if (id == R.id.item_inicio) {
-            // Iniciar la actividad del Carrito
-            Intent i = new Intent(getApplicationContext(), InicioActivity.class);
-            startActivity(i);
-            finish();
-        } else if (id == R.id.item_carrito) {
-            // Iniciar la actividad del Carrito
-            Intent i = new Intent(getApplicationContext(), CarritoActivity.class);
-            startActivity(i);
-            finish();
-        } else if (id == R.id.item_perfil) {
-            // Iniciar la actividad de Perfil
-            Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
-            startActivity(i);
-            finish();
-        } else if (id == R.id.item_acercade) {
-            // Iniciar la actividad Acerca de
-            Intent i = new Intent(getApplicationContext(), AcercaDeActivity.class);
-            startActivity(i);
-            finish();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public interface OnPedidosLoadedListener {
-        void onPedidosLoaded(List<String> idPedidos);
-    }
 
     //Metodo que recoge y devuelve la lista de id de productos realizados en los ultimos 7 dias
     //y obtiene los 5 mas vendidos
@@ -434,14 +382,19 @@ public class MasVendidosActivity extends AppCompatActivity {
         }
     }
 
-
-
-    public interface OnProductosIdLoadedListener {
-        void onProductosIdLoaded(List<String> idProductos);
-    }
-
-    //Metodo que recoge los prodcutos y ecupera su informacion para poder mostrarla
     private void mostrarTop(List<String> top5Productos) {
+        // Limpiar las vistas antes de mostrar los nuevos productos
+        txtPrimerPuesto.setText("");
+        txtSegundoPuesto.setText("");
+        txtTercerPuesto.setText("");
+        txtCuartoPuesto.setText("");
+        txtQuintoPuesto.setText("");
+        imgPrimerPuesto.setImageResource(android.R.color.transparent);
+        imgSegundoPuesto.setImageResource(android.R.color.transparent);
+        imgTercerPuesto.setImageResource(android.R.color.transparent);
+        imgCuartoPuesto.setImageResource(android.R.color.transparent);
+        imgQuintoPuesto.setImageResource(android.R.color.transparent);
+
         for (int i = 0; i < top5Productos.size(); i++) {
             final int index = i;
             String idProducto = top5Productos.get(i);
@@ -465,6 +418,7 @@ public class MasVendidosActivity extends AppCompatActivity {
             });
         }
     }
+
 
     //Recoge cada productos y lo plasma en los imageview y textviews
     private void mostrarDetallesProducto(int index, String nombreProducto, String urlProducto) {
@@ -590,6 +544,64 @@ public class MasVendidosActivity extends AppCompatActivity {
             //Manejar cualquier excepción que pueda ocurrir al mostrar los detalles del producto
             e.printStackTrace();
         }
+    }
+
+    // Interfaz para manejar la carga del producto
+    public interface OnProductoLoadedListener {
+        void onProductoLoaded(Producto producto);
+    }
+
+    //Inflamos el menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menuprincipal, menu);
+
+        // Deshabilita el ítem del menú correspondiente a esta actividad
+        MenuItem item = menu.findItem(R.id.item_masvendidos);
+        if (item != null) {
+            item.setEnabled(false);
+        }
+
+        return true;
+    }
+
+    //Recogemos los items del menu
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Manejar las opciones del menú
+        int id = item.getItemId();
+        if (id == R.id.item_inicio) {
+            // Iniciar la actividad del Carrito
+            Intent i = new Intent(getApplicationContext(), InicioActivity.class);
+            startActivity(i);
+            finish();
+        } else if (id == R.id.item_carrito) {
+            // Iniciar la actividad del Carrito
+            Intent i = new Intent(getApplicationContext(), CarritoActivity.class);
+            startActivity(i);
+            finish();
+        } else if (id == R.id.item_perfil) {
+            // Iniciar la actividad de Perfil
+            Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
+            startActivity(i);
+            finish();
+        } else if (id == R.id.item_acercade) {
+            // Iniciar la actividad Acerca de
+            Intent i = new Intent(getApplicationContext(), AcercaDeActivity.class);
+            startActivity(i);
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public interface OnPedidosLoadedListener {
+        void onPedidosLoaded(List<String> idPedidos);
+    }
+
+
+    public interface OnProductosIdLoadedListener {
+        void onProductosIdLoaded(List<String> idProductos);
     }
 
 }

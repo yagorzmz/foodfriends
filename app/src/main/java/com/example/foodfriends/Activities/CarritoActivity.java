@@ -172,7 +172,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
                     public void onClick(DialogInterface dialog, int which) {
                         long milisegundos = 0;
                         switch (which) {
-                            case 0: milisegundos = convertirMinutosAMilisegundos(30);
+                            case 0: milisegundos = convertirMinutosAMilisegundos(1);
                                 break;
                             case 1:milisegundos = convertirMinutosAMilisegundos(45);
                                 break;
