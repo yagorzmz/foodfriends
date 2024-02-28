@@ -76,7 +76,7 @@ public class MasVendidosActivity extends AppCompatActivity {
         spinnerDias=findViewById(R.id.spinnerDias);
         // Configuramos el adaptador para el Spinner con el array de días
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.dias_array, android.R.layout.simple_spinner_item);
+                R.array.dias_array,R.layout.spinner_item_text_color);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDias.setAdapter(adapter);
         spinnerDias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

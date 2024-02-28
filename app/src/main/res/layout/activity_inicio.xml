@@ -39,6 +39,7 @@
         android:id="@+id/buscadorProductos"
         android:layout_width="0dp"
         android:layout_height="51dp"
+        style="@style/SearchViewTextStyle"
         app:layout_constraintBottom_toTopOf="@+id/recyclerView"
         app:layout_constraintEnd_toStartOf="@+id/btnTodosProductos"
         app:layout_constraintStart_toStartOf="parent"
