@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -27,6 +28,10 @@ import java.util.List;
 
 public class TodosProductosActivity extends AppCompatActivity {
 
+    private static final long TIEMPO_ESPERA = 500; // Tiempo de espera en milisegundos
+
+    private Handler handler = new Handler();
+    private Runnable runnable;
     private androidx.appcompat.widget.Toolbar toolbar;
     RecyclerView recycler;
     private SearchView searchview;
@@ -82,29 +87,43 @@ public class TodosProductosActivity extends AppCompatActivity {
 
     //Método que filtra las empresas mediante el searcher
     private void filterList(String texto) {
-        //Creamos una nueva lista para almacenar los elementos filtrados
-        List<Producto> listaFiltrada = new ArrayList<>();
+        // Cancelamos el runnable si está en curso
+        if (runnable != null) {
+            handler.removeCallbacks(runnable);
+        }
 
-        //Iteramos a través de la lista original de empresas
-        for (Producto producto : listaProductos) {
-            //Comprobamos si el nombre de la empresa contiene el texto de búsqueda (ignorando mayúsculas/minúsculas)
-            if (producto.getNombreProducto().toLowerCase().contains(texto.toLowerCase())) {
-                //Si se encuentra una coincidencia, agregar la empresa a la lista filtrada
-                listaFiltrada.add(producto);
+        // Definimos el nuevo runnable para mostrar el mensaje si no se encuentra el producto
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                // Creamos una nueva lista para almacenar los elementos filtrados
+                List<Producto> listaFiltrada = new ArrayList<>();
+
+                // Iteramos a través de la lista original de productos
+                for (Producto producto : listaProductos) {
+                    // Comprobamos si el nombre del producto contiene el texto de búsqueda (ignorando mayúsculas/minúsculas)
+                    if (producto.getNombreProducto().toLowerCase().contains(texto.toLowerCase())) {
+                        // Si se encuentra una coincidencia, agregar el producto a la lista filtrada
+                        listaFiltrada.add(producto);
+                    }
+                }
+
+                // Verificamos si la lista filtrada está vacía
+                if (listaFiltrada.isEmpty()) {
+                    // Mostramos un mensaje Toast indicando que no se encontraron resultados
+                    Toast.makeText(getApplicationContext(), "No se ha encontrado el producto", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Si hay resultados, actualizamos el adaptador con la nueva lista filtrada
+                    adaptadorProductos.setFilteredList(listaFiltrada);
+
+                    // Notificamos al adaptador que los datos han cambiado para que actualice la vista
+                    adaptadorProductos.notifyDataSetChanged();
+                }
             }
-        }
+        };
 
-        //Verificamos si la lista filtrada está vacía
-        if (listaFiltrada.isEmpty()) {
-            //Mostramos un mensaje Toast indicando que no se encontraron resultados
-            Toast.makeText(this, "No se ha encontrado el producto", Toast.LENGTH_SHORT).show();
-        } else {
-            //Si hay resultados, actualizamos el adaptador con la nueva lista filtrada
-            adaptadorProductos.setFilteredList(listaFiltrada);
-
-            //Notificamos al adaptador que los datos han cambiado para que actualice la vista
-            adaptadorProductos.notifyDataSetChanged();
-        }
+        // Programamos la ejecución del runnable después de un tiempo de espera
+        handler.postDelayed(runnable, TIEMPO_ESPERA);
     }
     //Método que inicia el RecyclerView
     public void init(List<Producto> listaProductos) {

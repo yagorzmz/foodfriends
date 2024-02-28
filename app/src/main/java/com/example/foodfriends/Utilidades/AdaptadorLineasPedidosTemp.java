@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.foodfriends.Activities.CarritoActivity;
 import com.example.foodfriends.Modelo.LineaPedidoTemp;
 import com.example.foodfriends.R;
 
@@ -23,8 +24,6 @@ import java.util.List;
 public class AdaptadorLineasPedidosTemp extends ArrayAdapter<LineaPedidoTemp>
 {
     private OnLineaPedidoChangeListener mListener;
-
-
     public AdaptadorLineasPedidosTemp(Context context, List<LineaPedidoTemp> lineasPedidos, OnLineaPedidoChangeListener listener) {
         super(context, 0, lineasPedidos);
         mListener = listener;
@@ -62,6 +61,7 @@ public class AdaptadorLineasPedidosTemp extends ArrayAdapter<LineaPedidoTemp>
             @Override
             public void onClick(View view) {
                 mListener.onEliminarLineaPedido(position);
+                CarritoActivity.reproducirSonidoDelete();
             }
         });
         return convertView;

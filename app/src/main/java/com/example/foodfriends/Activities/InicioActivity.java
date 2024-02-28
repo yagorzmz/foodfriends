@@ -1,10 +1,7 @@
 package com.example.foodfriends.Activities;
 
-import static androidx.fragment.app.FragmentManager.TAG;
-
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -13,17 +10,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.foodfriends.Modelo.Empresa;
 import com.example.foodfriends.R;
 import com.example.foodfriends.Utilidades.AdaptadorEmpresas;
@@ -33,7 +27,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -137,7 +130,7 @@ public class InicioActivity extends AppCompatActivity implements AdaptadorEmpres
     //Metodo que muestra un mensaje de informacion al usuario
     private void infoLocalizacion(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Cuando buscas restaurantes, los resultados se organizan según tu ubicación." +
+        builder.setMessage("Los restaurantes se ordenan en función de tu ubicación." +
                 " Primero verás los restaurantes más cercanos.\n" +
                 "Así, siempre tendrás a mano las opciones más relevantes para ti.");
         builder.setPositiveButton("Entendido", null);

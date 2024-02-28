@@ -15,6 +15,7 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -60,6 +61,7 @@ import java.util.Map;
 public class CarritoActivity extends AppCompatActivity implements AdaptadorLineasPedidosTemp.OnLineaPedidoChangeListener {
     //Elementos de la activity
     private static String fechaPedido;
+    private static MediaPlayer mediaPlayerDeleteProduct,mediaPlayerDelivery;
     private static double totalConGastosEnvio;
     private androidx.appcompat.widget.Toolbar toolbar;
     static ListView listViewLineasPedido;
@@ -88,6 +90,9 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         listaLineasPedidosTemp = ListaLineasPedidosTempHelper.getListaLineasPedidosTemp();
         txtTotalPedido = findViewById(R.id.txtTotalPedido);
         txtCarritoVacio = findViewById(R.id.txtCarritoVacio);
+
+        mediaPlayerDeleteProduct=MediaPlayer.create(this, R.raw.deleteproductsound);
+        mediaPlayerDelivery=MediaPlayer.create(this, R.raw.deliverysound);
 
         //Siempre que entremos actualizamos la situacion del carrito
         actualizarCarrito();
@@ -295,6 +300,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
     //Muestra el dialogo al usuario de que el pedido se esta realizando y deberá
     //confirmar su entrega
     private void mostrarDialogoEnMarcha() {
+        reproducirSonidoDelivery();
         // Crear y configurar el diálogo
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pedido en marcha")
@@ -548,6 +554,30 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         txtTotalPedido.setVisibility(View.GONE);
         imgCarritoVacio.setVisibility(View.VISIBLE);
     }
+    // Método para reproducir el sonido
+    public static void reproducirSonidoDelete() {
+        if (mediaPlayerDeleteProduct != null) {
+            mediaPlayerDeleteProduct.start();
+        }
+    }
+    // Método para reproducir el sonido
+    public static void reproducirSonidoDelivery() {
+        if (mediaPlayerDelivery != null) {
+            mediaPlayerDelivery.start();
+        }
+    }
 
-
+    // Método para liberar los recursos del reproductor de sonido
+    @Override
+    protected void onDestroy() {
+        if (mediaPlayerDeleteProduct != null) {
+            mediaPlayerDeleteProduct.release();
+            mediaPlayerDeleteProduct = null;
+        }
+        if (mediaPlayerDelivery != null) {
+            mediaPlayerDelivery.release();
+            mediaPlayerDelivery = null;
+        }
+        super.onDestroy();
+    }
 }

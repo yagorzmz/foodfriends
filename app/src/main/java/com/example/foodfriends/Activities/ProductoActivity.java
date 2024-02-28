@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 public class ProductoActivity extends AppCompatActivity
 {
     //Elementos de la activity
+    private MediaPlayer mediaPlayerAddCart;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference empresasReference;
     private static final int CANTIDAD_MINIMA = 1;
@@ -91,6 +93,10 @@ public class ProductoActivity extends AppCompatActivity
         btnRestarCantidad=findViewById(R.id.btnBajarCantidad);
         txtCantidadProducto=findViewById(R.id.txtCantidadProducto);
 
+        // Inicializar el reproductor de sonido
+        mediaPlayerAddCart = MediaPlayer.create(this, R.raw.addcartsound);
+
+
         //Metodo que incrementa las unidades escogidas del producto
         btnSumarCantidad.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +116,7 @@ public class ProductoActivity extends AppCompatActivity
         btnAgregarAlCarrito.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                reproducirSonidoAddCart();
                 // Obtener la cantidad seleccionada
                 int cantidadSeleccionada = Integer.valueOf(txtCantidadProducto.getText().toString());
 
@@ -255,8 +262,8 @@ public class ProductoActivity extends AppCompatActivity
     private void incrementarCantidad() {
         if (cantidadActual < CANTIDAD_MAXIMA) {
             cantidadActual++;
+            actualizarCantidad();
         }
-        actualizarCantidad();
     }
     //Metodo que decrementa la cantidad del producto
     private void decrementarCantidad()
@@ -265,6 +272,22 @@ public class ProductoActivity extends AppCompatActivity
             cantidadActual--;
             actualizarCantidad();
         }
+    }
+    // Método para reproducir el sonido
+    private void reproducirSonidoAddCart() {
+        if (mediaPlayerAddCart != null) {
+            mediaPlayerAddCart.start();
+        }
+    }
+
+    // Método para liberar los recursos del reproductor de sonido
+    @Override
+    protected void onDestroy() {
+        if (mediaPlayerAddCart != null) {
+            mediaPlayerAddCart.release();
+            mediaPlayerAddCart = null;
+        }
+        super.onDestroy();
     }
 
 }
