@@ -6,7 +6,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-
+import com.bumptech.glide.Glide;
+import android.widget.ImageView;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
@@ -77,6 +78,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carrito);
+
 
         // Configuración inicial de la interfaz y la barra de herramientas.
         iconoToolbar = findViewById(R.id.iconoToolbar);
@@ -580,4 +582,5 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
         }
         super.onDestroy();
     }
+
 }
