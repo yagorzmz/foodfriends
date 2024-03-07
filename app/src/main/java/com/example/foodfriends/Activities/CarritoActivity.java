@@ -223,6 +223,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
 
     //Método que programa cuando enviar la notificacion de confirmacion de entrega de pedido
     private void programarNotificacionDespuesDe(long milisegundos) {
+        carritoVacio();
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(new Runnable() {
             @Override

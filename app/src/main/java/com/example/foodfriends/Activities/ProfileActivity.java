@@ -402,6 +402,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                 // Verificar si el archivo seleccionado es una imagen
                 if (esImagen(uriImagenSeleccionada)) {
+                    borrarImagenPorUrl(urlFotoActual);
                     imgPerfil.setImageURI(uriImagenSeleccionada);
                     subirImagenAlStorage(uriImagenSeleccionada);
                     storageReference.putFile(uriImagenSeleccionada)
@@ -462,7 +463,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         //Creamos una referencia en el Storage con el mismo nombre que el archivo original
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("urlPerfiles").child(nombreImagen);
+        storageReference = FirebaseStorage.getInstance().getReference().child("urlPerfiles").child(nombreImagen);
 
         // Obtenemos la URL de la imagen actual del perfil desde la base de datos
         usuariosRef.child(firebaseUser.getUid()).child("urlFotoPerfil").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -761,18 +762,20 @@ public class ProfileActivity extends AppCompatActivity {
     }
     //Metodo que borra la imagen de perfil del storage
     public void borrarImagenPorUrl(String url) {
-        StorageReference mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl(url);
-        mStorageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                // La imagen se eliminó con éxito del almacenamiento
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Hubo un error al eliminar la imagen del almacenamiento
-            }
-        });
+        if(!url.equals("gs://foodfriendsapp-f51dc.appspot.com/urlPerfiles/perfilvacio.jpg")){
+            StorageReference mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl(url);
+            mStorageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    // La imagen se eliminó con éxito del almacenamiento
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Hubo un error al eliminar la imagen del almacenamiento
+                }
+            });
+        }
     }
 
 }
