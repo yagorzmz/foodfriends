@@ -7,4 +7,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="number_picker_height">200.0dp</dimen>
     <dimen name="number_picker_text_size">24.0sp</dimen>
+    <dimen name="text_size_large">16sp</dimen>
 </resources>
+

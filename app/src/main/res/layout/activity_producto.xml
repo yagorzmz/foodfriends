@@ -7,10 +7,51 @@
     android:background="@drawable/fondoempresas"
     tools:context=".Activities.ProductoActivity">
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="183dp"
+        android:layout_height="183dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toolbar4"
+        app:layout_constraintVertical_bias="0.155"
+        app:srcCompat="@drawable/border" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical|center_horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar4">
+
+        <ImageView
+            android:id="@+id/imgProducto2"
+            android:layout_width="@dimen/_182sdp"
+            android:layout_height="@dimen/_182sdp"
+            android:background="@drawable/border"
+            android:fadingEdge="vertical"
+            android:gravity="center_vertical|center_horizontal"
+            android:scaleType="centerCrop"
+            android:src="@drawable/logo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.156"
+            app:srcCompat="@drawable/error" />
+
+    </LinearLayout>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="0dp"
-        android:layout_height="400dp"
+        android:layout_height="419dp"
         android:background="#FFFFFF"
         android:layerType="none"
         app:cardCornerRadius="16dp"
@@ -65,12 +106,12 @@
                 android:layout_height="60dp"
                 android:layout_below="@id/txtNombreProducto2"
                 android:foregroundTint="#FFFFFF"
+                android:gravity="center_vertical|center_horizontal"
                 android:padding="20dp"
                 android:text="Precio"
                 android:textAlignment="center"
                 android:textColor="#000000"
-                android:textSize="18sp"
-                android:gravity="center_vertical|center_horizontal"/>
+                android:textSize="18sp" />
 
             <View
                 android:id="@+id/view2"
@@ -99,8 +140,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:background="#FFFFFF"
-                android:orientation="horizontal"
-                android:gravity="center_vertical|center_horizontal">
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/txtCantidad"
@@ -183,44 +224,7 @@
             android:layout_height="60dp"
             app:srcCompat="@drawable/ic_notificacion"
             tools:layout_editor_absoluteX="148dp"
-            tools:layout_editor_absoluteY="32dp" /> <!-- Ajusta el tamaño deseado -->
-        android:layout_height="24dp" <!-- Ajusta el tamaño deseado -->
-        android:src="@drawable/tu_icono" <!-- Reemplaza con tu recurso de icono -->
-        android:layout_gravity="start"
-        android:layout_marginStart="16dp" <!-- Puedes ajustar el margen según sea necesario -->
-        android:layout_marginEnd="16dp" <!-- Puedes ajustar el margen según sea necesario -->
-        android:contentDescription="@string/desc_icono" />
+            tools:layout_editor_absoluteY="32dp" />
     </androidx.appcompat.widget.Toolbar>
-
-    <!-- Nombre del producto -->
-
-
-    <ImageView
-        android:id="@+id/imgProducto2"
-        android:layout_width="182dp"
-        android:layout_height="182dp"
-        android:background="@drawable/border"
-        android:fadingEdge="vertical"
-        android:scaleType="centerCrop"
-        android:src="@drawable/logo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.156"
-        app:srcCompat="@drawable/error" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="183dp"
-        android:layout_height="183dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar4"
-        app:layout_constraintVertical_bias="0.155"
-        app:srcCompat="@drawable/border" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

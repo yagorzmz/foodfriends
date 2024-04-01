@@ -40,7 +40,7 @@
                 android:layout_marginBottom="4dp"
                 android:text="@string/nombre_del_restaurante"
                 android:textColor="@android:color/black"
-                android:textSize="22sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/txtUnidades"
@@ -59,7 +59,7 @@
                 android:layout_marginTop="4dp"
                 android:text="Numero Telefono"
                 android:textColor="#FF0000"
-                android:textSize="16sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/txtDireccionRestaurante"
