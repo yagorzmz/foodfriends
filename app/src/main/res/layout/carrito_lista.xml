@@ -38,7 +38,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="243dp"
+            android:layout_width="263dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="8dp">
@@ -49,24 +49,24 @@
                 android:layout_height="wrap_content"
                 android:text="@string/nombre_producto"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"
+                android:textSize="13sp"
                 tools:ignore="VisualLintBounds" />
 
             <TextView
                 android:id="@+id/txtUnidades"
-                android:layout_width="220dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/unidades_pedidas"
                 android:textColor="#757575"
-                android:textSize="15sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/txtPrecioLineaPedido"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:text="@string/precio_linea_pedido"
                 android:textColor="#757575"
-                android:textSize="15sp" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 
