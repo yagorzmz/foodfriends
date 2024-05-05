@@ -131,7 +131,8 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent pendingIntent;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+                pendingIntent = PendingIntent.getActivity(this, 0, intent,
+                        PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
             } else {
                 pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             }
@@ -141,7 +142,8 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
             // Crea un PendingIntent para la acción
             PendingIntent confirmPendingIntent;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                confirmPendingIntent = PendingIntent.getBroadcast(this, 0, confirmIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+                confirmPendingIntent = PendingIntent.getBroadcast(this, 0, confirmIntent,
+                        PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
             } else {
                 confirmPendingIntent = PendingIntent.getBroadcast(this, 0, confirmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             }
@@ -369,14 +371,13 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
                 Toast.makeText(getApplicationContext(), "No hay productos para realizar el pedido", Toast.LENGTH_SHORT).show();
             } else {
                 // Verifica si la hora actual está entre las 22 y las 12.
-                if (hour >= 23 || hour <= 9) {
+                if ((hour<9)||(hour >23)) {
                     // Las cocinas están cerradas, muestra un cuadro de diálogo al usuario.
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Cocinas cerradas");
                     builder.setMessage("El pedido no se puede realizar, las cocinas están cerradas. Puede realizar el pedido entre las 9 y las 23h");
                     builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            // Aquí puedes agregar cualquier acción adicional que desees realizar después de que el usuario haga clic en Aceptar.
                         }
                     });
                     AlertDialog dialog = builder.create();

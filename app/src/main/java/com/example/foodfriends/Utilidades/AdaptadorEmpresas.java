@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,8 +20,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -70,8 +67,8 @@ public class AdaptadorEmpresas extends RecyclerView.Adapter<AdaptadorEmpresas.Vi
 
             //Obtiene referencias a las vistas dentro de cada elemento
             imgRestaurante = itemView.findViewById(R.id.imgProductoLineaPedido);
-            nombre = itemView.findViewById(R.id.txtIdUsuario);
-            tipo = itemView.findViewById(R.id.txtUnidades);
+            nombre = itemView.findViewById(R.id.txtNombreProductoCarrito);
+            tipo = itemView.findViewById(R.id.txtUnidadesPedidasCarrito);
             telefono= itemView.findViewById(R.id.txtNumeroTelefono);
             direccionRestaurante=itemView.findViewById(R.id.txtDireccionRestaurante);
         }

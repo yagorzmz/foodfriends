@@ -37,10 +37,10 @@ public class AdaptadorLineasPedidos extends ArrayAdapter<LineaPedidoTemp> {
 
         // Obtén referencias a los elementos de la interfaz de usuario (TextViews)
         TextView txtNumeroLineaPedido = convertView.findViewById(R.id.txtNumeroLineaPedido);
-        TextView txtNombreProducto = convertView.findViewById(R.id.txtIdUsuario);
-        TextView txtPrecioProducto = convertView.findViewById(R.id.txtPrecioProducto);
-        TextView txtUnidades = convertView.findViewById(R.id.txtUnidades);
-        TextView txtTotalLinea = convertView.findViewById(R.id.txtTotalLinea);
+        TextView txtNombreProducto = convertView.findViewById(R.id.txtNombreProductoCarrito);
+        TextView txtPrecioProducto = convertView.findViewById(R.id.txtPrecioProductoLineaPedido);
+        TextView txtUnidades = convertView.findViewById(R.id.txtUnidadesPedidasCarrito);
+        TextView txtTotalLinea = convertView.findViewById(R.id.txtFechaPedidoHistorial);
 
         // Calcula el total de la línea de pedido
         double totalLinea = lineaPedido.getPrecioProducto() * lineaPedido.getUnidades();

@@ -34,22 +34,22 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/txtIdUsuario"
+                android:id="@+id/txtNombreProductoCarrito"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
+                android:layout_height="45dp"
                 android:text="nombreProducto"
-                android:textColor="@android:color/black"
-                android:textSize="15sp" />
+                android:textColor="#000000"
+                android:textSize="17sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/txtUnidades"
+                android:id="@+id/txtUnidadesPedidasCarrito"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="1dp"
+                android:autoSizeTextType="uniform"
                 android:text="Descripcion"
                 android:textAlignment="textStart"
-                android:textColor="#000000"
+                android:textColor="#2C2C2C"
                 android:textSize="10sp" />
 
         </LinearLayout>

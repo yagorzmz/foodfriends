@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.foodfriends.Modelo.Empresa;
 import com.example.foodfriends.Modelo.LineaPedidoTemp;
 import com.example.foodfriends.Modelo.Producto;
 import com.example.foodfriends.R;
@@ -34,8 +33,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import java.util.ArrayList;
 
 /**
  * La clase ProductoActivity permite al usuario añadir el producto
@@ -78,7 +75,7 @@ public class ProductoActivity extends AppCompatActivity
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         iconoToolbar=findViewById(R.id.iconoToolbar);
         // Inicializa las referencias a las vistas
-        txtNombreProducto = findViewById(R.id.txtNombreProducto2);
+        txtNombreProducto = findViewById(R.id.txtNombreProducto);
         txtPrecio = findViewById(R.id.txtPrecio);
         txtDescripcion = findViewById(R.id.txtDescripcionProducto2);
         // Crear un filtro para limitar la cantidad de caracteres

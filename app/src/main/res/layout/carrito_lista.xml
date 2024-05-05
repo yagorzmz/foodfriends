@@ -44,7 +44,7 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/txtIdUsuario"
+                android:id="@+id/txtNombreProductoCarrito"
                 android:layout_width="376dp"
                 android:layout_height="wrap_content"
                 android:text="@string/nombre_producto"
@@ -53,7 +53,7 @@
                 tools:ignore="VisualLintBounds" />
 
             <TextView
-                android:id="@+id/txtUnidades"
+                android:id="@+id/txtUnidadesPedidasCarrito"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/unidades_pedidas"
@@ -61,7 +61,7 @@
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/txtPrecioLineaPedido"
+                android:id="@+id/txtPrecioLineaPedidoCarrito"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/precio_linea_pedido"
