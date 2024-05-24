@@ -168,7 +168,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
 
         // Calcular las opciones de tiempo según las especificaciones dadas
         List<String> opcionesTiempo = new ArrayList<>();
-        opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt, minutoActual + 30)); // Primera opción
+        opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt, minutoActual + 1)); // Primera opción
         opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt, minutoActual + 45)); // Segunda opción
         opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt + 1, minutoActual)); // Tercera opción
         opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt + 1, minutoActual + 15)); // Cuarta opción
@@ -306,6 +306,8 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
     //confirmar su entrega
     private void mostrarDialogoEnMarcha() {
         reproducirSonidoDelivery();
+        listaLineasPedidosTemp.clear();
+        actualizarCarrito();
         // Crear y configurar el diálogo
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pedido en marcha")
