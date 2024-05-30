@@ -40,14 +40,14 @@ public class AdaptadorLineasPedidos extends ArrayAdapter<LineaPedidoTemp> {
         TextView txtNombreProducto = convertView.findViewById(R.id.txtNombreProductoCarrito);
         TextView txtPrecioProducto = convertView.findViewById(R.id.txtPrecioProductoLineaPedido);
         TextView txtUnidades = convertView.findViewById(R.id.txtUnidadesPedidasCarrito);
-        TextView txtTotalLinea = convertView.findViewById(R.id.txtFechaPedidoHistorial);
+        TextView txtTotalLinea = convertView.findViewById(R.id.txtPreciolinea);
 
         // Calcula el total de la línea de pedido
         double totalLinea = lineaPedido.getPrecioProducto() * lineaPedido.getUnidades();
 
         // Establece los valores correspondientes en los TextViews
         txtNumeroLineaPedido.setText(String.valueOf(position + 1));
-        txtNombreProducto.setText("Producto: " + lineaPedido.getNombreProducto());
+        txtNombreProducto.setText(lineaPedido.getNombreProducto());
         txtPrecioProducto.setText("Precio/uni: " + formatearDecimal(lineaPedido.getPrecioProducto())+"€");
         txtUnidades.setText("Unidades: " + String.valueOf(lineaPedido.getUnidades()));
         txtTotalLinea.setText("Precio linea: " + formatearDecimal(totalLinea)+"€");

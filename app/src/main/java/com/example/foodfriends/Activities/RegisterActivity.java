@@ -90,6 +90,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     // Método que registra un nuevo usuario en la app
     public void registrarUsuario() {
+        final String password = editPassword.getText().toString();
+
+        // Verificar si la contraseña es lo suficientemente larga
+        if (password.length() < 6) {
+            mostrarToast("La contraseña debe tener al menos 6 caracteres.");
+            return;
+        }
         firebaseAuth.createUserWithEmailAndPassword(editEmail.getText().toString(), editPassword.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override

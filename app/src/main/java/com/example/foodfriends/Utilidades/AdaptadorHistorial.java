@@ -46,7 +46,7 @@ public class AdaptadorHistorial extends ArrayAdapter<Pedido> {
         TextView txtNumeroPedido = convertView.findViewById(R.id.txtNumeroLineaPedido);
         TextView txtIdPedido = convertView.findViewById(R.id.txtNombreProductoCarrito);
         TextView txtPrecioTotal = convertView.findViewById(R.id.txtUnidadesPedidasCarrito);
-        TextView txtFechaPedido = convertView.findViewById(R.id.txtFechaPedidoHistorial);
+        TextView txtFechaPedido = convertView.findViewById(R.id.txtPreciolinea);
         imgMostrarLineas = convertView.findViewById(R.id.imgMostrarLineas);
         imgMostrarLineas.setOnClickListener(new View.OnClickListener() {
             @Override

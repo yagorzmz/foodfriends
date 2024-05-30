@@ -4,6 +4,7 @@ import static com.example.foodfriends.Activities.CarritoActivity.listaLineasPedi
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -586,7 +587,6 @@ public class ProfileActivity extends AppCompatActivity {
     //Metodo que elimina la cuenta del usuario
     public void eliminarCuenta() {
         cuentaEliminada = true;
-        // Mostrar un cuadro de diálogo de confirmación antes de eliminar la cuenta
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Eliminar cuenta");
         builder.setMessage("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer. Ten en cuenta que, aunque tu cuenta se eliminará, la información de tus pedidos realizados seguirá formando parte de la empresa y no se borrará.");
@@ -594,19 +594,16 @@ public class ProfileActivity extends AppCompatActivity {
         builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //Obtenemos el id del usuario
+                // Obtener el id del usuario
                 String idUsuario = firebaseUser.getUid();
-                //Borra la cuenta y vuelve al Login
+                // Borrar la cuenta y reiniciar la aplicación
                 borrarUsuario(idUsuario);
-                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(i);
             }
         });
 
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // No hacer nada, simplemente cerrar el cuadro de diálogo
                 dialog.dismiss();
             }
         });
@@ -615,24 +612,19 @@ public class ProfileActivity extends AppCompatActivity {
     }
     //Método que borra al usuario mediante su id de la base de datos y de la autenticacion
     public void borrarUsuario(String idUsuario) {
-
-        // Obtener la referencia específica al usuario que se desea borrar
         DatabaseReference usuarioAEliminarRef = usuariosRef.child(idUsuario);
         borrarImagenPorUrl(urlFotoActual);
 
-        // Eliminar el usuario de la base de datos
         usuarioAEliminarRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    // Ahora, eliminar el usuario de Firebase Authentication
                     firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                // El usuario se eliminó con éxito de Firebase Authentication
                                 mostrarToast("Cuenta eliminada");
-                                finish(); // Cierra la actividad después de eliminar el usuario
+                                limpiarDatosYReiniciar(); // Reiniciar la aplicación
                             } else {
                                 mostrarToast("Error al eliminar el usuario de la autenticación");
                             }
@@ -643,6 +635,16 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    private void limpiarDatosYReiniciar() {
+        // Limpiar todos los datos de la aplicación
+        ((ActivityManager) getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
+
+        // Reiniciar la aplicación
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        System.exit(0); // Cierra la aplicación completamente
     }
 
 
@@ -655,52 +657,44 @@ public class ProfileActivity extends AppCompatActivity {
         filters[0] = new InputFilter.LengthFilter(46);
         input.setFilters(filters);
 
-        AlertDialog alertDialog = new AlertDialog.Builder(this)
-                .setTitle("Ingresa tu dirección")
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Ingresa tu dirección")
                 .setMessage(texto)
                 .setView(input)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
+                .setPositiveButton("OK", null) // Setting null here to override default behavior
+                .setCancelable(false); // Make the dialog non-cancelable
+
+        AlertDialog alertDialog = builder.create();
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         String direccion = input.getText().toString();
 
                         if (direccion.isEmpty()) {
                             mostrarToast("Por favor, ingresa tu dirección.");
-                            solicitarDireccion(titulo, texto); // Volver a solicitar
                         } else if (!direccion.startsWith("C/")) {
                             mostrarToast("La dirección debe tener este formato: C/...");
-                            solicitarDireccion(titulo, texto);
                         } else {
                             // Guardar dirección ingresada
                             txtDireccionUsuario.setText(direccion);
 
                             // Actualiza la dirección en la base de datos
                             usuariosRef.child(firebaseUser.getUid()).child("DireccionUsuario").setValue(direccion);
+
+                            // Cerrar el diálogo
+                            alertDialog.dismiss();
                         }
                     }
-                })
-                .show();
-
-        // Desactivar el botón Atrás y el gesto de deslizar para salir de la actividad hasta que se ingrese una dirección
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                });
             }
         });
 
-        // Capturar el evento de cierre del cuadro de diálogo
-        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                // Verificar si se ingresó una dirección antes de cerrar el cuadro de diálogo
-                if (txtDireccionUsuario.getText().toString().isEmpty()) {
-                    solicitarDireccion(titulo, texto);
-                } else {
-                    // Habilitar el botón Atrás y el gesto de deslizar para salir de la actividad
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                }
-            }
-        });
+        alertDialog.show();
     }
 
     @Override

@@ -57,6 +57,7 @@
                         android:layout_height="32dp"
                         android:autoSizeTextType="uniform"
                         android:text="@string/nombre_producto"
+                        android:textAlignment="viewStart"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
@@ -82,20 +83,22 @@
 
                     <TextView
                         android:id="@+id/txtUnidadesPedidasCarrito"
-                        android:layout_width="140dp"
+                        android:layout_width="match_parent"
                         android:layout_height="32dp"
                         android:layout_marginTop="10sp"
                         android:text="@string/unidades_pedidas"
+                        android:textAlignment="center"
                         android:textColor="#F80707"
-                        android:textSize="12sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/txtPrecioProductoLineaPedido"
-                        android:layout_width="140dp"
+                        android:layout_width="match_parent"
                         android:layout_height="25dp"
                         android:layout_marginTop="5dp"
                         android:text="Precio Unidad"
-                        android:textSize="12sp" />
+                        android:textAlignment="center"
+                        android:textSize="13sp" />
                 </LinearLayout>
 
             </LinearLayout>

@@ -67,7 +67,7 @@
                     tools:ignore="VisualLintBounds" />
 
                 <TextView
-                    android:id="@+id/txtFechaPedidoHistorial"
+                    android:id="@+id/txtPreciolinea"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_marginTop="5dp"

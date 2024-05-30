@@ -168,7 +168,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
 
         // Calcular las opciones de tiempo según las especificaciones dadas
         List<String> opcionesTiempo = new ArrayList<>();
-        opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt, minutoActual + 1)); // Primera opción
+        opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt, minutoActual + 30)); // Primera opción
         opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt, minutoActual + 45)); // Segunda opción
         opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt + 1, minutoActual)); // Tercera opción
         opcionesTiempo.add(obtenerTiempoFormateado(horaActualInt + 1, minutoActual + 15)); // Cuarta opción
@@ -192,7 +192,7 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
                             case 4:milisegundos = convertirMinutosAMilisegundos(90);
                                 break;
                         }
-                        //Mostramos un dialogo para avisar al usuario de que le pedido se esta realizando
+                        //Mostramos un dialogo para avisar al usuario de que el pedido se esta realizando
                         mostrarDialogoEnMarcha();
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
                         fechaPedido=sdf.format(new Date());
@@ -306,12 +306,11 @@ public class CarritoActivity extends AppCompatActivity implements AdaptadorLinea
     //confirmar su entrega
     private void mostrarDialogoEnMarcha() {
         reproducirSonidoDelivery();
-        listaLineasPedidosTemp.clear();
         actualizarCarrito();
         // Crear y configurar el diálogo
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pedido en marcha")
-                .setMessage("Su pedido está en camino. Recibirá una notificación a través de la aplicación para confirmar la entrega.")
+                .setMessage("Su pedido está en camino. Recibirá una notificación a través de la aplicación para confirmar la entrega. Mantenga la sesión iniciada.")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                     }

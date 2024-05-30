@@ -36,10 +36,10 @@
             <TextView
                 android:id="@+id/txtNombreProductoCarrito"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="35dp"
                 android:text="nombreProducto"
                 android:textColor="#000000"
-                android:textSize="17sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
             <TextView
