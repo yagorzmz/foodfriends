@@ -636,6 +636,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+    //Metodo que reinicia la app
     private void limpiarDatosYReiniciar() {
         // Limpiar todos los datos de la aplicación
         ((ActivityManager) getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
